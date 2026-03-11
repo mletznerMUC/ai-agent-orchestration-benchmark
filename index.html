@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Agent Orchestration · Benchmark 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f;
+    --surface: #12121a;
+    --card: #1a1a28;
+    --border: #2a2a3e;
+    --accent: #7c6aff;
+    --accent2: #ff6a9e;
+    --accent3: #6affda;
+    --text: #e8e8f0;
+    --muted: #7878a0;
+    --green: #4ade80;
+    --yellow: #facc15;
+    --red: #f87171;
+    --maestro: #7c6aff;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Syne', sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  /* Animated background */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background:
+      radial-gradient(ellipse 80% 50% at 10% 20%, rgba(124,106,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse 60% 40% at 90% 80%, rgba(106,255,218,0.05) 0%, transparent 50%);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .container {
+    position: relative;
+    z-index: 1;
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 24px;
+  }
+
+  /* Header */
+  header {
+    margin-bottom: 56px;
+    text-align: center;
+  }
+
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.2em;
+    color: var(--accent);
+    text-transform: uppercase;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+  }
+
+  .eyebrow::before, .eyebrow::after {
+    content: '';
+    width: 40px;
+    height: 1px;
+    background: var(--accent);
+    opacity: 0.5;
+  }
+
+  h1 {
+    font-size: clamp(2rem, 5vw, 3.5rem);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 16px;
+    background: linear-gradient(135deg, #e8e8f0 30%, var(--accent));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .subtitle {
+    color: var(--muted);
+    font-size: 15px;
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  /* Legend */
+  .legend {
+    display: flex;
+    gap: 24px;
+    justify-content: center;
+    margin-bottom: 40px;
+    flex-wrap: wrap;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 12px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+  }
+
+  .dot { width: 10px; height: 10px; border-radius: 50%; }
+  .dot-g { background: var(--green); }
+  .dot-y { background: var(--yellow); }
+  .dot-r { background: var(--red); }
+
+  /* Feature matrix */
+  .section-title {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.15em;
+    color: var(--muted);
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 12px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .matrix-wrap {
+    overflow-x: auto;
+    margin-bottom: 48px;
+    border-radius: 16px;
+    border: 1px solid var(--border);
+    background: var(--surface);
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+    min-width: 900px;
+  }
+
+  thead tr {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+  }
+
+  th {
+    padding: 16px 14px;
+    text-align: left;
+    font-weight: 700;
+    font-size: 12px;
+    white-space: nowrap;
+  }
+
+  th.tool-header {
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+  }
+
+  th.maestro-col {
+    color: var(--accent);
+    background: rgba(124,106,255,0.08);
+    border-left: 2px solid var(--accent);
+    border-right: 2px solid var(--accent);
+  }
+
+  td {
+    padding: 13px 14px;
+    border-bottom: 1px solid rgba(42,42,62,0.5);
+    vertical-align: middle;
+  }
+
+  tr:last-child td { border-bottom: none; }
+
+  tr:hover td { background: rgba(255,255,255,0.02); }
+
+  .maestro-col {
+    background: rgba(124,106,255,0.04);
+    border-left: 2px solid rgba(124,106,255,0.3);
+    border-right: 2px solid rgba(124,106,255,0.3);
+  }
+
+  thead .maestro-col { border-top: 2px solid var(--accent); }
+  tr:last-child .maestro-col {
+    border-bottom: 2px solid var(--accent);
+  }
+
+  .feature-label {
+    font-weight: 600;
+    color: var(--text);
+    white-space: nowrap;
+  }
+
+  .feature-sub {
+    font-size: 11px;
+    color: var(--muted);
+    font-weight: 400;
+    font-family: 'DM Mono', monospace;
+    display: block;
+    margin-top: 2px;
+  }
+
+  /* Rating pills */
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    font-weight: 500;
+    white-space: nowrap;
+  }
+
+  .pill-green { background: rgba(74,222,128,0.12); color: var(--green); border: 1px solid rgba(74,222,128,0.2); }
+  .pill-yellow { background: rgba(250,204,21,0.1); color: var(--yellow); border: 1px solid rgba(250,204,21,0.2); }
+  .pill-red { background: rgba(248,113,113,0.1); color: var(--red); border: 1px solid rgba(248,113,113,0.2); }
+  .pill-blue { background: rgba(124,106,255,0.12); color: var(--accent); border: 1px solid rgba(124,106,255,0.2); }
+  .pill-teal { background: rgba(106,255,218,0.1); color: var(--accent3); border: 1px solid rgba(106,255,218,0.2); }
+
+  /* Score bars */
+  .score-cell {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .score-bar-track {
+    flex: 1;
+    height: 6px;
+    background: var(--border);
+    border-radius: 3px;
+    min-width: 60px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .score-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.3s ease;
+  }
+
+  .score-num {
+    font-family: 'DM Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--muted);
+    min-width: 24px;
+    text-align: right;
+  }
+
+  /* Price cards */
+  .price-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .price-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 20px;
+    transition: transform 0.2s, border-color 0.2s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .price-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: var(--accent-color, var(--border));
+  }
+
+  .price-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(124,106,255,0.3);
+  }
+
+  .price-card.highlight {
+    border-color: rgba(124,106,255,0.4);
+    background: rgba(124,106,255,0.05);
+  }
+
+  .price-card .tool-name {
+    font-weight: 700;
+    font-size: 15px;
+    margin-bottom: 4px;
+  }
+
+  .price-card .tool-type {
+    font-size: 11px;
+    font-family: 'DM Mono', monospace;
+    color: var(--muted);
+    margin-bottom: 14px;
+  }
+
+  .price-tag {
+    font-size: 26px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+
+  .price-note {
+    font-size: 11px;
+    color: var(--muted);
+    font-family: 'DM Mono', monospace;
+  }
+
+  .price-tiers {
+    margin-top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  .price-tier {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    padding: 6px 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 6px;
+    border: 1px solid var(--border);
+  }
+
+  .tier-name { color: var(--muted); font-family: 'DM Mono', monospace; font-size: 11px; }
+  .tier-price { font-weight: 600; }
+
+  /* Summary verdict */
+  .verdict-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 16px;
+    margin-bottom: 48px;
+  }
+
+  .verdict-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    padding: 22px;
+    display: flex;
+    gap: 16px;
+  }
+
+  .verdict-icon {
+    font-size: 28px;
+    flex-shrink: 0;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: var(--surface);
+    border-radius: 10px;
+  }
+
+  .verdict-body .vname {
+    font-weight: 700;
+    font-size: 14px;
+    margin-bottom: 6px;
+  }
+
+  .verdict-body .vtext {
+    font-size: 12px;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  .verdict-body .vtag {
+    margin-top: 10px;
+    display: inline-block;
+  }
+
+  /* Radar / score overview */
+  .overview-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+    gap: 12px;
+    margin-bottom: 48px;
+  }
+
+  .ov-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px;
+    text-align: center;
+  }
+
+  .ov-tool { font-size: 13px; font-weight: 700; margin-bottom: 8px; }
+  .ov-score {
+    font-family: 'DM Mono', monospace;
+    font-size: 32px;
+    font-weight: 700;
+    line-height: 1;
+    margin-bottom: 4px;
+  }
+  .ov-label { font-size: 10px; color: var(--muted); font-family: 'DM Mono', monospace; letter-spacing: 0.1em; }
+
+  .star-maestro .ov-score { color: var(--accent); }
+  .star-best .ov-score { color: var(--accent3); }
+
+  footer {
+    margin-top: 60px;
+    padding-top: 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-family: 'DM Mono', monospace;
+    font-size: 11px;
+    color: var(--muted);
+    flex-wrap: gap;
+    gap: 12px;
+  }
+
+  @media (max-width: 640px) {
+    footer { flex-direction: column; text-align: center; }
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <div class="eyebrow">Feature & Price Benchmarking · März 2026</div>
+    <h1>AI Agent Orchestration<br>Alternatives to Maestro</h1>
+    <p class="subtitle">Vergleich der führenden Tools zur Orchestrierung autonomer KI-Coding-Agents — von Desktop-Apps bis Enterprise-Frameworks.</p>
+  </header>
+
+  <!-- Score Overview -->
+  <p class="section-title">Gesamtbewertung (1–100)</p>
+  <div class="overview-cards">
+    <div class="ov-card star-maestro" style="border-color:rgba(124,106,255,0.4)">
+      <div class="ov-tool">Maestro</div>
+      <div class="ov-score">84</div>
+      <div class="ov-label">REFERENZ</div>
+    </div>
+    <div class="ov-card star-best" style="border-color:rgba(106,255,218,0.3)">
+      <div class="ov-tool">LangGraph</div>
+      <div class="ov-score" style="color:var(--accent3)">88</div>
+      <div class="ov-label">BEST OVERALL</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-tool">CrewAI</div>
+      <div class="ov-score" style="color:#facc15">82</div>
+      <div class="ov-label">BEST ONBOARDING</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-tool">n8n</div>
+      <div class="ov-score" style="color:#f97316">79</div>
+      <div class="ov-label">BEST NO-CODE</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-tool">Claude Squad</div>
+      <div class="ov-score" style="color:#a78bfa">72</div>
+      <div class="ov-label">LIGHTWEIGHT</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-tool">AutoGen</div>
+      <div class="ov-score" style="color:#60a5fa">75</div>
+      <div class="ov-label">ENTERPRISE MS</div>
+    </div>
+    <div class="ov-card">
+      <div class="ov-tool">OpenAI SDK</div>
+      <div class="ov-score" style="color:#34d399">70</div>
+      <div class="ov-label">FAST PROTOTYPE</div>
+    </div>
+  </div>
+
+  <!-- Feature Matrix -->
+  <p class="section-title">Feature-Matrix</p>
+  <div class="legend">
+    <div class="legend-item"><div class="dot dot-g"></div> Vollständig</div>
+    <div class="legend-item"><div class="dot dot-y"></div> Teilweise / Beta</div>
+    <div class="legend-item"><div class="dot dot-r"></div> Nicht vorhanden</div>
+  </div>
+
+  <div class="matrix-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:200px">Feature</th>
+          <th class="tool-header maestro-col">🎼 Maestro</th>
+          <th class="tool-header">LangGraph</th>
+          <th class="tool-header">CrewAI</th>
+          <th class="tool-header">n8n</th>
+          <th class="tool-header">Claude Squad</th>
+          <th class="tool-header">AutoGen</th>
+          <th class="tool-header">OpenAI SDK</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="feature-label">Multi-Agent Parallel</span><span class="feature-sub">Gleichzeitige Ausführung</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-yellow">~ Begrenzt</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-yellow">~ Beta</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Desktop GUI</span><span class="feature-sub">Native App / Dashboard</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-yellow">~ Web Studio</span></td>
+          <td><span class="pill pill-green">✓ Web App</span></td>
+          <td><span class="pill pill-red">✗ Terminal</span></td>
+          <td><span class="pill pill-yellow">~ Studio UI</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Playbooks / Auto-Run</span><span class="feature-sub">Autonome Langzeit-Tasks</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Workflows</span></td>
+          <td><span class="pill pill-yellow">~ Flows</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-yellow">~ Begrenzt</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Mobile Remote Control</span><span class="feature-sub">Steuerung per Smartphone</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ QR + Tunnel</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-yellow">~ Web-Access</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Git Worktrees</span><span class="feature-sub">Isolierte Branch-Runs</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Agent Group Chat</span><span class="feature-sub">Agents kommunizieren miteinander</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-yellow">~ Begrenzt</span></td>
+          <td><span class="pill pill-yellow">~ Tmux-Panes</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-yellow">~ Handoffs</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">MCP-Support</span><span class="feature-sub">Model Context Protocol</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-yellow">~ Begrenzt</span></td>
+          <td><span class="pill pill-green">✓ First-Class</span></td>
+          <td><span class="pill pill-yellow">~ Beta</span></td>
+          <td><span class="pill pill-yellow">~ Via Claude</span></td>
+          <td><span class="pill pill-yellow">~ Beta</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Open Source</span><span class="feature-sub">Lizenz & Code-Zugang</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ AGPL-3.0</span></td>
+          <td><span class="pill pill-green">✓ MIT</span></td>
+          <td><span class="pill pill-green">✓ MIT (Core)</span></td>
+          <td><span class="pill pill-green">✓ Apache 2.0</span></td>
+          <td><span class="pill pill-green">✓ MIT</span></td>
+          <td><span class="pill pill-green">✓ MIT</span></td>
+          <td><span class="pill pill-green">✓ MIT</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">CLI / CI/CD</span><span class="feature-sub">Headless & Automatisierung</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Python API</span></td>
+          <td><span class="pill pill-green">✓ Python CLI</span></td>
+          <td><span class="pill pill-green">✓ REST API</span></td>
+          <td><span class="pill pill-yellow">~ Begrenzt</span></td>
+          <td><span class="pill pill-green">✓ Python SDK</span></td>
+          <td><span class="pill pill-green">✓ Python SDK</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Observability</span><span class="feature-sub">Tracing, Logs, Monitoring</span></td>
+          <td class="maestro-col"><span class="pill pill-yellow">~ Dashboard</span></td>
+          <td><span class="pill pill-green">✓ LangSmith</span></td>
+          <td><span class="pill pill-yellow">~ Verbose Log</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Minimal</span></td>
+          <td><span class="pill pill-yellow">~ Studio UI</span></td>
+          <td><span class="pill pill-yellow">~ Basic Traces</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Human-in-the-Loop</span><span class="feature-sub">Approval-Steps</span></td>
+          <td class="maestro-col"><span class="pill pill-yellow">~ Geplant</span></td>
+          <td><span class="pill pill-green">✓ Built-in</span></td>
+          <td><span class="pill pill-yellow">~ Begrenzt</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Nein</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-yellow">~ Guardrails</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">EU / On-Prem Hosting</span><span class="feature-sub">DSGVO-Konformität</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Self-hosted</span></td>
+          <td><span class="pill pill-green">✓ Self-hosted</span></td>
+          <td><span class="pill pill-green">✓ Self-hosted</span></td>
+          <td><span class="pill pill-green">✓ Self-hosted</span></td>
+          <td><span class="pill pill-green">✓ Lokal</span></td>
+          <td><span class="pill pill-yellow">~ Azure-Fokus</span></td>
+          <td><span class="pill pill-red">✗ OpenAI-only</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Model-Agnostisch</span><span class="feature-sub">Claude, GPT, Mistral etc.</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Multi-Model</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ Claude-only</span></td>
+          <td><span class="pill pill-green">✓ Vollständig</span></td>
+          <td><span class="pill pill-red">✗ OpenAI-only</span></td>
+        </tr>
+        <tr>
+          <td><span class="feature-label">Lernkurve</span><span class="feature-sub">Onboarding-Aufwand</span></td>
+          <td class="maestro-col"><span class="pill pill-green">✓ Niedrig</span></td>
+          <td><span class="pill pill-red">✗ Hoch (1–2 Wo.)</span></td>
+          <td><span class="pill pill-green">✓ Niedrig</span></td>
+          <td><span class="pill pill-green">✓ Sehr niedrig</span></td>
+          <td><span class="pill pill-green">✓ Niedrig</span></td>
+          <td><span class="pill pill-yellow">~ Mittel</span></td>
+          <td><span class="pill pill-green">✓ Sehr niedrig</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Price Comparison -->
+  <p class="section-title">Preis-Benchmarking</p>
+  <div class="price-grid">
+
+    <div class="price-card highlight" style="--accent-color: var(--accent);">
+      <div class="tool-name" style="color:var(--accent)">🎼 Maestro</div>
+      <div class="tool-type">Desktop Agent Orchestrator</div>
+      <div class="price-tag" style="color:var(--accent)">Kostenlos</div>
+      <div class="price-note">Open Source · AGPL-3.0</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">Self-hosted</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">Cloud (geplant)</span><span class="tier-price" style="color:var(--muted)">TBD</span></div>
+        <div class="price-tier"><span class="tier-name">Token-Kosten</span><span class="tier-price" style="color:var(--yellow)">Via LLM API</span></div>
+      </div>
+    </div>
+
+    <div class="price-card" style="--accent-color: var(--accent3);">
+      <div class="tool-name">LangGraph</div>
+      <div class="tool-type">Code-first Orchestration Framework</div>
+      <div class="price-tag" style="color:var(--accent3)">€0</div>
+      <div class="price-note">Open Source (MIT) · Self-hosted</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">OSS Framework</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">LangSmith Plus</span><span class="tier-price">~€39/Mo.</span></div>
+        <div class="price-tier"><span class="tier-name">LangSmith Enterprise</span><span class="tier-price" style="color:var(--muted)">Custom</span></div>
+      </div>
+    </div>
+
+    <div class="price-card" style="--accent-color: #facc15;">
+      <div class="tool-name">CrewAI</div>
+      <div class="tool-type">Role-based Multi-Agent Framework</div>
+      <div class="price-tag" style="color:#facc15">€0</div>
+      <div class="price-note">Core Open Source · Cloud optional</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">OSS Core</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">Cloud Basic</span><span class="tier-price" style="color:var(--green)">€0 (50 Runs)</span></div>
+        <div class="price-tier"><span class="tier-name">Cloud Pro</span><span class="tier-price">~€25/Mo.</span></div>
+        <div class="price-tier"><span class="tier-name">Enterprise</span><span class="tier-price" style="color:var(--muted)">Custom</span></div>
+      </div>
+    </div>
+
+    <div class="price-card" style="--accent-color: #f97316;">
+      <div class="tool-name">n8n</div>
+      <div class="tool-type">Visual Low-Code Orchestration</div>
+      <div class="price-tag" style="color:#f97316">€0</div>
+      <div class="price-note">Self-hosted Free · Cloud kostenpflichtig</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">Self-hosted</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">Cloud Starter</span><span class="tier-price">~€24/Mo.</span></div>
+        <div class="price-tier"><span class="tier-name">Cloud Pro</span><span class="tier-price">~€60/Mo.</span></div>
+        <div class="price-tier"><span class="tier-name">Enterprise</span><span class="tier-price" style="color:var(--muted)">Custom</span></div>
+      </div>
+    </div>
+
+    <div class="price-card" style="--accent-color: #a78bfa;">
+      <div class="tool-name">Claude Squad</div>
+      <div class="tool-type">Terminal Multi-Claude Multiplexer</div>
+      <div class="price-tag" style="color:#a78bfa">Kostenlos</div>
+      <div class="price-note">Open Source (MIT) · Lokal</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">Self-hosted</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">Claude API</span><span class="tier-price" style="color:var(--yellow)">Via Anthropic</span></div>
+      </div>
+    </div>
+
+    <div class="price-card" style="--accent-color: #60a5fa;">
+      <div class="tool-name">AutoGen (Microsoft)</div>
+      <div class="tool-type">Enterprise Multi-Agent Framework</div>
+      <div class="price-tag" style="color:#60a5fa">€0</div>
+      <div class="price-note">Open Source · Azure-Integration</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">OSS Framework</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">Azure AI Service</span><span class="tier-price" style="color:var(--muted)">Usage-based</span></div>
+        <div class="price-tier"><span class="tier-name">Studio UI</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+      </div>
+    </div>
+
+    <div class="price-card" style="--accent-color: #34d399;">
+      <div class="tool-name">OpenAI Agents SDK</div>
+      <div class="tool-type">OpenAI-native Agent Framework</div>
+      <div class="price-tag" style="color:#34d399">€0</div>
+      <div class="price-note">Open Source (MIT) · OpenAI-only</div>
+      <div class="price-tiers">
+        <div class="price-tier"><span class="tier-name">Framework</span><span class="tier-price" style="color:var(--green)">€0</span></div>
+        <div class="price-tier"><span class="tier-name">GPT-4o API</span><span class="tier-price">~$2.50/1M Token</span></div>
+        <div class="price-tier"><span class="tier-name">Enterprise</span><span class="tier-price" style="color:var(--muted)">Custom</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Verdict -->
+  <p class="section-title">Empfehlungen nach Use Case</p>
+  <div class="verdict-grid">
+
+    <div class="verdict-card">
+      <div class="verdict-icon">🚀</div>
+      <div class="verdict-body">
+        <div class="vname">Schnelles Prototyping</div>
+        <div class="vtext">Für schnelle Ergebnisse ohne Lernkurve — CrewAI oder OpenAI Agents SDK. Konzept zu Demo in Stunden, nicht Tagen.</div>
+        <div class="vtag"><span class="pill pill-yellow">CrewAI</span></div>
+      </div>
+    </div>
+
+    <div class="verdict-card">
+      <div class="verdict-icon">🏭</div>
+      <div class="verdict-body">
+        <div class="vname">Production / Enterprise</div>
+        <div class="vtext">Komplexe stateful Workflows mit Branching-Logik, Audit-Trail und Human-in-the-Loop erfordern LangGraph's Präzision.</div>
+        <div class="vtag"><span class="pill pill-teal">LangGraph</span></div>
+      </div>
+    </div>
+
+    <div class="verdict-card">
+      <div class="verdict-icon">🖥️</div>
+      <div class="verdict-body">
+        <div class="vname">Desktop Coding Workflow</div>
+        <div class="vtext">Mehrere Claude Code Instanzen parallel, GUI, Mobile-Kontrolle und Git-Integration — Maestro ist hier ungeschlagen.</div>
+        <div class="vtag"><span class="pill pill-blue">Maestro</span></div>
+      </div>
+    </div>
+
+    <div class="verdict-card">
+      <div class="verdict-icon">🔧</div>
+      <div class="verdict-body">
+        <div class="vname">No-Code / Business Teams</div>
+        <div class="vtext">Für nicht-technische Teams mit vielen Integrations-Anforderungen ist n8n's visual builder die zugänglichste Option.</div>
+        <div class="vtag"><span class="pill pill-green">n8n</span></div>
+      </div>
+    </div>
+
+    <div class="verdict-card">
+      <div class="verdict-icon">🇪🇺</div>
+      <div class="verdict-body">
+        <div class="vname">EU Compliance / DSGVO</div>
+        <div class="vtext">Maestro, LangGraph, CrewAI und n8n können alle self-hosted betrieben werden — keine Daten verlassen EU-Infrastruktur.</div>
+        <div class="vtag"><span class="pill pill-blue">Self-hosted Tools</span></div>
+      </div>
+    </div>
+
+    <div class="verdict-card">
+      <div class="verdict-icon">💡</div>
+      <div class="verdict-body">
+        <div class="vname">Open Source Community</div>
+        <div class="vtext">CrewAI (44,600 GitHub Stars) und LangGraph (38M PyPI-Downloads/Mo.) haben die aktivsten Communities und schnellsten Release-Zyklen.</div>
+        <div class="vtag"><span class="pill pill-yellow">CrewAI · LangGraph</span></div>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>
+    <span>Stand: März 2026 · Preise können sich ändern</span>
+    <span>Quellen: GitHub, LangChain Docs, CrewAI Docs, n8n Docs, runmaestro.ai</span>
+  </footer>
+
+</div>
+</body>
+</html>
