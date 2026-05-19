@@ -36,6 +36,9 @@
     --claude: #c2410c;
     --claude-bg: #fff7ed;
     --claude-border: #fed7aa;
+    --databricks: #be123c;
+    --databricks-bg: #fff1f2;
+    --databricks-border: #fecdd3;
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -244,6 +247,10 @@
   .is-mcp .score-bar-fill { background: var(--claude); }
   .is-mcp { background: var(--claude-bg); }
 
+  .is-databricks .score-number { color: var(--databricks); }
+  .is-databricks .score-bar-fill { background: var(--databricks); }
+  .is-databricks { background: var(--databricks-bg); }
+
   .score-tool {
     font-size: 13px;
     font-weight: 600;
@@ -286,6 +293,12 @@
     color: var(--claude);
     background: var(--claude-bg);
     border: 1px solid var(--claude-border);
+  }
+
+  .badge-databricks {
+    color: var(--databricks);
+    background: var(--databricks-bg);
+    border: 1px solid var(--databricks-border);
   }
 
   .score-number {
@@ -707,7 +720,7 @@
       <p class="subtitle">Vergleich der führenden Tools zur Orchestrierung autonomer KI-Agents — von Desktop-Apps bis Enterprise-Frameworks. Alle Daten basieren auf öffentlicher Dokumentation und Eigentests.</p>
       <div class="header-stats">
         <div class="stat">
-          <div class="stat-num">10</div>
+          <div class="stat-num">11</div>
           <div class="stat-label">Tools</div>
         </div>
         <div class="stat">
@@ -751,6 +764,12 @@
         <div class="score-number">86</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:86%"></div></div>
         <div class="score-descriptor">AWS-Native SDK</div>
+      </div>
+      <div class="score-card is-databricks">
+        <div class="score-tool">Databricks Agent Bricks <span class="score-badge badge-databricks">Best Governance</span></div>
+        <div class="score-number">85</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:85%"></div></div>
+        <div class="score-descriptor">Managed Enterprise Platform</div>
       </div>
       <div class="score-card">
         <div class="score-tool">CrewAI</div>
@@ -810,6 +829,7 @@
             <th>LangGraph</th>
             <th>Google ADK</th>
             <th>Strands</th>
+            <th>Databricks</th>
             <th>CrewAI</th>
             <th>n8n</th>
             <th>MS Agent Framework</th>
@@ -825,6 +845,7 @@
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">Workflow Agents</span></td>
             <td><span class="chip chip-yes">Swarm + A-as-T</span></td>
+            <td><span class="chip chip-yes">Supervisor</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-partial">Begrenzt</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
@@ -838,6 +859,7 @@
             <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-partial">Web Dev UI</span></td>
             <td><span class="chip chip-no">SDK only</span></td>
+            <td><span class="chip chip-partial">Workspace UI</span></td>
             <td><span class="chip chip-partial">Web Studio</span></td>
             <td><span class="chip chip-yes">Web App</span></td>
             <td><span class="chip chip-partial">DevUI Browser</span></td>
@@ -851,6 +873,7 @@
             <td><span class="chip chip-yes">Workflows</span></td>
             <td><span class="chip chip-yes">Workflow Runtime</span></td>
             <td><span class="chip chip-yes">Agent Loop</span></td>
+            <td><span class="chip chip-yes">Lakeflow Jobs</span></td>
             <td><span class="chip chip-partial">Flows</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">Graph Workflows</span></td>
@@ -861,6 +884,7 @@
           <tr>
             <td><span class="feature-name">Mobile Remote Control</span><span class="feature-desc">Steuerung per Smartphone</span></td>
             <td class="maestro-col"><span class="chip chip-yes">QR + Tunnel</span></td>
+            <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-no">Nein</span></td>
@@ -881,6 +905,7 @@
             <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-no">Nein</span></td>
+            <td><span class="chip chip-no">Nein</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-no">Nein</span></td>
           </tr>
@@ -890,6 +915,7 @@
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">Hierarchical</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Supervisor Pattern</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-partial">Begrenzt</span></td>
             <td><span class="chip chip-yes">5 Patterns</span></td>
@@ -903,6 +929,7 @@
             <td><span class="chip chip-partial">Begrenzt</span></td>
             <td><span class="chip chip-yes">First-Class</span></td>
             <td><span class="chip chip-yes">First-Class</span></td>
+            <td><span class="chip chip-yes">Managed + Custom</span></td>
             <td><span class="chip chip-yes">First-Class</span></td>
             <td><span class="chip chip-partial">Beta</span></td>
             <td><span class="chip chip-yes">Built-in</span></td>
@@ -916,6 +943,7 @@
             <td><span class="chip chip-yes">MIT</span></td>
             <td><span class="chip chip-yes">Apache 2.0</span></td>
             <td><span class="chip chip-yes">Apache 2.0</span></td>
+            <td><span class="chip chip-no">Proprietär</span></td>
             <td><span class="chip chip-yes">MIT (Core)</span></td>
             <td><span class="chip chip-yes">Apache 2.0</span></td>
             <td><span class="chip chip-yes">MIT</span></td>
@@ -929,6 +957,7 @@
             <td><span class="chip chip-yes">Python API</span></td>
             <td><span class="chip chip-yes">Py/TS/Go/Java</span></td>
             <td><span class="chip chip-yes">Python + TS</span></td>
+            <td><span class="chip chip-yes">SDK + REST API</span></td>
             <td><span class="chip chip-yes">Python CLI</span></td>
             <td><span class="chip chip-yes">REST API</span></td>
             <td><span class="chip chip-yes">Python + .NET</span></td>
@@ -942,6 +971,7 @@
             <td><span class="chip chip-yes">LangSmith</span></td>
             <td><span class="chip chip-yes">OTel + MLflow</span></td>
             <td><span class="chip chip-yes">OpenTelemetry</span></td>
+            <td><span class="chip chip-yes">MLflow 3.0</span></td>
             <td><span class="chip chip-partial">Verbose Log</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">OTel nativ</span></td>
@@ -955,6 +985,7 @@
             <td><span class="chip chip-yes">Built-in</span></td>
             <td><span class="chip chip-yes">ToolConfirmation</span></td>
             <td><span class="chip chip-yes">Interrupts</span></td>
+            <td><span class="chip chip-yes">AI Playground</span></td>
             <td><span class="chip chip-partial">Begrenzt</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">Built-in</span></td>
@@ -968,6 +999,7 @@
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-yes">Cloud Run/GKE</span></td>
             <td><span class="chip chip-yes">Cloud-agnostic</span></td>
+            <td><span class="chip chip-partial">Multi-Cloud EU</span></td>
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-partial">Azure-Fokus</span></td>
@@ -981,6 +1013,7 @@
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">LiteLLM Bridge</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">AI Gateway</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">6 Provider</span></td>
@@ -994,6 +1027,7 @@
             <td><span class="chip chip-no">Hoch (1–2 Wo.)</span></td>
             <td><span class="chip chip-partial">Mittel</span></td>
             <td><span class="chip chip-yes">Niedrig</span></td>
+            <td><span class="chip chip-partial">Hoch (Platform)</span></td>
             <td><span class="chip chip-yes">Niedrig</span></td>
             <td><span class="chip chip-yes">Sehr niedrig</span></td>
             <td><span class="chip chip-partial">Mittel</span></td>
@@ -1073,6 +1107,23 @@
             <div class="price-row"><span class="price-row-label">OSS SDK</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">AgentCore Runtime</span><span class="price-row-value is-muted">Usage (AWS)</span></div>
             <div class="price-row"><span class="price-row-label">Strands Evals SDK</span><span class="price-row-value is-free">€0</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card-header">
+          <div class="price-tool">Databricks Agent Bricks</div>
+          <div class="price-type">Managed Enterprise Agent Platform</div>
+        </div>
+        <div class="price-card-body">
+          <div class="price-main">Usage-based</div>
+          <div class="price-note">Proprietär · Databricks-Workspace erforderlich</div>
+          <div class="price-rows">
+            <div class="price-row"><span class="price-row-label">Supervisor Agent (GA)</span><span class="price-row-value is-muted">Serverless Compute</span></div>
+            <div class="price-row"><span class="price-row-label">Managed MCP Servers</span><span class="price-row-value is-muted">SQL Warehouse + Compute</span></div>
+            <div class="price-row"><span class="price-row-label">Custom MCP / Apps</span><span class="price-row-value is-muted">Databricks Apps Pricing</span></div>
+            <div class="price-row"><span class="price-row-label">Token-Kosten</span><span class="price-row-value">Via AI Gateway</span></div>
           </div>
         </div>
       </div>
@@ -1206,7 +1257,7 @@
             <div class="verdict-subtitle">Stateful Workflows mit Audit-Trail</div>
           </div>
         </div>
-        <div class="verdict-body">Komplexe stateful Workflows mit Branching-Logik, Audit-Trail und Human-in-the-Loop erfordern LangGraph's Präzision und Flexibilität. Bei reinem .NET- oder Azure-Stack ist Microsoft Agent Framework die natürliche Wahl; bei multi-cloud Setups oft Google ADK.</div>
+        <div class="verdict-body">Komplexe stateful Workflows mit Branching-Logik, Audit-Trail und Human-in-the-Loop erfordern LangGraph's Präzision und Flexibilität. Bei reinem .NET- oder Azure-Stack ist Microsoft Agent Framework die natürliche Wahl; bei multi-cloud Setups oft Google ADK. Wenn die Datenplattform bereits Databricks ist, bietet Agent Bricks die mit Abstand stärkste Governance- und Lineage-Story.</div>
         <span class="verdict-tag">LangGraph</span>
       </div>
 
@@ -1254,7 +1305,7 @@
             <div class="verdict-subtitle">Datensouveränität on-prem</div>
           </div>
         </div>
-        <div class="verdict-body">Maestro, LangGraph, Google ADK, Strands, CrewAI, Claude Agent SDK und n8n können alle self-hosted betrieben werden — keine Daten verlassen EU-Infrastruktur.</div>
+        <div class="verdict-body">Maestro, LangGraph, Google ADK, Strands, CrewAI, Claude Agent SDK und n8n können alle self-hosted betrieben werden — keine Daten verlassen EU-Infrastruktur. Databricks Agent Bricks ist in EU-Regionen (westeurope, northeurope) verfügbar, aber als managed Service ohne On-Prem-Option.</div>
         <span class="verdict-tag">Self-hosted Tools</span>
       </div>
 
@@ -1266,7 +1317,7 @@
             <div class="verdict-subtitle">Aktivste Ökosysteme</div>
           </div>
         </div>
-        <div class="verdict-body">CrewAI (44.000+ GitHub Stars) und LangGraph (v1.0 stabil, 38M PyPI-Downloads/Mo.) haben die aktivsten Communities und schnellsten Release-Zyklen. Strands wächst rapide mit 6.500+ Stars seit Launch.</div>
+        <div class="verdict-body">CrewAI (44.000+ GitHub Stars) und LangGraph (v1.0 stabil seit Oktober 2025, 38M PyPI-Downloads/Mo.) haben die aktivsten Communities und schnellsten Release-Zyklen. Strands wächst rapide mit 6.500+ Stars seit Launch.</div>
         <span class="verdict-tag">CrewAI &middot; LangGraph</span>
       </div>
 
@@ -1280,6 +1331,18 @@
         </div>
         <div class="verdict-body">Google ADK ist die reifste Option für multimodale Agenten und cross-framework-Kollaboration via A2A-Protokoll. Apache 2.0, vier Sprachen (Python, TypeScript, Go, Java), Deploy auf Vertex AI, Cloud Run, GKE oder eigenem Kubernetes.</div>
         <span class="verdict-tag">Google ADK</span>
+      </div>
+
+      <div class="verdict-card">
+        <div class="verdict-header">
+          <div class="verdict-icon">&#128274;</div>
+          <div>
+            <div class="verdict-title">Enterprise Governance + Lakehouse</div>
+            <div class="verdict-subtitle">Unity Catalog · MLflow 3.0</div>
+          </div>
+        </div>
+        <div class="verdict-body">Databricks Agent Bricks ist die einzige Plattform mit vollständig integrierter Governance über Daten, Modelle und Tools — Unity Catalog inklusive On-Behalf-Of-Authentication, Audit-Trail und Data-Lineage. Supervisor Agent GA, Document Intelligence + Custom Agents GA. Vendor-Lock-in zur Databricks-Plattform ist der Trade-off.</div>
+        <span class="verdict-tag">Databricks Agent Bricks</span>
       </div>
 
       <div class="verdict-card">
@@ -1302,7 +1365,7 @@
 <footer>
   <div class="footer-inner">
     <span class="footer-left">Stand: Mai 2026 &middot; Preise ohne Gewähr</span>
-    <span class="footer-right">Quellen: GitHub &middot; LangChain Docs &middot; CrewAI Docs &middot; n8n Docs &middot; runmaestro.ai &middot; strandsagents.com &middot; adk.dev &middot; learn.microsoft.com/agent-framework &middot; code.claude.com/docs</span>
+    <span class="footer-right">Quellen: GitHub &middot; LangChain Docs &middot; CrewAI Docs &middot; n8n Docs &middot; runmaestro.ai &middot; strandsagents.com &middot; adk.dev &middot; learn.microsoft.com/agent-framework &middot; code.claude.com/docs &middot; docs.databricks.com</span>
   </div>
 </footer>
 
