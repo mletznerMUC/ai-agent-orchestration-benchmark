@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="de">
+<html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -29,7 +29,7 @@
     --red-border: #fecaca;
     --maestro: #2563eb;
     --strands: #7c3aed;
-    /* New tool accent colors (Mai 2026 Update) */
+    /* New tool accent colors (May 2026 Update) */
     --adk: #0891b2;
     --adk-bg: #ecfeff;
     --adk-border: #a5f3fc;
@@ -658,45 +658,6 @@
     padding: 2px 7px;
   }
 
-  /* Comparison highlight row */
-  .highlight-bar {
-    background: var(--bg-subtle);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    padding: 16px 20px;
-    margin-bottom: 24px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    flex-wrap: wrap;
-  }
-
-  .highlight-bar-label {
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    color: var(--text-muted);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    margin-right: 4px;
-  }
-
-  .tool-tag {
-    font-size: 11px;
-    font-family: 'JetBrains Mono', monospace;
-    font-weight: 500;
-    padding: 3px 8px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-    background: var(--bg);
-    color: var(--text-secondary);
-  }
-
-  .tool-tag.is-maestro {
-    color: var(--accent);
-    background: var(--accent-bg);
-    border-color: var(--accent-border);
-  }
-
   /* Footer */
   footer {
     padding: 24px 0;
@@ -721,12 +682,6 @@
     color: var(--text-muted);
   }
 
-  .divider {
-    height: 1px;
-    background: var(--border);
-    margin: 0;
-  }
-
   @media (max-width: 768px) {
     h1 { font-size: 1.6rem; }
     .header-meta { flex-direction: column; gap: 24px; }
@@ -745,10 +700,10 @@
     <span class="topbar-logo">agent-benchmark.dev</span>
     <div class="topbar-right">
       <div class="lang-toggle">
-        <a href="index.html" class="active">DE</a>
-        <a href="index.en.html">EN</a>
+        <a href="index.html">DE</a>
+        <a href="index.en.html" class="active">EN</a>
       </div>
-      <span class="topbar-meta">Stand: Mai 2026</span>
+      <span class="topbar-meta">As of: May 2026</span>
     </div>
   </div>
 </div>
@@ -759,7 +714,7 @@
     <div class="category-tag">Benchmark 2026</div>
     <h1>AI Agent Orchestration<br>Alternatives to Maestro</h1>
     <div class="header-meta">
-      <p class="subtitle">Vergleich der führenden Tools zur Orchestrierung autonomer KI-Agents — von Desktop-Apps bis Enterprise-Frameworks. Alle Daten basieren auf öffentlicher Dokumentation und Eigentests.</p>
+      <p class="subtitle">Comparison of leading tools for orchestrating autonomous AI agents — from desktop apps to enterprise frameworks. All data based on public documentation and hands-on testing.</p>
       <div class="header-stats">
         <div class="stat">
           <div class="stat-num">11</div>
@@ -780,11 +735,11 @@
   <!-- Score Overview -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Gesamtbewertung &nbsp;/ 100</span>
+      <span class="section-title">Overall Rating &nbsp;/ 100</span>
     </div>
     <div class="score-grid">
       <div class="score-card is-maestro">
-        <div class="score-tool">Maestro <span class="score-badge badge-ref">Referenz</span></div>
+        <div class="score-tool">Maestro <span class="score-badge badge-ref">Reference</span></div>
         <div class="score-number">84</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:84%"></div></div>
         <div class="score-descriptor">Desktop Orchestrator</div>
@@ -855,11 +810,11 @@
   <!-- Feature Matrix -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Feature-Matrix</span>
+      <span class="section-title">Feature Matrix</span>
       <div class="section-legend">
-        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Vollständig</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>Teilweise / Beta</div>
-        <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted)"></div>Nicht vorhanden</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--green)"></div>Full</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--yellow)"></div>Partial / Beta</div>
+        <div class="legend-item"><div class="legend-dot" style="background:var(--text-muted)"></div>Not Available</div>
       </div>
     </div>
     <div class="matrix-wrap">
@@ -882,23 +837,23 @@
         </thead>
         <tbody>
           <tr>
-            <td><span class="feature-name">Multi-Agent Parallel</span><span class="feature-desc">Gleichzeitige Ausführung</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="feature-name">Multi-Agent Parallel</span><span class="feature-desc">Concurrent Execution</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Workflow Agents</span></td>
             <td><span class="chip chip-yes">Swarm + A-as-T</span></td>
             <td><span class="chip chip-yes">Supervisor</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Subagents</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Desktop GUI</span><span class="feature-desc">Native App / Dashboard</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-partial">Web Dev UI</span></td>
             <td><span class="chip chip-no">SDK only</span></td>
             <td><span class="chip chip-partial">Workspace UI</span></td>
@@ -907,68 +862,68 @@
             <td><span class="chip chip-partial">DevUI Browser</span></td>
             <td><span class="chip chip-no">SDK only</span></td>
             <td><span class="chip chip-no">Terminal</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
+            <td><span class="chip chip-no">No</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Playbooks / Auto-Run</span><span class="feature-desc">Autonome Langzeit-Tasks</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="feature-name">Playbooks / Auto-Run</span><span class="feature-desc">Autonomous Long-Running Tasks</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Workflows</span></td>
             <td><span class="chip chip-yes">Workflow Runtime</span></td>
             <td><span class="chip chip-yes">Agent Loop</span></td>
             <td><span class="chip chip-yes">Lakeflow Jobs</span></td>
             <td><span class="chip chip-partial">Flows</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Graph Workflows</span></td>
             <td><span class="chip chip-yes">Agent Loop</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Mobile Remote Control</span><span class="feature-desc">Steuerung per Smartphone</span></td>
+            <td><span class="feature-name">Mobile Remote Control</span><span class="feature-desc">Smartphone Control</span></td>
             <td class="maestro-col"><span class="chip chip-yes">QR + Tunnel</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-partial">Web-Access</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Git Worktrees</span><span class="feature-desc">Isolierte Branch-Runs</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
+            <td><span class="feature-name">Git Worktrees</span><span class="feature-desc">Isolated Branch Runs</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-no">No</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Agent Group Chat</span><span class="feature-desc">Agents kommunizieren miteinander</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="feature-name">Agent Group Chat</span><span class="feature-desc">Agents Communicate</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Hierarchical</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Supervisor Pattern</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
             <td><span class="chip chip-yes">5 Patterns</span></td>
             <td><span class="chip chip-partial">Subagent Delegation</span></td>
             <td><span class="chip chip-partial">Tmux-Panes</span></td>
             <td><span class="chip chip-partial">Handoffs</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">MCP-Support</span><span class="feature-desc">Model Context Protocol</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
+            <td><span class="feature-name">MCP Support</span><span class="feature-desc">Model Context Protocol</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
             <td><span class="chip chip-yes">First-Class</span></td>
             <td><span class="chip chip-yes">First-Class</span></td>
             <td><span class="chip chip-yes">Managed + Custom</span></td>
@@ -980,12 +935,12 @@
             <td><span class="chip chip-yes">v0.13+</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Open Source</span><span class="feature-desc">Lizenz &amp; Code-Zugang</span></td>
+            <td><span class="feature-name">Open Source</span><span class="feature-desc">License &amp; Code Access</span></td>
             <td class="maestro-col"><span class="chip chip-yes">AGPL-3.0</span></td>
             <td><span class="chip chip-yes">MIT</span></td>
             <td><span class="chip chip-yes">Apache 2.0</span></td>
             <td><span class="chip chip-yes">Apache 2.0</span></td>
-            <td><span class="chip chip-no">Proprietär</span></td>
+            <td><span class="chip chip-no">Proprietary</span></td>
             <td><span class="chip chip-yes">MIT (Core)</span></td>
             <td><span class="chip chip-yes">Apache 2.0</span></td>
             <td><span class="chip chip-yes">MIT</span></td>
@@ -994,8 +949,8 @@
             <td><span class="chip chip-yes">MIT</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">CLI / CI/CD</span><span class="feature-desc">Headless &amp; Automatisierung</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="feature-name">CLI / CI/CD</span><span class="feature-desc">Headless &amp; Automation</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Python API</span></td>
             <td><span class="chip chip-yes">Py/TS/Go/Java</span></td>
             <td><span class="chip chip-yes">Python + TS</span></td>
@@ -1004,7 +959,7 @@
             <td><span class="chip chip-yes">REST API</span></td>
             <td><span class="chip chip-yes">Python + .NET</span></td>
             <td><span class="chip chip-yes">Python + TS</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
             <td><span class="chip chip-yes">Python SDK</span></td>
           </tr>
           <tr>
@@ -1015,67 +970,67 @@
             <td><span class="chip chip-yes">OpenTelemetry</span></td>
             <td><span class="chip chip-yes">MLflow 3.0</span></td>
             <td><span class="chip chip-partial">Verbose Log</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">OTel nativ</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-yes">OTel Native</span></td>
             <td><span class="chip chip-yes">OTel built-in</span></td>
             <td><span class="chip chip-no">Minimal</span></td>
             <td><span class="chip chip-partial">Basic Traces</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Human-in-the-Loop</span><span class="feature-desc">Approval-Steps</span></td>
-            <td class="maestro-col"><span class="chip chip-partial">Geplant</span></td>
+            <td><span class="feature-name">Human-in-the-Loop</span><span class="feature-desc">Approval Steps</span></td>
+            <td class="maestro-col"><span class="chip chip-partial">Planned</span></td>
             <td><span class="chip chip-yes">Built-in</span></td>
             <td><span class="chip chip-yes">ToolConfirmation</span></td>
             <td><span class="chip chip-yes">Interrupts</span></td>
             <td><span class="chip chip-yes">AI Playground</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Built-in</span></td>
             <td><span class="chip chip-yes">can_use_tool</span></td>
-            <td><span class="chip chip-no">Nein</span></td>
+            <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-partial">Guardrails</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">EU / On-Prem Hosting</span><span class="feature-desc">DSGVO-Konformität</span></td>
+            <td><span class="feature-name">EU / On-Prem Hosting</span><span class="feature-desc">GDPR Compliance</span></td>
             <td class="maestro-col"><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-yes">Cloud Run/GKE</span></td>
             <td><span class="chip chip-yes">Cloud-agnostic</span></td>
-            <td><span class="chip chip-partial">Multi-Cloud EU</span></td>
+            <td><span class="chip chip-partial">Multi-Cloud (EU)</span></td>
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-partial">Azure-Fokus</span></td>
             <td><span class="chip chip-yes">Self-hosted</span></td>
-            <td><span class="chip chip-yes">Lokal</span></td>
+            <td><span class="chip chip-yes">Local</span></td>
             <td><span class="chip chip-no">OpenAI-only</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Model-Agnostisch</span><span class="feature-desc">Claude, GPT, Mistral etc.</span></td>
+            <td><span class="feature-name">Model-Agnostic</span><span class="feature-desc">Claude, GPT, Mistral etc.</span></td>
             <td class="maestro-col"><span class="chip chip-yes">Multi-Model</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">LiteLLM Bridge</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">AI Gateway</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">6 Provider</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-yes">6 Providers</span></td>
             <td><span class="chip chip-no">Claude-only</span></td>
             <td><span class="chip chip-no">Claude-only</span></td>
             <td><span class="chip chip-yes">v0.13 Any-LLM</span></td>
           </tr>
           <tr>
-            <td><span class="feature-name">Lernkurve</span><span class="feature-desc">Onboarding-Aufwand</span></td>
-            <td class="maestro-col"><span class="chip chip-yes">Niedrig</span></td>
-            <td><span class="chip chip-no">Hoch (1–2 Wo.)</span></td>
-            <td><span class="chip chip-partial">Mittel</span></td>
-            <td><span class="chip chip-yes">Niedrig</span></td>
-            <td><span class="chip chip-partial">Hoch (Platform)</span></td>
-            <td><span class="chip chip-yes">Niedrig</span></td>
-            <td><span class="chip chip-yes">Sehr niedrig</span></td>
-            <td><span class="chip chip-partial">Mittel</span></td>
-            <td><span class="chip chip-yes">Niedrig</span></td>
-            <td><span class="chip chip-yes">Niedrig</span></td>
-            <td><span class="chip chip-yes">Sehr niedrig</span></td>
+            <td><span class="feature-name">Learning Curve</span><span class="feature-desc">Onboarding Effort</span></td>
+            <td class="maestro-col"><span class="chip chip-yes">Low</span></td>
+            <td><span class="chip chip-no">High (1–2 wks)</span></td>
+            <td><span class="chip chip-partial">Medium</span></td>
+            <td><span class="chip chip-yes">Low</span></td>
+            <td><span class="chip chip-partial">High (Platform)</span></td>
+            <td><span class="chip chip-yes">Low</span></td>
+            <td><span class="chip chip-yes">Very Low</span></td>
+            <td><span class="chip chip-partial">Medium</span></td>
+            <td><span class="chip chip-yes">Low</span></td>
+            <td><span class="chip chip-yes">Low</span></td>
+            <td><span class="chip chip-yes">Very Low</span></td>
           </tr>
         </tbody>
       </table>
@@ -1085,7 +1040,7 @@
   <!-- Pricing -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Preis-Benchmarking</span>
+      <span class="section-title">Price Benchmarking</span>
     </div>
     <div class="price-grid">
 
@@ -1095,12 +1050,12 @@
           <div class="price-type">Desktop Agent Orchestrator</div>
         </div>
         <div class="price-card-body">
-          <div class="price-main">Kostenlos</div>
+          <div class="price-main">Free</div>
           <div class="price-note">Open Source · AGPL-3.0</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">Self-hosted</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">Cloud (geplant)</span><span class="price-row-value is-muted">TBD</span></div>
-            <div class="price-row"><span class="price-row-label">Token-Kosten</span><span class="price-row-value">Via LLM API</span></div>
+            <div class="price-row"><span class="price-row-label">Cloud (planned)</span><span class="price-row-value is-muted">TBD</span></div>
+            <div class="price-row"><span class="price-row-label">Token Costs</span><span class="price-row-value">Via LLM API</span></div>
           </div>
         </div>
       </div>
@@ -1115,7 +1070,7 @@
           <div class="price-note">Open Source (MIT) · Self-hosted</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">OSS Framework</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">LangSmith Plus</span><span class="price-row-value">~€39/Mo.</span></div>
+            <div class="price-row"><span class="price-row-label">LangSmith Plus</span><span class="price-row-value">~€39/mo.</span></div>
             <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
           </div>
         </div>
@@ -1160,12 +1115,12 @@
         </div>
         <div class="price-card-body">
           <div class="price-main">Usage-based</div>
-          <div class="price-note">Proprietär · Databricks-Workspace erforderlich</div>
+          <div class="price-note">Proprietary · Databricks Workspace required</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">Supervisor Agent (GA)</span><span class="price-row-value is-muted">Serverless Compute</span></div>
             <div class="price-row"><span class="price-row-label">Managed MCP Servers</span><span class="price-row-value is-muted">SQL Warehouse + Compute</span></div>
             <div class="price-row"><span class="price-row-label">Custom MCP / Apps</span><span class="price-row-value is-muted">Databricks Apps Pricing</span></div>
-            <div class="price-row"><span class="price-row-label">Token-Kosten</span><span class="price-row-value">Via AI Gateway</span></div>
+            <div class="price-row"><span class="price-row-label">Token Costs</span><span class="price-row-value">Via AI Gateway</span></div>
           </div>
         </div>
       </div>
@@ -1181,7 +1136,7 @@
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">OSS Core</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Cloud Basic</span><span class="price-row-value is-free">€0 (50 Runs)</span></div>
-            <div class="price-row"><span class="price-row-label">Cloud Pro</span><span class="price-row-value">~€25/Mo.</span></div>
+            <div class="price-row"><span class="price-row-label">Cloud Pro</span><span class="price-row-value">~€25/mo.</span></div>
             <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
           </div>
         </div>
@@ -1194,11 +1149,11 @@
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
-          <div class="price-note">Self-hosted Free · Cloud kostenpflichtig</div>
+          <div class="price-note">Self-hosted Free · Cloud paid</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">Self-hosted</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">Cloud Starter</span><span class="price-row-value">~€24/Mo.</span></div>
-            <div class="price-row"><span class="price-row-label">Cloud Pro</span><span class="price-row-value">~€60/Mo.</span></div>
+            <div class="price-row"><span class="price-row-label">Cloud Starter</span><span class="price-row-value">~€24/mo.</span></div>
+            <div class="price-row"><span class="price-row-label">Cloud Pro</span><span class="price-row-value">~€60/mo.</span></div>
             <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
           </div>
         </div>
@@ -1211,7 +1166,7 @@
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
-          <div class="price-note">Open Source MIT · Successor zu AutoGen + SK</div>
+          <div class="price-note">Open Source MIT · Successor to AutoGen + SK</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">OSS Framework</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">DevUI</span><span class="price-row-value is-free">€0</span></div>
@@ -1231,7 +1186,7 @@
           <div class="price-note">Open Source (MIT) · Claude-only</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">SDK</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">Managed Agents (Beta)</span><span class="price-row-value">$0.08/Session-h</span></div>
+            <div class="price-row"><span class="price-row-label">Managed Agents (Beta)</span><span class="price-row-value">$0.08/Session-hr</span></div>
             <div class="price-row"><span class="price-row-label">Claude API</span><span class="price-row-value">Via Anthropic/Bedrock/Vertex</span></div>
           </div>
         </div>
@@ -1243,8 +1198,8 @@
           <div class="price-type">Terminal Multi-Claude Multiplexer</div>
         </div>
         <div class="price-card-body">
-          <div class="price-main">Kostenlos</div>
-          <div class="price-note">Open Source (MIT) · Lokal</div>
+          <div class="price-main">Free</div>
+          <div class="price-note">Open Source (MIT) · Local</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">Self-hosted</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Claude API</span><span class="price-row-value">Via Anthropic</span></div>
@@ -1259,11 +1214,11 @@
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
-          <div class="price-note">Open Source (MIT) · Multi-Provider seit v0.13</div>
+          <div class="price-note">Open Source (MIT) · Multi-Provider since v0.13</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">Framework</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Any-LLM Adapter</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">GPT-4o API</span><span class="price-row-value">~$2.50/1M Token</span></div>
+            <div class="price-row"><span class="price-row-label">GPT-4o API</span><span class="price-row-value">~$2.50/1M tokens</span></div>
             <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
           </div>
         </div>
@@ -1275,7 +1230,7 @@
   <!-- Verdict -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Empfehlungen nach Use Case</span>
+      <span class="section-title">Recommendations by Use Case</span>
     </div>
     <div class="verdict-grid">
 
@@ -1283,11 +1238,11 @@
         <div class="verdict-header">
           <div class="verdict-icon">&#128640;</div>
           <div>
-            <div class="verdict-title">Schnelles Prototyping</div>
-            <div class="verdict-subtitle">Konzept zu Demo in Stunden</div>
+            <div class="verdict-title">Rapid Prototyping</div>
+            <div class="verdict-subtitle">Concept to Demo in Hours</div>
           </div>
         </div>
-        <div class="verdict-body">Für schnelle Ergebnisse ohne Lernkurve — CrewAI oder OpenAI Agents SDK. Beide bieten minimalen Setup-Aufwand und gute Dokumentation für den Einstieg.</div>
+        <div class="verdict-body">For quick results without a learning curve — CrewAI or OpenAI Agents SDK. Both offer minimal setup and solid documentation for getting started.</div>
         <span class="verdict-tag">CrewAI</span>
       </div>
 
@@ -1296,10 +1251,10 @@
           <div class="verdict-icon">&#127981;</div>
           <div>
             <div class="verdict-title">Production / Enterprise</div>
-            <div class="verdict-subtitle">Stateful Workflows mit Audit-Trail</div>
+            <div class="verdict-subtitle">Stateful Workflows with Audit Trail</div>
           </div>
         </div>
-        <div class="verdict-body">Komplexe stateful Workflows mit Branching-Logik, Audit-Trail und Human-in-the-Loop erfordern LangGraph's Präzision und Flexibilität. Bei reinem .NET- oder Azure-Stack ist Microsoft Agent Framework die natürliche Wahl; bei multi-cloud Setups oft Google ADK. Wenn die Datenplattform bereits Databricks ist, bietet Agent Bricks die mit Abstand stärkste Governance- und Lineage-Story.</div>
+        <div class="verdict-body">Complex stateful workflows with branching logic, audit trails, and human-in-the-loop require LangGraph's precision and flexibility. For pure .NET or Azure stacks, Microsoft Agent Framework is the natural choice; for multi-cloud setups, often Google ADK. When the data platform is already Databricks, Agent Bricks offers by far the strongest governance and lineage story.</div>
         <span class="verdict-tag">LangGraph</span>
       </div>
 
@@ -1308,10 +1263,10 @@
           <div class="verdict-icon">&#9729;&#65039;</div>
           <div>
             <div class="verdict-title">AWS-Native / Governed Agents</div>
-            <div class="verdict-subtitle">EU-AI-Act-kritische Setups</div>
+            <div class="verdict-subtitle">EU AI Act Critical Setups</div>
           </div>
         </div>
-        <div class="verdict-body">Hooks- und Steering-basierte Governance, OpenTelemetry-Tracing und ein eigenes Evals-SDK out-of-the-box. Strands ist der sauberste Pfad für Production auf AWS.</div>
+        <div class="verdict-body">Hooks- and steering-based governance, OpenTelemetry tracing, and a dedicated Evals SDK out of the box. Strands is the cleanest path to production on AWS.</div>
         <span class="verdict-tag">Strands Agents</span>
       </div>
 
@@ -1320,10 +1275,10 @@
           <div class="verdict-icon">&#128421;&#65039;</div>
           <div>
             <div class="verdict-title">Desktop Coding Workflow</div>
-            <div class="verdict-subtitle">Parallel-Entwicklung mit GUI</div>
+            <div class="verdict-subtitle">Parallel Development with GUI</div>
           </div>
         </div>
-        <div class="verdict-body">Mehrere Claude Code Instanzen parallel, native GUI, Mobile-Kontrolle und Git-Integration — Maestro ist hier ungeschlagen. Maestro Cue ermöglicht zusätzlich trigger-basierte Cross-Agent-Orchestrierung via Heartbeats, GitHub Issues/PRs und Filesystem-Monitore.</div>
+        <div class="verdict-body">Multiple Claude Code instances in parallel, native GUI, mobile control, and Git integration — Maestro is unmatched here. Maestro Cue adds trigger-based cross-agent orchestration via heartbeats, GitHub Issues/PRs, and filesystem monitors.</div>
         <span class="verdict-tag">Maestro</span>
       </div>
 
@@ -1332,10 +1287,10 @@
           <div class="verdict-icon">&#128295;</div>
           <div>
             <div class="verdict-title">No-Code / Business Teams</div>
-            <div class="verdict-subtitle">Visuelle Workflow-Erstellung</div>
+            <div class="verdict-subtitle">Visual Workflow Creation</div>
           </div>
         </div>
-        <div class="verdict-body">Für nicht-technische Teams mit vielen Integrations-Anforderungen ist n8n's visual builder die zugänglichste und produktivste Option.</div>
+        <div class="verdict-body">For non-technical teams with many integration requirements, n8n's visual builder is the most accessible and productive option.</div>
         <span class="verdict-tag">n8n</span>
       </div>
 
@@ -1343,11 +1298,11 @@
         <div class="verdict-header">
           <div class="verdict-icon">&#127466;&#127482;</div>
           <div>
-            <div class="verdict-title">EU Compliance / DSGVO</div>
-            <div class="verdict-subtitle">Datensouveränität on-prem</div>
+            <div class="verdict-title">EU Compliance / GDPR</div>
+            <div class="verdict-subtitle">On-Prem Data Sovereignty</div>
           </div>
         </div>
-        <div class="verdict-body">Maestro, LangGraph, Google ADK, Strands, CrewAI, Claude Agent SDK und n8n können alle self-hosted betrieben werden — keine Daten verlassen EU-Infrastruktur. Databricks Agent Bricks ist in EU-Regionen (westeurope, northeurope) verfügbar, aber als managed Service ohne On-Prem-Option.</div>
+        <div class="verdict-body">Maestro, LangGraph, Google ADK, Strands, CrewAI, Claude Agent SDK, and n8n can all run self-hosted — no data leaves EU infrastructure. Databricks Agent Bricks is available in EU regions (westeurope, northeurope), but only as a managed service without an on-prem option.</div>
         <span class="verdict-tag">Self-hosted Tools</span>
       </div>
 
@@ -1356,10 +1311,10 @@
           <div class="verdict-icon">&#128161;</div>
           <div>
             <div class="verdict-title">Open Source Community</div>
-            <div class="verdict-subtitle">Aktivste Ökosysteme</div>
+            <div class="verdict-subtitle">Most Active Ecosystems</div>
           </div>
         </div>
-        <div class="verdict-body">CrewAI (44.000+ GitHub Stars) und LangGraph (v1.0 stabil seit Oktober 2025, 38M PyPI-Downloads/Mo.) haben die aktivsten Communities und schnellsten Release-Zyklen. Strands wächst rapide mit 6.500+ Stars seit Launch.</div>
+        <div class="verdict-body">CrewAI (44,600 GitHub stars) and LangGraph (v1.0 stable since October 2025, 38M PyPI downloads/month) have the most active communities. Strands is growing rapidly with 6,500+ stars since launch.</div>
         <span class="verdict-tag">CrewAI &middot; LangGraph</span>
       </div>
 
@@ -1368,10 +1323,10 @@
           <div class="verdict-icon">&#127760;</div>
           <div>
             <div class="verdict-title">Multi-Cloud / Multimodal</div>
-            <div class="verdict-subtitle">Bild, Audio, Video via A2A</div>
+            <div class="verdict-subtitle">Image, Audio, Video via A2A</div>
           </div>
         </div>
-        <div class="verdict-body">Google ADK ist die reifste Option für multimodale Agenten und cross-framework-Kollaboration via A2A-Protokoll. Apache 2.0, vier Sprachen (Python, TypeScript, Go, Java), Deploy auf Vertex AI, Cloud Run, GKE oder eigenem Kubernetes.</div>
+        <div class="verdict-body">Google ADK is the most mature option for multimodal agents and cross-framework collaboration via the A2A protocol. Apache 2.0, four languages (Python, TypeScript, Go, Java), deploy to Vertex AI, Cloud Run, GKE, or your own Kubernetes.</div>
         <span class="verdict-tag">Google ADK</span>
       </div>
 
@@ -1383,7 +1338,7 @@
             <div class="verdict-subtitle">Unity Catalog · MLflow 3.0</div>
           </div>
         </div>
-        <div class="verdict-body">Databricks Agent Bricks ist die einzige Plattform mit vollständig integrierter Governance über Daten, Modelle und Tools — Unity Catalog inklusive On-Behalf-Of-Authentication, Audit-Trail und Data-Lineage. Supervisor Agent GA, Document Intelligence + Custom Agents GA. Vendor-Lock-in zur Databricks-Plattform ist der Trade-off.</div>
+        <div class="verdict-body">Databricks Agent Bricks is the only platform with fully integrated governance across data, models, and tools — Unity Catalog including on-behalf-of authentication, audit trail, and data lineage. Supervisor Agent GA, Document Intelligence + Custom Agents GA. Vendor lock-in to the Databricks platform is the trade-off.</div>
         <span class="verdict-tag">Databricks Agent Bricks</span>
       </div>
 
@@ -1391,11 +1346,11 @@
         <div class="verdict-header">
           <div class="verdict-icon">&#128279;</div>
           <div>
-            <div class="verdict-title">Claude-Native + MCP-tief</div>
-            <div class="verdict-subtitle">Tiefste MCP-Integration</div>
+            <div class="verdict-title">Claude-Native + Deep MCP</div>
+            <div class="verdict-subtitle">Deepest MCP Integration</div>
           </div>
         </div>
-        <div class="verdict-body">Claude Agent SDK bietet die tiefste MCP-Anbindung aller Frameworks, native Subagent-Isolation und Bash/Filesystem-Zugriff. Managed Agents (Beta) verlagern Sandboxing und State-Persistierung in Anthropics gehostete Infrastruktur — $0,08/Session-Stunde plus Token.</div>
+        <div class="verdict-body">Claude Agent SDK offers the deepest MCP integration of all frameworks, native subagent isolation, and Bash/filesystem access. Managed Agents (Beta) move sandboxing and state persistence into Anthropic's hosted infrastructure — $0.08/session-hour plus tokens.</div>
         <span class="verdict-tag">Claude Agent SDK</span>
       </div>
 
@@ -1406,8 +1361,8 @@
 
 <footer>
   <div class="footer-inner">
-    <span class="footer-left">Stand: Mai 2026 &middot; Preise ohne Gewähr</span>
-    <span class="footer-right">Quellen: GitHub &middot; LangChain Docs &middot; CrewAI Docs &middot; n8n Docs &middot; runmaestro.ai &middot; strandsagents.com &middot; adk.dev &middot; learn.microsoft.com/agent-framework &middot; code.claude.com/docs &middot; docs.databricks.com</span>
+    <span class="footer-left">As of: May 2026 &middot; Prices without guarantee</span>
+    <span class="footer-right">Sources: GitHub &middot; LangChain Docs &middot; CrewAI Docs &middot; n8n Docs &middot; runmaestro.ai &middot; strandsagents.com &middot; adk.dev &middot; learn.microsoft.com/agent-framework &middot; code.claude.com/docs &middot; docs.databricks.com</span>
   </div>
 </footer>
 
