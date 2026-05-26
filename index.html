@@ -727,6 +727,100 @@
     margin: 0;
   }
 
+  /* News / changelog block */
+  .news-card {
+    border: 1px solid var(--accent-border);
+    border-radius: 8px;
+    overflow: hidden;
+    background: var(--bg);
+  }
+
+  .news-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 20px;
+    background: var(--accent-bg);
+    border-bottom: 1px solid var(--accent-border);
+    flex-wrap: wrap;
+  }
+
+  .news-title {
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .news-date {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--accent);
+    background: var(--bg);
+    border: 1px solid var(--accent-border);
+    border-radius: 4px;
+    padding: 3px 8px;
+    letter-spacing: 0.02em;
+  }
+
+  .news-body {
+    padding: 18px 20px 20px;
+  }
+
+  .news-intro {
+    font-size: 12px;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 14px;
+  }
+
+  .news-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 9px;
+  }
+
+  .news-list li {
+    position: relative;
+    padding-left: 18px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+    line-height: 1.6;
+  }
+
+  .news-list li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 7px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--accent);
+  }
+
+  .news-list li strong {
+    color: var(--text);
+    font-weight: 600;
+  }
+
+  .news-tag-inline {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    font-weight: 500;
+    padding: 1px 6px;
+    border-radius: 3px;
+    background: var(--green-bg);
+    color: var(--green);
+    border: 1px solid var(--green-border);
+    margin-left: 4px;
+    white-space: nowrap;
+  }
+
   @media (max-width: 768px) {
     h1 { font-size: 1.6rem; }
     .header-meta { flex-direction: column; gap: 24px; }
@@ -748,7 +842,7 @@
         <a href="index.html" class="active">DE</a>
         <a href="index.en.html">EN</a>
       </div>
-      <span class="topbar-meta">Stand: Mai 2026</span>
+      <span class="topbar-meta">Stand: 26. Mai 2026</span>
     </div>
   </div>
 </div>
@@ -797,9 +891,9 @@
       </div>
       <div class="score-card is-adk">
         <div class="score-tool">Google ADK <span class="score-badge badge-adk">Best Multi-Cloud</span></div>
-        <div class="score-number">87</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:87%"></div></div>
-        <div class="score-descriptor">Enterprise Framework</div>
+        <div class="score-number">88</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:88%"></div></div>
+        <div class="score-descriptor">Enterprise Framework · v2.0 GA</div>
       </div>
       <div class="score-card">
         <div class="score-tool">Strands Agents</div>
@@ -821,9 +915,9 @@
       </div>
       <div class="score-card">
         <div class="score-tool">MS Agent Framework</div>
-        <div class="score-number">80</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:80%"></div></div>
-        <div class="score-descriptor">Microsoft Stack</div>
+        <div class="score-number">82</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:82%"></div></div>
+        <div class="score-descriptor">Microsoft Stack · v1.0 GA</div>
       </div>
       <div class="score-card">
         <div class="score-tool">n8n</div>
@@ -885,7 +979,7 @@
             <td><span class="feature-name">Multi-Agent Parallel</span><span class="feature-desc">Gleichzeitige Ausführung</span></td>
             <td class="maestro-col"><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
-            <td><span class="chip chip-yes">Workflow Agents</span></td>
+            <td><span class="chip chip-yes">Graph Workflows</span></td>
             <td><span class="chip chip-yes">Swarm + A-as-T</span></td>
             <td><span class="chip chip-yes">Supervisor</span></td>
             <td><span class="chip chip-yes">Vollständig</span></td>
@@ -921,7 +1015,7 @@
             <td><span class="chip chip-yes">Graph Workflows</span></td>
             <td><span class="chip chip-yes">Agent Loop</span></td>
             <td><span class="chip chip-no">Nein</span></td>
-            <td><span class="chip chip-partial">Begrenzt</span></td>
+            <td><span class="chip chip-partial">Sandbox Agents</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Mobile Remote Control</span><span class="feature-desc">Steuerung per Smartphone</span></td>
@@ -977,7 +1071,7 @@
             <td><span class="chip chip-yes">Built-in</span></td>
             <td><span class="chip chip-yes">Deepest</span></td>
             <td><span class="chip chip-partial">Via Claude</span></td>
-            <td><span class="chip chip-yes">v0.13+</span></td>
+            <td><span class="chip chip-yes">v0.14+</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Open Source</span><span class="feature-desc">Lizenz &amp; Code-Zugang</span></td>
@@ -1124,11 +1218,11 @@
       <div class="price-card">
         <div class="price-card-header">
           <div class="price-tool">Google ADK</div>
-          <div class="price-type">Agent Development Kit (Multi-Language)</div>
+          <div class="price-type">Agent Development Kit · v2.0 GA</div>
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
-          <div class="price-note">Open Source · Apache 2.0</div>
+          <div class="price-note">Open Source · Apache 2.0 · Graph Runtime</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">OSS Framework</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Vertex AI Agent Engine</span><span class="price-row-value is-muted">Usage (GCP)</span></div>
@@ -1147,7 +1241,7 @@
           <div class="price-note">Open Source · Apache 2.0</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">OSS SDK</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">AgentCore Runtime</span><span class="price-row-value is-muted">Usage (AWS)</span></div>
+            <div class="price-row"><span class="price-row-label">AgentCore Runtime</span><span class="price-row-value">$0.0895/vCPU-h</span></div>
             <div class="price-row"><span class="price-row-label">Strands Evals SDK</span><span class="price-row-value is-free">€0</span></div>
           </div>
         </div>
@@ -1194,11 +1288,12 @@
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
-          <div class="price-note">Self-hosted Free · Cloud kostenpflichtig</div>
+          <div class="price-note">Self-hosted Free · Cloud nur 14-Tage-Trial</div>
           <div class="price-rows">
-            <div class="price-row"><span class="price-row-label">Self-hosted</span><span class="price-row-value is-free">€0</span></div>
+            <div class="price-row"><span class="price-row-label">Self-hosted (Community)</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Cloud Starter</span><span class="price-row-value">~€24/Mo.</span></div>
             <div class="price-row"><span class="price-row-label">Cloud Pro</span><span class="price-row-value">~€60/Mo.</span></div>
+            <div class="price-row"><span class="price-row-label">Business (SSO)</span><span class="price-row-value">~€800/Mo.</span></div>
             <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
           </div>
         </div>
@@ -1207,7 +1302,7 @@
       <div class="price-card">
         <div class="price-card-header">
           <div class="price-tool">Microsoft Agent Framework</div>
-          <div class="price-type">Unified Enterprise Framework (.NET + Python)</div>
+          <div class="price-type">Unified Enterprise Framework · v1.0 GA</div>
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
@@ -1232,6 +1327,7 @@
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">SDK</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Managed Agents (Beta)</span><span class="price-row-value">$0.08/Session-h</span></div>
+            <div class="price-row"><span class="price-row-label">SDK-Credit (Abo)</span><span class="price-row-value is-muted">ab 15.06.2026</span></div>
             <div class="price-row"><span class="price-row-label">Claude API</span><span class="price-row-value">Via Anthropic/Bedrock/Vertex</span></div>
           </div>
         </div>
@@ -1259,11 +1355,11 @@
         </div>
         <div class="price-card-body">
           <div class="price-main">€0</div>
-          <div class="price-note">Open Source (MIT) · Multi-Provider seit v0.13</div>
+          <div class="price-note">Open Source (MIT) · v0.14 · Sandbox Agents</div>
           <div class="price-rows">
             <div class="price-row"><span class="price-row-label">Framework</span><span class="price-row-value is-free">€0</span></div>
             <div class="price-row"><span class="price-row-label">Any-LLM Adapter</span><span class="price-row-value is-free">€0</span></div>
-            <div class="price-row"><span class="price-row-label">GPT-4o API</span><span class="price-row-value">~$2.50/1M Token</span></div>
+            <div class="price-row"><span class="price-row-label">GPT-5.4 API</span><span class="price-row-value">Usage-based</span></div>
             <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
           </div>
         </div>
@@ -1299,7 +1395,7 @@
             <div class="verdict-subtitle">Stateful Workflows mit Audit-Trail</div>
           </div>
         </div>
-        <div class="verdict-body">Komplexe stateful Workflows mit Branching-Logik, Audit-Trail und Human-in-the-Loop erfordern LangGraph's Präzision und Flexibilität. Bei reinem .NET- oder Azure-Stack ist Microsoft Agent Framework die natürliche Wahl; bei multi-cloud Setups oft Google ADK. Wenn die Datenplattform bereits Databricks ist, bietet Agent Bricks die mit Abstand stärkste Governance- und Lineage-Story.</div>
+        <div class="verdict-body">Komplexe stateful Workflows mit Branching-Logik, Audit-Trail und Human-in-the-Loop erfordern LangGraph's Präzision und Flexibilität. Bei reinem .NET- oder Azure-Stack ist Microsoft Agent Framework (seit April 2026 v1.0 GA, gelockter API-Contract) die natürliche Wahl; bei multi-cloud Setups oft Google ADK. Wenn die Datenplattform bereits Databricks ist, bietet Agent Bricks die mit Abstand stärkste Governance- und Lineage-Story.</div>
         <span class="verdict-tag">LangGraph</span>
       </div>
 
@@ -1371,7 +1467,7 @@
             <div class="verdict-subtitle">Bild, Audio, Video via A2A</div>
           </div>
         </div>
-        <div class="verdict-body">Google ADK ist die reifste Option für multimodale Agenten und cross-framework-Kollaboration via A2A-Protokoll. Apache 2.0, vier Sprachen (Python, TypeScript, Go, Java), Deploy auf Vertex AI, Cloud Run, GKE oder eigenem Kubernetes.</div>
+        <div class="verdict-body">Google ADK ist die reifste Option für multimodale Agenten und cross-framework-Kollaboration via A2A-Protokoll. Mit ADK 2.0 (GA seit Mai 2026) wechselt das Framework auf eine graph-basierte Workflow-Runtime mit Routing, Fan-out/Fan-in und Task-API. Apache 2.0, Sprachen Python, TypeScript, Go und Java, Deploy auf Vertex AI, Cloud Run, GKE oder eigenem Kubernetes.</div>
         <span class="verdict-tag">Google ADK</span>
       </div>
 
@@ -1395,10 +1491,36 @@
             <div class="verdict-subtitle">Tiefste MCP-Integration</div>
           </div>
         </div>
-        <div class="verdict-body">Claude Agent SDK bietet die tiefste MCP-Anbindung aller Frameworks, native Subagent-Isolation und Bash/Filesystem-Zugriff. Managed Agents (Beta) verlagern Sandboxing und State-Persistierung in Anthropics gehostete Infrastruktur — $0,08/Session-Stunde plus Token.</div>
+        <div class="verdict-body">Claude Agent SDK bietet die tiefste MCP-Anbindung aller Frameworks, native Subagent-Isolation und Bash/Filesystem-Zugriff. Managed Agents (Beta) verlagern Sandboxing und State-Persistierung in Anthropics gehostete Infrastruktur — $0,08/Session-Stunde plus Token. Neu: selbst kontrollierte Sandboxes mit Anbindung an private MCP-Server sowie &bdquo;Dreaming&ldquo; als Research Preview für selbst-verbessernde Agents.</div>
         <span class="verdict-tag">Claude Agent SDK</span>
       </div>
 
+    </div>
+  </div>
+
+  <!-- News / Changelog -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Aktuelle Updates</span>
+    </div>
+    <div class="news-card">
+      <div class="news-header">
+        <div class="news-title">&#128240;&nbsp; Benchmark-Aktualisierung</div>
+        <span class="news-date">26. Mai 2026</span>
+      </div>
+      <div class="news-body">
+        <p class="news-intro">Überprüfung aller 11 Tools gegen den aktuellen Stand von Versionen, Features und Preisen (inkl. Enterprise-Tiers). Wesentliche Änderungen seit dem letzten Stand (Mai 2026):</p>
+        <ul class="news-list">
+          <li><strong>Google ADK 2.0:</strong> Seit dem 19. Mai 2026 generell verfügbar. Die Architektur wechselt von einem hierarchischen Agent-Executor auf eine graph-basierte Workflow-Runtime (Routing, Fan-out/Fan-in, Loops, Retry, Task-API). Score von 87 auf 88 angehoben, Feature-Matrix-Zelle auf &bdquo;Graph Workflows&ldquo; aktualisiert.<span class="news-tag-inline">v2.0 GA</span></li>
+          <li><strong>Microsoft Agent Framework 1.0:</strong> Seit 3. April 2026 General Availability — AutoGen und Semantic Kernel sind in einer produktionsreifen Plattform konvergiert, der 1.0-API-Contract ist gelockt. Score von 80 auf 82 angehoben.<span class="news-tag-inline">v1.0 GA</span></li>
+          <li><strong>Claude Managed Agents:</strong> Drei neue Funktionen ergänzt — selbst kontrollierte Sandboxes mit Anbindung an private MCP-Server (relevant für DSGVO/On-Prem), Cloudflare-Sandbox-Integration sowie &bdquo;Dreaming&ldquo; (Research Preview) für selbst-verbessernde Agents. Ab 15. Juni 2026 zieht die Agent-SDK-Nutzung auf Abo-Plänen von einem separaten monatlichen Credit.</li>
+          <li><strong>OpenAI Agents SDK v0.14:</strong> Neue Sandbox Agents für Langzeit-Tasks plus modell-nativer Harness (abgestimmt auf GPT-5.4). Feature-Matrix und Preiskarte entsprechend aktualisiert; GPT-4o-Referenz auf GPT-5.4 korrigiert.</li>
+          <li><strong>AWS Strands / AgentCore:</strong> AgentCore Policy (GA seit März) und Evaluations (GA seit März) ergänzt. Runtime-Preis konkretisiert: $0,0895 pro vCPU-Stunde plus $0,00945 pro GB-Stunde.</li>
+          <li><strong>n8n Preisstruktur:</strong> Neue Business-Stufe (~€800/Mo., mit SSO) zwischen Pro und Enterprise ergänzt. Wichtig: Der dauerhafte Cloud-Free-Plan wurde eingestellt — nur noch 14-Tage-Trial; die self-hosted Community Edition bleibt kostenlos.</li>
+          <li><strong>Databricks Agent Bricks:</strong> Supervisor Agent unterstützt nun Vector-Search-Indizes als Subagent-Tools; die Unity AI Gateway erzwingt Zugriffskontrolle und Audit über alle MCP-Interaktionen.</li>
+          <li><strong>Maestro:</strong> Vollwertige xterm.js-Terminal-Tabs, Web-UX-Parität mit echten PTY-Terminals und SSH-synchronisierte History ergänzt. Tool-Support erweitert auf Claude Code, OpenAI Codex, OpenCode und Factory Droid.</li>
+        </ul>
+      </div>
     </div>
   </div>
 
@@ -1406,7 +1528,7 @@
 
 <footer>
   <div class="footer-inner">
-    <span class="footer-left">Stand: Mai 2026 &middot; Markus Letzner &middot; Preise ohne Gewähr</span>
+    <span class="footer-left">Stand: 26. Mai 2026 &middot; Markus Letzner &middot; Preise ohne Gewähr</span>
     <span class="footer-right">Quellen: GitHub &middot; LangChain Docs &middot; CrewAI Docs &middot; n8n Docs &middot; runmaestro.ai &middot; strandsagents.com &middot; adk.dev &middot; learn.microsoft.com/agent-framework &middot; code.claude.com/docs &middot; docs.databricks.com</span>
   </div>
 </footer>
