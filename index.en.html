@@ -811,7 +811,7 @@
       <p class="subtitle">Comparison of leading tools for orchestrating autonomous AI agents — from desktop apps to enterprise frameworks. All data based on public documentation and hands-on testing.</p>
       <div class="header-stats">
         <div class="stat">
-          <div class="stat-num">11</div>
+          <div class="stat-num">12</div>
           <div class="stat-label">Tools</div>
         </div>
         <div class="stat">
@@ -898,6 +898,12 @@
         <div class="score-bar-track"><div class="score-bar-fill" style="width:72%"></div></div>
         <div class="score-descriptor">Lightweight CLI</div>
       </div>
+      <div class="score-card">
+        <div class="score-tool">Manus AI</div>
+        <div class="score-number">70</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:70%"></div></div>
+        <div class="score-descriptor">Autonomous Web Agent</div>
+      </div>
     </div>
   </div>
 
@@ -927,6 +933,7 @@
             <th>Claude Agent SDK</th>
             <th>Claude Squad</th>
             <th>OpenAI SDK</th>
+            <th>Manus AI</th>
           </tr>
         </thead>
         <tbody>
@@ -943,6 +950,7 @@
             <td><span class="chip chip-yes">Subagents</span></td>
             <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-partial">Subagents</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Desktop GUI</span><span class="feature-desc">Native App / Dashboard</span></td>
@@ -957,6 +965,7 @@
             <td><span class="chip chip-no">SDK only</span></td>
             <td><span class="chip chip-no">Terminal</span></td>
             <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-yes">Web App</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Playbooks / Auto-Run</span><span class="feature-desc">Autonomous Long-Running Tasks</span></td>
@@ -971,6 +980,7 @@
             <td><span class="chip chip-yes">Agent Loop</span></td>
             <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-partial">Sandbox Agents</span></td>
+            <td><span class="chip chip-yes">Browser Tasks</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Mobile Remote Control</span><span class="feature-desc">Smartphone Control</span></td>
@@ -985,6 +995,7 @@
             <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-no">No</span></td>
+            <td><span class="chip chip-partial">Web-Access</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Git Worktrees</span><span class="feature-desc">Isolated Branch Runs</span></td>
@@ -998,6 +1009,7 @@
             <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-yes">Full</span></td>
+            <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-no">No</span></td>
           </tr>
           <tr>
@@ -1013,6 +1025,7 @@
             <td><span class="chip chip-partial">Subagent Delegation</span></td>
             <td><span class="chip chip-partial">Tmux-Panes</span></td>
             <td><span class="chip chip-partial">Handoffs</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">MCP Support</span><span class="feature-desc">Model Context Protocol</span></td>
@@ -1027,6 +1040,7 @@
             <td><span class="chip chip-yes">Deepest</span></td>
             <td><span class="chip chip-partial">Via Claude</span></td>
             <td><span class="chip chip-yes">v0.14+</span></td>
+            <td><span class="chip chip-no">No</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Open Source</span><span class="feature-desc">License &amp; Code Access</span></td>
@@ -1041,6 +1055,7 @@
             <td><span class="chip chip-yes">MIT</span></td>
             <td><span class="chip chip-yes">MIT</span></td>
             <td><span class="chip chip-yes">MIT</span></td>
+            <td><span class="chip chip-no">Proprietary</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">CLI / CI/CD</span><span class="feature-desc">Headless &amp; Automation</span></td>
@@ -1055,6 +1070,7 @@
             <td><span class="chip chip-yes">Python + TS</span></td>
             <td><span class="chip chip-partial">Limited</span></td>
             <td><span class="chip chip-yes">Python SDK</span></td>
+            <td><span class="chip chip-partial">API (Beta)</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Observability</span><span class="feature-desc">Tracing, Logs, Monitoring</span></td>
@@ -1069,6 +1085,7 @@
             <td><span class="chip chip-yes">OTel built-in</span></td>
             <td><span class="chip chip-no">Minimal</span></td>
             <td><span class="chip chip-partial">Basic Traces</span></td>
+            <td><span class="chip chip-partial">Task Log</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Human-in-the-Loop</span><span class="feature-desc">Approval Steps</span></td>
@@ -1083,6 +1100,7 @@
             <td><span class="chip chip-yes">can_use_tool</span></td>
             <td><span class="chip chip-no">No</span></td>
             <td><span class="chip chip-yes">Guardrails v2</span></td>
+            <td><span class="chip chip-partial">Limited</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">EU / On-Prem Hosting</span><span class="feature-desc">GDPR Compliance</span></td>
@@ -1097,6 +1115,7 @@
             <td><span class="chip chip-yes">Self-hosted</span></td>
             <td><span class="chip chip-yes">Local</span></td>
             <td><span class="chip chip-no">OpenAI-only</span></td>
+            <td><span class="chip chip-no">No</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Model-Agnostic</span><span class="feature-desc">Claude, GPT, Mistral etc.</span></td>
@@ -1111,6 +1130,7 @@
             <td><span class="chip chip-no">Claude-only</span></td>
             <td><span class="chip chip-no">Claude-only</span></td>
             <td><span class="chip chip-yes">v0.13 Any-LLM</span></td>
+            <td><span class="chip chip-partial">Multi-LLM internal</span></td>
           </tr>
           <tr>
             <td><span class="feature-name">Learning Curve</span><span class="feature-desc">Onboarding Effort</span></td>
@@ -1124,6 +1144,7 @@
             <td><span class="chip chip-partial">Medium</span></td>
             <td><span class="chip chip-yes">Low</span></td>
             <td><span class="chip chip-yes">Low</span></td>
+            <td><span class="chip chip-yes">Very Low</span></td>
             <td><span class="chip chip-yes">Very Low</span></td>
           </tr>
         </tbody>
@@ -1305,6 +1326,22 @@
 
       <div class="price-card">
         <div class="price-card-header">
+          <div class="price-tool">Manus AI</div>
+          <div class="price-type">Autonomous Web Agent Platform</div>
+        </div>
+        <div class="price-card-body">
+          <div class="price-main">Credits</div>
+          <div class="price-note">Proprietary · Cloud-only · No open source</div>
+          <div class="price-rows">
+            <div class="price-row"><span class="price-row-label">Free</span><span class="price-row-value is-free">Limited credits</span></div>
+            <div class="price-row"><span class="price-row-label">Pro</span><span class="price-row-value">~$39/mo.</span></div>
+            <div class="price-row"><span class="price-row-label">Enterprise</span><span class="price-row-value is-muted">Custom</span></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="price-card">
+        <div class="price-card-header">
           <div class="price-tool">OpenAI Agents SDK</div>
           <div class="price-type">OpenAI-native Agent Framework</div>
         </div>
@@ -1440,6 +1477,18 @@
 
       <div class="verdict-card">
         <div class="verdict-header">
+          <div class="verdict-icon">&#127760;</div>
+          <div>
+            <div class="verdict-title">Autonomous Web Research</div>
+            <div class="verdict-subtitle">Browser Tasks Without Code</div>
+          </div>
+        </div>
+        <div class="verdict-body">Manus AI specializes in fully automated browser tasks — web research, form filling, data extraction, and long-running scraping without any coding. No open source, no EU hosting option, and no programmable API for complex workflows. Ideal for non-technical teams that need quick results without a developer.</div>
+        <span class="verdict-tag">Manus AI</span>
+      </div>
+
+      <div class="verdict-card">
+        <div class="verdict-header">
           <div class="verdict-icon">&#128279;</div>
           <div>
             <div class="verdict-title">Claude-Native + Deep MCP</div>
@@ -1469,7 +1518,7 @@
           <li><strong>Claude Agent SDK — Billing plan paused:</strong> The planned integration of the SDK credit into Anthropic subscription plans (originally from June 15, 2026) was withdrawn. Pricing card and descriptor updated accordingly; Managed Agents ($0.08/session-hr) remains unchanged.</li>
           <li><strong>OpenAI Agents SDK — Enterprise Safety (Apr. 2026):</strong> Guardrails v2 is fully GA (no longer Beta); new Evals pipeline and stronger sandbox isolation for Enterprise. Human-in-the-Loop cell upgraded to "Guardrails v2" (Full). Score raised from 74 to 76.<span class="news-tag-inline">Score +2</span></li>
           <li><strong>Microsoft Agent Framework — Build 2026:</strong> Additional announcements at Microsoft Build 2026: deeper Azure AI Foundry integration and new routing policies for enterprise. Score stays at 82 (extensions only, not a new GA milestone).</li>
-          <li><strong>Manus AI (New on the radar):</strong> Appears in multiple 2026 framework comparisons alongside OpenAI Agents SDK, n8n, and Claude Agent SDK. Focus: autonomous web tasks (browser-use, long-running scraping). Not yet a candidate for inclusion — no open source, no defined API contract — but worth watching for the next benchmark update.</li>
+          <li><strong>Manus AI added (Tool #12):</strong> Added as the 12th tool in the benchmark. Focus: autonomous browser tasks (web research, scraping, form filling) without coding. Score 70 — strong in the no-code space, but no open source, no EU hosting, and no programmable API for complex workflows.<span class="news-tag-inline">New</span></li>
         </ul>
       </div>
     </div>
