@@ -913,7 +913,7 @@
     display: flex;
     align-items: flex-start;
     justify-content: center;
-    padding: 40px 16px;
+    padding: 20px 12px;
     overflow-y: auto;
     opacity: 0;
     pointer-events: none;
@@ -925,28 +925,31 @@
     border-radius: 12px;
     border: 1px solid var(--border-strong);
     width: 100%;
-    max-width: 900px;
+    max-width: 860px;
+    min-width: 0;
     box-shadow: 0 24px 64px rgba(0,0,0,0.18);
-    flex-shrink: 0;
+    flex-shrink: 1;
   }
   .cmp-head {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 24px;
+    padding: 14px 18px;
     border-bottom: 1px solid var(--border);
-    gap: 12px;
+    gap: 10px;
+    flex-wrap: wrap;
   }
-  .cmp-head-title { font-size: 15px; font-weight: 700; }
+  .cmp-head-title { font-size: 14px; font-weight: 700; }
   .cmp-head-actions { display: flex; gap: 8px; align-items: center; }
   .cmp-reset-btn {
     background: none;
     border: 1px solid var(--border);
     border-radius: 6px;
-    padding: 6px 12px;
+    padding: 5px 10px;
     font-size: 12px;
     cursor: pointer;
     color: var(--text-secondary);
+    white-space: nowrap;
   }
   .cmp-reset-btn:hover { border-color: var(--border-strong); color: var(--text); }
   .cmp-close-btn {
@@ -958,42 +961,58 @@
     color: var(--text-muted);
     padding: 2px 6px;
     border-radius: 4px;
+    flex-shrink: 0;
   }
   .cmp-close-btn:hover { color: var(--text); background: var(--bg-subtle); }
-  .cmp-body { overflow-x: auto; }
+
+  /* No overflow-x — table fills width */
+  .cmp-body { overflow-x: hidden; }
+
   .cmp-table {
     width: 100%;
     border-collapse: collapse;
     font-size: 13px;
+    table-layout: fixed;
   }
   .cmp-table thead th {
-    padding: 16px 20px 14px;
+    padding: 12px 14px 10px;
     text-align: left;
     vertical-align: bottom;
     border-bottom: 2px solid var(--border);
     background: var(--bg);
+    word-break: break-word;
+    overflow-wrap: anywhere;
   }
   .cmp-feat-head {
-    width: 170px;
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.06em;
     color: var(--text-muted);
+    vertical-align: bottom;
   }
-  .ct-name { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+  .ct-name {
+    font-size: 13px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    overflow-wrap: break-word;
+  }
   .ct-score {
-    font-size: 30px;
+    font-size: 26px;
     font-weight: 700;
     color: var(--accent);
     line-height: 1;
-    margin-bottom: 6px;
+    margin-bottom: 5px;
   }
-  .ct-bar { height: 4px; background: var(--bg-muted); border-radius: 2px; margin-bottom: 5px; }
+  .ct-bar { height: 3px; background: var(--bg-muted); border-radius: 2px; margin-bottom: 4px; }
   .ct-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
-  .ct-desc { font-size: 11px; color: var(--text-muted); }
+  .ct-desc {
+    font-size: 10px;
+    color: var(--text-muted);
+    overflow-wrap: break-word;
+  }
   .cmp-table tbody td {
-    padding: 10px 20px;
+    padding: 9px 14px;
     border-bottom: 1px solid var(--border);
     vertical-align: middle;
   }
@@ -1003,10 +1022,10 @@
     font-size: 12px;
     font-weight: 500;
     color: var(--text-secondary);
-    white-space: nowrap;
+    overflow-wrap: break-word;
   }
   .cmp-foot {
-    padding: 14px 24px;
+    padding: 12px 18px;
     border-top: 1px solid var(--border);
     display: flex;
     justify-content: flex-end;
@@ -1017,7 +1036,7 @@
     color: #fff;
     border: none;
     border-radius: 6px;
-    padding: 8px 18px;
+    padding: 7px 16px;
     font-size: 13px;
     font-weight: 600;
     cursor: pointer;
@@ -1955,7 +1974,20 @@
     thead.appendChild(hrow);
     table.appendChild(thead);
 
-    var tbody = document.createElement('tbody');
+    // colgroup for percentage-based widths (prevents overflow)
+        var n = selected.length;
+        var featPct = n >= 3 ? 26 : 30;
+        var toolPct = Math.floor((100 - featPct) / n);
+        var cg = document.createElement('colgroup');
+        var fc = document.createElement('col'); fc.style.width = featPct + '%';
+        cg.appendChild(fc);
+        for (var ci = 0; ci < n; ci++) {
+          var tc = document.createElement('col'); tc.style.width = toolPct + '%';
+          cg.appendChild(tc);
+        }
+        table.appendChild(cg);
+
+        var tbody = document.createElement('tbody');
     document.querySelectorAll('.matrix-wrap table tbody tr').forEach(function (row) {
       var cells      = row.querySelectorAll('td');
       var featNameEl = cells[0] && cells[0].querySelector('.feature-name');
