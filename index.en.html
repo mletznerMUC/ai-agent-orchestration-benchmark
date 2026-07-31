@@ -773,23 +773,81 @@
   }
 
   /* ─── Comparison Feature ─── */
-  .compare-check {
+
+  /* Custom toggle button on each card */
+  .cmp-toggle {
     position: absolute;
     top: 10px;
     right: 10px;
-    width: 18px;
-    height: 18px;
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    border: 1.5px solid var(--border-strong);
+    background: var(--bg);
     cursor: pointer;
-    accent-color: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
     z-index: 2;
-    opacity: 0;
-    transition: opacity 0.15s;
+    transition: border-color 0.12s, background 0.12s, box-shadow 0.12s;
+    flex-shrink: 0;
   }
-  .score-card:hover .compare-check,
-  .score-card.is-selected .compare-check { opacity: 1; }
+  .cmp-toggle:hover {
+    border-color: var(--accent);
+    box-shadow: 0 0 0 3px var(--accent-bg);
+  }
+  .cmp-toggle svg {
+    width: 10px;
+    height: 10px;
+    stroke: transparent;
+    transition: stroke 0.1s;
+    overflow: visible;
+  }
+  .score-card.is-selected .cmp-toggle {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+  .score-card.is-selected .cmp-toggle svg { stroke: #fff; }
   .score-card.is-selected {
     outline: 2px solid var(--accent);
-    outline-offset: -1px;
+    outline-offset: -2px;
+  }
+
+  /* Header action next to section title */
+  .cmp-header-wrap { display: flex; flex-direction: column; gap: 3px; }
+  .cmp-header-hint {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.03em;
+  }
+  .cmp-header-btn {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: opacity 0.15s;
+    align-self: flex-start;
+  }
+  .cmp-header-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .cmp-header-btn:not(:disabled):hover { opacity: 0.88; }
+  .cmp-badge {
+    background: rgba(255,255,255,0.25);
+    border-radius: 10px;
+    padding: 1px 7px;
+    font-size: 11px;
+    font-weight: 700;
+    min-width: 20px;
+    text-align: center;
   }
 
   /* Sticky Bar */
@@ -1008,7 +1066,13 @@
   <!-- Score Overview -->
   <div class="section">
     <div class="section-header">
-      <span class="section-title">Overall Rating &nbsp;/ 100</span>
+      <div class="cmp-header-wrap">
+        <span class="section-title">Overall Rating &nbsp;/ 100</span>
+        <span class="cmp-header-hint">☑ Select up to 3 tools and compare them</span>
+      </div>
+      <button class="cmp-header-btn" id="cmp-header-btn" disabled>
+        Compare <span class="cmp-badge" id="cmp-header-count">0</span>
+      </button>
     </div>
     <div class="score-grid">
       <div class="score-card" data-tool="maestro">
@@ -1769,7 +1833,9 @@
   var selected = [];
   var toolData = {};
 
-  /* Initialise tool data and inject checkboxes */
+  var CHECK_SVG = '<svg viewBox="0 0 12 10" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M1.5 5L4.5 8L10.5 1.5" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+
+  /* Initialise tool data and inject toggle buttons */
   document.querySelectorAll('.score-card[data-tool]').forEach(function (card) {
     var key = card.dataset.tool;
     var nameEl = card.querySelector('.score-tool a') || card.querySelector('.score-tool');
@@ -1778,34 +1844,45 @@
     var desc = ((card.querySelector('.score-descriptor') || {}).textContent || '').trim();
     toolData[key] = { name: name, score: score, desc: desc };
 
-    var cb = document.createElement('input');
-    cb.type = 'checkbox';
-    cb.className = 'compare-check';
-    cb.setAttribute('aria-label', name);
-    card.appendChild(cb);
+    var btn = document.createElement('button');
+    btn.className = 'cmp-toggle';
+    btn.type = 'button';
+    btn.setAttribute('aria-pressed', 'false');
+    btn.setAttribute('title', 'Select for comparison');
+    btn.setAttribute('aria-label', 'Compare: ' + name);
+    btn.innerHTML = CHECK_SVG;
+    card.appendChild(btn);
 
-    cb.addEventListener('change', function () {
-      if (cb.checked) {
-        if (selected.length >= MAX) { cb.checked = false; return; }
+    btn.addEventListener('click', function (e) {
+      e.stopPropagation();
+      var idx = selected.indexOf(key);
+      if (idx === -1) {
+        if (selected.length >= MAX) return;
         selected.push(key);
         card.classList.add('is-selected');
+        btn.setAttribute('aria-pressed', 'true');
       } else {
-        selected = selected.filter(function (k) { return k !== key; });
+        selected.splice(idx, 1);
         card.classList.remove('is-selected');
+        btn.setAttribute('aria-pressed', 'false');
       }
-      syncBar();
+      syncUI();
     });
   });
 
-  /* Sticky Bar */
-  var bar      = document.getElementById('cmp-bar');
-  var barCount = document.getElementById('cmp-bar-count');
-  var barChips = document.getElementById('cmp-bar-chips');
-  var barBtn   = document.getElementById('cmp-bar-btn');
-  var barReset = document.getElementById('cmp-bar-reset');
+  /* UI refs */
+  var bar         = document.getElementById('cmp-bar');
+  var barCount    = document.getElementById('cmp-bar-count');
+  var barChips    = document.getElementById('cmp-bar-chips');
+  var barBtn      = document.getElementById('cmp-bar-btn');
+  var barReset    = document.getElementById('cmp-bar-reset');
+  var headerBtn   = document.getElementById('cmp-header-btn');
+  var headerCount = document.getElementById('cmp-header-count');
 
-  function syncBar() {
+  function syncUI() {
     var n = selected.length;
+    headerCount.textContent = n;
+    headerBtn.disabled = n < 2;
     if (n === 0) {
       bar.classList.remove('is-visible');
     } else {
@@ -1825,32 +1902,30 @@
 
   barReset.addEventListener('click', resetAll);
   barBtn.addEventListener('click', openModal);
+  headerBtn.addEventListener('click', openModal);
 
-  /* Reset */
   function resetAll() {
     selected = [];
     document.querySelectorAll('.score-card.is-selected').forEach(function (c) {
       c.classList.remove('is-selected');
     });
-    document.querySelectorAll('.compare-check').forEach(function (cb) {
-      cb.checked = false;
+    document.querySelectorAll('.cmp-toggle').forEach(function (b) {
+      b.setAttribute('aria-pressed', 'false');
     });
-    syncBar();
+    syncUI();
     closeModal();
   }
 
-  /* Modal */
-  var overlay   = document.getElementById('cmp-overlay');
+  var overlay = document.getElementById('cmp-overlay');
   document.getElementById('cmp-close-btn').addEventListener('click', closeModal);
   document.getElementById('cmp-reset-btn').addEventListener('click', resetAll);
   document.getElementById('cmp-foot-close').addEventListener('click', closeModal);
   overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
   document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
 
-  function openModal() { buildTable(); overlay.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+  function openModal()  { buildTable(); overlay.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
   function closeModal() { overlay.classList.remove('is-open'); document.body.style.overflow = ''; }
 
-  /* Build comparison table from live DOM */
   function buildTable() {
     var colMap = {};
     document.querySelectorAll('.matrix-wrap table thead th[data-tool]').forEach(function (th) {
@@ -1860,7 +1935,6 @@
     var table = document.getElementById('cmp-table');
     table.innerHTML = '';
 
-    /* Header row */
     var thead = document.createElement('thead');
     var hrow  = document.createElement('tr');
     var fth   = document.createElement('th');
@@ -1881,14 +1955,13 @@
     thead.appendChild(hrow);
     table.appendChild(thead);
 
-    /* Feature rows */
     var tbody = document.createElement('tbody');
     document.querySelectorAll('.matrix-wrap table tbody tr').forEach(function (row) {
       var cells      = row.querySelectorAll('td');
       var featNameEl = cells[0] && cells[0].querySelector('.feature-name');
       if (!featNameEl) return;
 
-      var tr    = document.createElement('tr');
+      var tr     = document.createElement('tr');
       var featTd = document.createElement('td');
       featTd.className = 'ct-feat-label';
       featTd.textContent = featNameEl.textContent.trim();
@@ -1906,7 +1979,7 @@
   }
 
   function esc(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 })();
 </script>
