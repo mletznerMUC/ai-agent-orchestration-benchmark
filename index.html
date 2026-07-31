@@ -810,6 +810,199 @@
     .footer-inner { flex-direction: column; }
     .footer-right { text-align: left; }
   }
+
+  /* ─── Vergleichsfunktion ─── */
+  .compare-check {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    width: 18px;
+    height: 18px;
+    cursor: pointer;
+    accent-color: var(--accent);
+    z-index: 2;
+    opacity: 0;
+    transition: opacity 0.15s;
+  }
+  .score-card:hover .compare-check,
+  .score-card.is-selected .compare-check { opacity: 1; }
+  .score-card.is-selected {
+    outline: 2px solid var(--accent);
+    outline-offset: -1px;
+  }
+
+  /* Sticky Bar */
+  .compare-bar {
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    background: #18181b;
+    color: #fff;
+    padding: 12px 24px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    z-index: 100;
+    transform: translateY(100%);
+    transition: transform 0.22s cubic-bezier(0.4,0,0.2,1);
+    box-shadow: 0 -2px 16px rgba(0,0,0,0.15);
+  }
+  .compare-bar.is-visible { transform: translateY(0); }
+  .cmp-bar-count {
+    font-size: 12px;
+    color: rgba(255,255,255,0.55);
+    white-space: nowrap;
+    min-width: 56px;
+  }
+  .cmp-bar-chips { display: flex; gap: 6px; flex-wrap: wrap; flex: 1; }
+  .cmp-chip {
+    background: rgba(255,255,255,0.13);
+    border-radius: 4px;
+    padding: 3px 9px;
+    font-size: 12px;
+    font-weight: 500;
+  }
+  .cmp-bar-btn {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .cmp-bar-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+  .cmp-bar-reset {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.25);
+    color: rgba(255,255,255,0.6);
+    border-radius: 6px;
+    padding: 7px 13px;
+    font-size: 13px;
+    cursor: pointer;
+    white-space: nowrap;
+  }
+  .cmp-bar-reset:hover { border-color: rgba(255,255,255,0.5); color: #fff; }
+
+  /* Overlay & Modal */
+  .cmp-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0,0,0,0.45);
+    z-index: 200;
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    padding: 40px 16px;
+    overflow-y: auto;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s;
+  }
+  .cmp-overlay.is-open { opacity: 1; pointer-events: all; }
+  .cmp-modal {
+    background: var(--bg);
+    border-radius: 12px;
+    border: 1px solid var(--border-strong);
+    width: 100%;
+    max-width: 900px;
+    box-shadow: 0 24px 64px rgba(0,0,0,0.18);
+    flex-shrink: 0;
+  }
+  .cmp-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 18px 24px;
+    border-bottom: 1px solid var(--border);
+    gap: 12px;
+  }
+  .cmp-head-title { font-size: 15px; font-weight: 700; }
+  .cmp-head-actions { display: flex; gap: 8px; align-items: center; }
+  .cmp-reset-btn {
+    background: none;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 12px;
+    cursor: pointer;
+    color: var(--text-secondary);
+  }
+  .cmp-reset-btn:hover { border-color: var(--border-strong); color: var(--text); }
+  .cmp-close-btn {
+    background: none;
+    border: none;
+    font-size: 22px;
+    line-height: 1;
+    cursor: pointer;
+    color: var(--text-muted);
+    padding: 2px 6px;
+    border-radius: 4px;
+  }
+  .cmp-close-btn:hover { color: var(--text); background: var(--bg-subtle); }
+  .cmp-body { overflow-x: auto; }
+  .cmp-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13px;
+  }
+  .cmp-table thead th {
+    padding: 16px 20px 14px;
+    text-align: left;
+    vertical-align: bottom;
+    border-bottom: 2px solid var(--border);
+    background: var(--bg);
+  }
+  .cmp-feat-head {
+    width: 170px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+  }
+  .ct-name { font-size: 14px; font-weight: 700; margin-bottom: 5px; }
+  .ct-score {
+    font-size: 30px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 6px;
+  }
+  .ct-bar { height: 4px; background: var(--bg-muted); border-radius: 2px; margin-bottom: 5px; }
+  .ct-bar-fill { height: 100%; background: var(--accent); border-radius: 2px; }
+  .ct-desc { font-size: 11px; color: var(--text-muted); }
+  .cmp-table tbody td {
+    padding: 10px 20px;
+    border-bottom: 1px solid var(--border);
+    vertical-align: middle;
+  }
+  .cmp-table tbody tr:last-child td { border-bottom: none; }
+  .cmp-table tbody tr:hover td { background: var(--bg-subtle); }
+  .ct-feat-label {
+    font-size: 12px;
+    font-weight: 500;
+    color: var(--text-secondary);
+    white-space: nowrap;
+  }
+  .cmp-foot {
+    padding: 14px 24px;
+    border-top: 1px solid var(--border);
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+  }
+  .cmp-foot-close {
+    background: var(--accent);
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 8px 18px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+  }
 </style>
 </head>
 <body>
@@ -857,73 +1050,73 @@
       <span class="section-title">Gesamtbewertung &nbsp;/ 100</span>
     </div>
     <div class="score-grid">
-      <div class="score-card">
+      <div class="score-card" data-tool="maestro">
         <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
         <div class="score-number">84</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:84%"></div></div>
         <div class="score-descriptor">Desktop Orchestrator</div>
       </div>
-      <div class="score-card is-top">
+      <div class="score-card is-top" data-tool="langgraph">
         <div class="score-tool"><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener">LangGraph</a> <span class="score-badge badge-top">Best Overall</span></div>
         <div class="score-number">89</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:89%"></div></div>
         <div class="score-descriptor">Code-First Framework</div>
       </div>
-      <div class="score-card is-adk">
+      <div class="score-card is-adk" data-tool="google-adk">
         <div class="score-tool"><a href="https://adk.dev" target="_blank" rel="noopener">Google ADK</a> <span class="score-badge badge-adk">Best Multi-Cloud</span></div>
         <div class="score-number">88</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:88%"></div></div>
         <div class="score-descriptor">Enterprise Framework · v2.0 GA</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="strands">
         <div class="score-tool"><a href="https://strandsagents.com" target="_blank" rel="noopener">Strands Agents</a></div>
         <div class="score-number">86</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:86%"></div></div>
         <div class="score-descriptor">AWS-Native SDK</div>
       </div>
-      <div class="score-card is-databricks">
+      <div class="score-card is-databricks" data-tool="databricks">
         <div class="score-tool"><a href="https://www.databricks.com/product/agent-bricks" target="_blank" rel="noopener">Databricks Agent Bricks</a> <span class="score-badge badge-databricks">Best Governance</span></div>
         <div class="score-number">85</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:85%"></div></div>
         <div class="score-descriptor">Managed Enterprise Platform</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="crewai">
         <div class="score-tool"><a href="https://www.crewai.com" target="_blank" rel="noopener">CrewAI</a></div>
         <div class="score-number">83</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
         <div class="score-descriptor">Best Onboarding</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="ms-agent">
         <div class="score-tool"><a href="https://learn.microsoft.com/agent-framework" target="_blank" rel="noopener">MS Agent Framework</a></div>
         <div class="score-number">82</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:82%"></div></div>
         <div class="score-descriptor">Microsoft Stack · v1.0 GA</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="n8n">
         <div class="score-tool"><a href="https://n8n.io" target="_blank" rel="noopener">n8n</a></div>
         <div class="score-number">79</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:79%"></div></div>
         <div class="score-descriptor">Best No-Code</div>
       </div>
-      <div class="score-card is-mcp">
+      <div class="score-card is-mcp" data-tool="claude-sdk">
         <div class="score-tool"><a href="https://code.claude.com" target="_blank" rel="noopener">Claude Agent SDK</a> <span class="score-badge badge-mcp">Best MCP</span></div>
         <div class="score-number">78</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:78%"></div></div>
         <div class="score-descriptor">Code-First SDK</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="openai-sdk">
         <div class="score-tool"><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI SDK</a></div>
         <div class="score-number">76</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:76%"></div></div>
         <div class="score-descriptor">Fast Prototype · Enterprise Safety</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="claude-squad">
         <div class="score-tool"><a href="https://github.com/smtg-ai/claude-squad" target="_blank" rel="noopener">Claude Squad</a></div>
         <div class="score-number">72</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:72%"></div></div>
         <div class="score-descriptor">Lightweight CLI</div>
       </div>
-      <div class="score-card">
+      <div class="score-card" data-tool="manus-ai">
         <div class="score-tool"><a href="https://manus.im" target="_blank" rel="noopener">Manus AI</a></div>
         <div class="score-number">70</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:70%"></div></div>
@@ -947,18 +1140,18 @@
         <thead>
           <tr>
             <th class="feature-col">Feature</th>
-            <th>Maestro</th>
-            <th>LangGraph</th>
-            <th>Google ADK</th>
-            <th>Strands</th>
-            <th>Databricks</th>
-            <th>CrewAI</th>
-            <th>n8n</th>
-            <th>MS Agent Framework</th>
-            <th>Claude Agent SDK</th>
-            <th>Claude Squad</th>
-            <th>OpenAI SDK</th>
-            <th>Manus AI</th>
+            <th data-tool="maestro">Maestro</th>
+            <th data-tool="langgraph">LangGraph</th>
+            <th data-tool="google-adk">Google ADK</th>
+            <th data-tool="strands">Strands</th>
+            <th data-tool="databricks">Databricks</th>
+            <th data-tool="crewai">CrewAI</th>
+            <th data-tool="n8n">n8n</th>
+            <th data-tool="ms-agent">MS Agent Framework</th>
+            <th data-tool="claude-sdk">Claude Agent SDK</th>
+            <th data-tool="claude-squad">Claude Squad</th>
+            <th data-tool="openai-sdk">OpenAI SDK</th>
+            <th data-tool="manus-ai">Manus AI</th>
           </tr>
         </thead>
         <tbody>
@@ -1579,5 +1772,179 @@
   </div>
 </footer>
 
+<!-- Sticky Vergleichsleiste -->
+<div class="compare-bar" id="cmp-bar">
+  <span class="cmp-bar-count" id="cmp-bar-count">0 / 3</span>
+  <div class="cmp-bar-chips" id="cmp-bar-chips"></div>
+  <button class="cmp-bar-reset" id="cmp-bar-reset">Zurücksetzen</button>
+  <button class="cmp-bar-btn" id="cmp-bar-btn" disabled>Vergleichen</button>
+</div>
+
+<!-- Vergleichsmodal -->
+<div class="cmp-overlay" id="cmp-overlay">
+  <div class="cmp-modal">
+    <div class="cmp-head">
+      <span class="cmp-head-title">Tool-Vergleich</span>
+      <div class="cmp-head-actions">
+        <button class="cmp-reset-btn" id="cmp-reset-btn">Vergleich aufheben</button>
+        <button class="cmp-close-btn" id="cmp-close-btn" title="Schließen">&times;</button>
+      </div>
+    </div>
+    <div class="cmp-body">
+      <table class="cmp-table" id="cmp-table"></table>
+    </div>
+    <div class="cmp-foot">
+      <button class="cmp-foot-close" id="cmp-foot-close">Schließen</button>
+    </div>
+  </div>
+</div>
+
+<script>
+(function () {
+  var MAX = 3;
+  var selected = [];
+  var toolData = {};
+
+  /* Tool-Daten und Checkboxen initialisieren */
+  document.querySelectorAll('.score-card[data-tool]').forEach(function (card) {
+    var key = card.dataset.tool;
+    var nameEl = card.querySelector('.score-tool a') || card.querySelector('.score-tool');
+    var name = nameEl ? nameEl.textContent.trim() : key;
+    var score = parseInt((card.querySelector('.score-number') || {}).textContent, 10) || 0;
+    var desc = ((card.querySelector('.score-descriptor') || {}).textContent || '').trim();
+    toolData[key] = { name: name, score: score, desc: desc };
+
+    var cb = document.createElement('input');
+    cb.type = 'checkbox';
+    cb.className = 'compare-check';
+    cb.setAttribute('aria-label', name);
+    card.appendChild(cb);
+
+    cb.addEventListener('change', function () {
+      if (cb.checked) {
+        if (selected.length >= MAX) { cb.checked = false; return; }
+        selected.push(key);
+        card.classList.add('is-selected');
+      } else {
+        selected = selected.filter(function (k) { return k !== key; });
+        card.classList.remove('is-selected');
+      }
+      syncBar();
+    });
+  });
+
+  /* Sticky Bar */
+  var bar      = document.getElementById('cmp-bar');
+  var barCount = document.getElementById('cmp-bar-count');
+  var barChips = document.getElementById('cmp-bar-chips');
+  var barBtn   = document.getElementById('cmp-bar-btn');
+  var barReset = document.getElementById('cmp-bar-reset');
+
+  function syncBar() {
+    var n = selected.length;
+    if (n === 0) {
+      bar.classList.remove('is-visible');
+    } else {
+      bar.classList.add('is-visible');
+      barCount.textContent = n + ' / ' + MAX + ' ausgewählt';
+      barChips.innerHTML = '';
+      selected.forEach(function (k) {
+        var s = document.createElement('span');
+        s.className = 'cmp-chip';
+        s.textContent = (toolData[k] || {}).name || k;
+        barChips.appendChild(s);
+      });
+      barBtn.disabled = n < 2;
+      barBtn.textContent = n < 2 ? 'Vergleichen (mind. 2)' : 'Vergleichen';
+    }
+  }
+
+  barReset.addEventListener('click', resetAll);
+  barBtn.addEventListener('click', openModal);
+
+  /* Reset */
+  function resetAll() {
+    selected = [];
+    document.querySelectorAll('.score-card.is-selected').forEach(function (c) {
+      c.classList.remove('is-selected');
+    });
+    document.querySelectorAll('.compare-check').forEach(function (cb) {
+      cb.checked = false;
+    });
+    syncBar();
+    closeModal();
+  }
+
+  /* Modal */
+  var overlay   = document.getElementById('cmp-overlay');
+  document.getElementById('cmp-close-btn').addEventListener('click', closeModal);
+  document.getElementById('cmp-reset-btn').addEventListener('click', resetAll);
+  document.getElementById('cmp-foot-close').addEventListener('click', closeModal);
+  overlay.addEventListener('click', function (e) { if (e.target === overlay) closeModal(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeModal(); });
+
+  function openModal() { buildTable(); overlay.classList.add('is-open'); document.body.style.overflow = 'hidden'; }
+  function closeModal() { overlay.classList.remove('is-open'); document.body.style.overflow = ''; }
+
+  /* Vergleichstabelle aus DOM aufbauen */
+  function buildTable() {
+    var colMap = {};
+    document.querySelectorAll('.matrix-wrap table thead th[data-tool]').forEach(function (th) {
+      colMap[th.dataset.tool] = th.cellIndex;
+    });
+
+    var table = document.getElementById('cmp-table');
+    table.innerHTML = '';
+
+    /* Kopfzeile */
+    var thead = document.createElement('thead');
+    var hrow  = document.createElement('tr');
+    var fth   = document.createElement('th');
+    fth.className = 'cmp-feat-head';
+    fth.textContent = 'Feature';
+    hrow.appendChild(fth);
+
+    selected.forEach(function (key) {
+      var d  = toolData[key] || {};
+      var th = document.createElement('th');
+      th.innerHTML =
+        '<div class="ct-name">' + esc(d.name || key) + '</div>' +
+        '<div class="ct-score">' + (d.score || 0) + '</div>' +
+        '<div class="ct-bar"><div class="ct-bar-fill" style="width:' + (d.score || 0) + '%"></div></div>' +
+        '<div class="ct-desc">' + esc(d.desc || '') + '</div>';
+      hrow.appendChild(th);
+    });
+    thead.appendChild(hrow);
+    table.appendChild(thead);
+
+    /* Feature-Zeilen */
+    var tbody = document.createElement('tbody');
+    document.querySelectorAll('.matrix-wrap table tbody tr').forEach(function (row) {
+      var cells      = row.querySelectorAll('td');
+      var featNameEl = cells[0] && cells[0].querySelector('.feature-name');
+      if (!featNameEl) return;
+
+      var tr    = document.createElement('tr');
+      var featTd = document.createElement('td');
+      featTd.className = 'ct-feat-label';
+      featTd.textContent = featNameEl.textContent.trim();
+      tr.appendChild(featTd);
+
+      selected.forEach(function (key) {
+        var idx = colMap[key];
+        var td  = document.createElement('td');
+        if (idx !== undefined && cells[idx]) { td.innerHTML = cells[idx].innerHTML; }
+        tr.appendChild(td);
+      });
+      tbody.appendChild(tr);
+    });
+    table.appendChild(tbody);
+  }
+
+  function esc(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  }
+})();
+</script>
 </body>
 </html>
