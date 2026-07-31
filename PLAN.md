@@ -3,42 +3,42 @@ Branch: feature/fix-grid-auto-fit
 
 ## Steps
 
-1. [ ] Replace `auto-fill` with `auto-fit` in `.score-grid` in `index.html`
+1. [x] Replace `auto-fill` with `auto-fit` in `.score-grid` in `index.html`
    - Files: `/home/user/ai-agent-orchestration-benchmark/index.html`
    - Line 255, exact replacement:
      - Before: `    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));`
      - After:  `    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));`
    - Done when: line 255 reads `auto-fit` and the surrounding `.score-grid` block is otherwise unchanged.
 
-2. [ ] Replace `auto-fill` with `auto-fit` in `.price-grid` in `index.html`
+2. [x] Replace `auto-fill` with `auto-fit` in `.price-grid` in `index.html`
    - Files: `/home/user/ai-agent-orchestration-benchmark/index.html`
    - Line 481, exact replacement:
      - Before: `    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));`
      - After:  `    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));`
    - Done when: line 481 reads `auto-fit` and the surrounding `.price-grid` block is otherwise unchanged.
 
-3. [ ] Replace `auto-fill` with `auto-fit` in `.verdict-grid` in `index.html`
+3. [x] Replace `auto-fill` with `auto-fit` in `.verdict-grid` in `index.html`
    - Files: `/home/user/ai-agent-orchestration-benchmark/index.html`
    - Line 582, exact replacement:
      - Before: `    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));`
      - After:  `    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));`
    - Done when: line 582 reads `auto-fit` and the surrounding `.verdict-grid` block is otherwise unchanged.
 
-4. [ ] Replace `auto-fill` with `auto-fit` in `.score-grid` in `index.en.html`
+4. [x] Replace `auto-fill` with `auto-fit` in `.score-grid` in `index.en.html`
    - Files: `/home/user/ai-agent-orchestration-benchmark/index.en.html`
    - Line 255, exact replacement:
      - Before: `    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));`
      - After:  `    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));`
    - Done when: line 255 reads `auto-fit` and the surrounding `.score-grid` block is otherwise unchanged.
 
-5. [ ] Replace `auto-fill` with `auto-fit` in `.price-grid` in `index.en.html`
+5. [x] Replace `auto-fill` with `auto-fit` in `.price-grid` in `index.en.html`
    - Files: `/home/user/ai-agent-orchestration-benchmark/index.en.html`
    - Line 481, exact replacement:
      - Before: `    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));`
      - After:  `    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));`
    - Done when: line 481 reads `auto-fit` and the surrounding `.price-grid` block is otherwise unchanged.
 
-6. [ ] Replace `auto-fill` with `auto-fit` in `.verdict-grid` in `index.en.html`
+6. [x] Replace `auto-fill` with `auto-fit` in `.verdict-grid` in `index.en.html`
    - Files: `/home/user/ai-agent-orchestration-benchmark/index.en.html`
    - Line 582, exact replacement:
      - Before: `    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));`
