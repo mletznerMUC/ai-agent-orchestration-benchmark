@@ -1,0 +1,10 @@
+{
+  "name": "ai-agent-orchestration-benchmark",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test \"scripts/**/*.test.mjs\"",
+    "verify": "node scripts/verify.mjs",
+    "extract": "node scripts/extract.mjs"
+  }
+}

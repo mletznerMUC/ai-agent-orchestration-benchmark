@@ -1,0 +1,2851 @@
+{
+  "meta": {
+    "edition": "2026",
+    "asOf": {
+      "de": "Juli 2026",
+      "en": "July 2026"
+    },
+    "features": [
+      {
+        "key": "multi-agent-parallel",
+        "label": {
+          "de": "Multi-Agent Parallel",
+          "en": "Multi-Agent Parallel"
+        },
+        "desc": {
+          "de": "Gleichzeitige Ausführung",
+          "en": "Concurrent Execution"
+        }
+      },
+      {
+        "key": "desktop-gui",
+        "label": {
+          "de": "Desktop GUI",
+          "en": "Desktop GUI"
+        },
+        "desc": {
+          "de": "Native App / Dashboard",
+          "en": "Native App / Dashboard"
+        }
+      },
+      {
+        "key": "playbooks",
+        "label": {
+          "de": "Playbooks / Auto-Run",
+          "en": "Playbooks / Auto-Run"
+        },
+        "desc": {
+          "de": "Autonome Langzeit-Tasks",
+          "en": "Autonomous Long-Running Tasks"
+        }
+      },
+      {
+        "key": "mobile-remote",
+        "label": {
+          "de": "Mobile Remote Control",
+          "en": "Mobile Remote Control"
+        },
+        "desc": {
+          "de": "Steuerung per Smartphone",
+          "en": "Smartphone Control"
+        }
+      },
+      {
+        "key": "git-worktrees",
+        "label": {
+          "de": "Git Worktrees",
+          "en": "Git Worktrees"
+        },
+        "desc": {
+          "de": "Isolierte Branch-Runs",
+          "en": "Isolated Branch Runs"
+        }
+      },
+      {
+        "key": "group-chat",
+        "label": {
+          "de": "Agent Group Chat",
+          "en": "Agent Group Chat"
+        },
+        "desc": {
+          "de": "Agents kommunizieren miteinander",
+          "en": "Agents Communicate"
+        }
+      },
+      {
+        "key": "mcp-support",
+        "label": {
+          "de": "MCP-Support",
+          "en": "MCP Support"
+        },
+        "desc": {
+          "de": "Model Context Protocol",
+          "en": "Model Context Protocol"
+        }
+      },
+      {
+        "key": "open-source",
+        "label": {
+          "de": "Open Source",
+          "en": "Open Source"
+        },
+        "desc": {
+          "de": "Lizenz &amp; Code-Zugang",
+          "en": "License &amp; Code Access"
+        }
+      },
+      {
+        "key": "cli-cicd",
+        "label": {
+          "de": "CLI / CI/CD",
+          "en": "CLI / CI/CD"
+        },
+        "desc": {
+          "de": "Headless &amp; Automatisierung",
+          "en": "Headless &amp; Automation"
+        }
+      },
+      {
+        "key": "observability",
+        "label": {
+          "de": "Observability",
+          "en": "Observability"
+        },
+        "desc": {
+          "de": "Tracing, Logs, Monitoring",
+          "en": "Tracing, Logs, Monitoring"
+        }
+      },
+      {
+        "key": "hitl",
+        "label": {
+          "de": "Human-in-the-Loop",
+          "en": "Human-in-the-Loop"
+        },
+        "desc": {
+          "de": "Approval-Steps",
+          "en": "Approval Steps"
+        }
+      },
+      {
+        "key": "eu-onprem",
+        "label": {
+          "de": "EU / On-Prem Hosting",
+          "en": "EU / On-Prem Hosting"
+        },
+        "desc": {
+          "de": "DSGVO-Konformität",
+          "en": "GDPR Compliance"
+        }
+      },
+      {
+        "key": "model-agnostic",
+        "label": {
+          "de": "Model-Agnostisch",
+          "en": "Model-Agnostic"
+        },
+        "desc": {
+          "de": "Claude, GPT, Mistral etc.",
+          "en": "Claude, GPT, Mistral etc."
+        }
+      },
+      {
+        "key": "learning-curve",
+        "label": {
+          "de": "Lernkurve",
+          "en": "Learning Curve"
+        },
+        "desc": {
+          "de": "Onboarding-Aufwand",
+          "en": "Onboarding Effort"
+        }
+      }
+    ],
+    "toolOrder": {
+      "scores": [
+        "maestro",
+        "langgraph",
+        "google-adk",
+        "strands",
+        "databricks",
+        "crewai",
+        "ms-agent",
+        "n8n",
+        "claude-sdk",
+        "openai-sdk",
+        "claude-squad",
+        "manus-ai"
+      ],
+      "matrix": [
+        "maestro",
+        "langgraph",
+        "google-adk",
+        "strands",
+        "databricks",
+        "crewai",
+        "n8n",
+        "ms-agent",
+        "claude-sdk",
+        "claude-squad",
+        "openai-sdk",
+        "manus-ai"
+      ],
+      "prices": [
+        "maestro",
+        "langgraph",
+        "google-adk",
+        "strands",
+        "databricks",
+        "crewai",
+        "n8n",
+        "ms-agent",
+        "claude-sdk",
+        "claude-squad",
+        "manus-ai",
+        "openai-sdk"
+      ]
+    }
+  },
+  "tools": {
+    "maestro": {
+      "name": "Maestro",
+      "score": {
+        "value": 84,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Desktop Orchestrator",
+        "en": "Desktop Orchestrator"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "yes",
+          "label": {
+            "de": "QR + Tunnel",
+            "en": "QR + Tunnel"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "AGPL-3.0",
+            "en": "AGPL-3.0"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "partial",
+          "label": {
+            "de": "Dashboard",
+            "en": "Dashboard"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "partial",
+          "label": {
+            "de": "Geplant",
+            "en": "Planned"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Self-hosted",
+            "en": "Self-hosted"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "Multi-Model",
+            "en": "Multi-Model"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Niedrig",
+            "en": "Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Desktop Agent Orchestrator",
+          "en": "Desktop Agent Orchestrator"
+        },
+        "main": {
+          "de": "Kostenlos",
+          "en": "Free"
+        },
+        "note": {
+          "de": "Open Source · AGPL-3.0",
+          "en": "Open Source · AGPL-3.0"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Self-hosted",
+              "en": "Self-hosted"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Cloud (geplant)",
+              "en": "Cloud (planned)"
+            },
+            "value": {
+              "de": "TBD",
+              "en": "TBD"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Token-Kosten",
+              "en": "Token Costs"
+            },
+            "value": {
+              "de": "Via LLM API",
+              "en": "Via LLM API"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "langgraph": {
+      "name": "LangGraph",
+      "score": {
+        "value": 89,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Code-First Framework",
+        "en": "Code-First Framework"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Workflows",
+            "en": "Workflows"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "MIT",
+            "en": "MIT"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Python API",
+            "en": "Python API"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "LangSmith",
+            "en": "LangSmith"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "Built-in",
+            "en": "Built-in"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Self-hosted",
+            "en": "Self-hosted"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "no",
+          "label": {
+            "de": "Hoch (1–2 Wo.)",
+            "en": "High (1–2 wks)"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Code-first Orchestration Framework",
+          "en": "Code-first Orchestration Framework"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Open Source (MIT) · Self-hosted",
+          "en": "Open Source (MIT) · Self-hosted"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "OSS Framework",
+              "en": "OSS Framework"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "LangSmith Plus",
+              "en": "LangSmith Plus"
+            },
+            "value": {
+              "de": "~€39/Mo.",
+              "en": "~€39/mo."
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Enterprise",
+              "en": "Enterprise"
+            },
+            "value": {
+              "de": "Custom",
+              "en": "Custom"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "google-adk": {
+      "name": "Google ADK",
+      "score": {
+        "value": 88,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Enterprise Framework · v2.0 GA",
+        "en": "Enterprise Framework · v2.0 GA"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Graph Workflows",
+            "en": "Graph Workflows"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "partial",
+          "label": {
+            "de": "Web Dev UI",
+            "en": "Web Dev UI"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Workflow Runtime",
+            "en": "Workflow Runtime"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "Hierarchical",
+            "en": "Hierarchical"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "First-Class",
+            "en": "First-Class"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "Apache 2.0",
+            "en": "Apache 2.0"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Py/TS/Go/Java",
+            "en": "Py/TS/Go/Java"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "OTel + MLflow",
+            "en": "OTel + MLflow"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "ToolConfirmation",
+            "en": "ToolConfirmation"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Cloud Run/GKE",
+            "en": "Cloud Run/GKE"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "LiteLLM Bridge",
+            "en": "LiteLLM Bridge"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "partial",
+          "label": {
+            "de": "Mittel",
+            "en": "Medium"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Agent Development Kit · v2.0 GA",
+          "en": "Agent Development Kit · v2.0 GA"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Open Source · Apache 2.0 · Graph Runtime",
+          "en": "Open Source · Apache 2.0 · Graph Runtime"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "OSS Framework",
+              "en": "OSS Framework"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Vertex AI Agent Engine",
+              "en": "Vertex AI Agent Engine"
+            },
+            "value": {
+              "de": "Usage (GCP)",
+              "en": "Usage (GCP)"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Self-hosted (GKE/Cloud Run)",
+              "en": "Self-hosted (GKE/Cloud Run)"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "strands": {
+      "name": "Strands Agents",
+      "score": {
+        "value": 86,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "AWS-Native SDK",
+        "en": "AWS-Native SDK"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Swarm + A-as-T",
+            "en": "Swarm + A-as-T"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "no",
+          "label": {
+            "de": "SDK only",
+            "en": "SDK only"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Agent Loop",
+            "en": "Agent Loop"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "First-Class",
+            "en": "First-Class"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "Apache 2.0",
+            "en": "Apache 2.0"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Python + TS",
+            "en": "Python + TS"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "OpenTelemetry",
+            "en": "OpenTelemetry"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "Interrupts",
+            "en": "Interrupts"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Cloud-agnostic",
+            "en": "Cloud-agnostic"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Niedrig",
+            "en": "Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "AWS-Native Agent SDK (Py + TS)",
+          "en": "AWS-Native Agent SDK (Py + TS)"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Open Source · Apache 2.0",
+          "en": "Open Source · Apache 2.0"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "OSS SDK",
+              "en": "OSS SDK"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "AgentCore Runtime",
+              "en": "AgentCore Runtime"
+            },
+            "value": {
+              "de": "$0.0895/vCPU-h",
+              "en": "$0.0895/vCPU-hr"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Strands Evals SDK",
+              "en": "Strands Evals SDK"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "databricks": {
+      "name": "Databricks Agent Bricks",
+      "score": {
+        "value": 85,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Managed Enterprise Platform",
+        "en": "Managed Enterprise Platform"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Supervisor",
+            "en": "Supervisor"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "partial",
+          "label": {
+            "de": "Workspace UI",
+            "en": "Workspace UI"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Lakeflow Jobs",
+            "en": "Lakeflow Jobs"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "Supervisor Pattern",
+            "en": "Supervisor Pattern"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "Managed + Custom",
+            "en": "Managed + Custom"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "no",
+          "label": {
+            "de": "Proprietär",
+            "en": "Proprietary"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "SDK + REST API",
+            "en": "SDK + REST API"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "MLflow 3.0",
+            "en": "MLflow 3.0"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "AI Playground",
+            "en": "AI Playground"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "partial",
+          "label": {
+            "de": "Multi-Cloud EU",
+            "en": "Multi-Cloud (EU)"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "AI Gateway",
+            "en": "AI Gateway"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "partial",
+          "label": {
+            "de": "Hoch (Platform)",
+            "en": "High (Platform)"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Managed Enterprise Agent Platform",
+          "en": "Managed Enterprise Agent Platform"
+        },
+        "main": {
+          "de": "Usage-based",
+          "en": "Usage-based"
+        },
+        "note": {
+          "de": "Proprietär · Databricks-Workspace erforderlich",
+          "en": "Proprietary · Databricks Workspace required"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Supervisor Agent (GA)",
+              "en": "Supervisor Agent (GA)"
+            },
+            "value": {
+              "de": "Serverless Compute",
+              "en": "Serverless Compute"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Managed MCP Servers",
+              "en": "Managed MCP Servers"
+            },
+            "value": {
+              "de": "SQL Warehouse + Compute",
+              "en": "SQL Warehouse + Compute"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Custom MCP / Apps",
+              "en": "Custom MCP / Apps"
+            },
+            "value": {
+              "de": "Databricks Apps Pricing",
+              "en": "Databricks Apps Pricing"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Token-Kosten",
+              "en": "Token Costs"
+            },
+            "value": {
+              "de": "Via AI Gateway",
+              "en": "Via AI Gateway"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "crewai": {
+      "name": "CrewAI",
+      "score": {
+        "value": 83,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Best Onboarding",
+        "en": "Best Onboarding"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "partial",
+          "label": {
+            "de": "Web Studio",
+            "en": "Web Studio"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "partial",
+          "label": {
+            "de": "Flows",
+            "en": "Flows"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "First-Class",
+            "en": "First-Class"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "MIT (Core)",
+            "en": "MIT (Core)"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Python CLI",
+            "en": "Python CLI"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "partial",
+          "label": {
+            "de": "Verbose Log",
+            "en": "Verbose Log"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Self-hosted",
+            "en": "Self-hosted"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Niedrig",
+            "en": "Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Role-based Multi-Agent Framework",
+          "en": "Role-based Multi-Agent Framework"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Core Open Source · Cloud optional",
+          "en": "Core Open Source · Cloud optional"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "OSS Core",
+              "en": "OSS Core"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Cloud Basic",
+              "en": "Cloud Basic"
+            },
+            "value": {
+              "de": "€0 (50 Runs)",
+              "en": "€0 (50 Runs)"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Cloud Pro",
+              "en": "Cloud Pro"
+            },
+            "value": {
+              "de": "~€25/Mo.",
+              "en": "~€25/mo."
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Enterprise",
+              "en": "Enterprise"
+            },
+            "value": {
+              "de": "Custom",
+              "en": "Custom"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "ms-agent": {
+      "name": "Microsoft Agent Framework",
+      "score": {
+        "value": 82,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Microsoft Stack · v1.0 GA",
+        "en": "Microsoft Stack · v1.0 GA"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "partial",
+          "label": {
+            "de": "DevUI Browser",
+            "en": "DevUI Browser"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Graph Workflows",
+            "en": "Graph Workflows"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "yes",
+          "label": {
+            "de": "5 Patterns",
+            "en": "5 Patterns"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "Built-in",
+            "en": "Built-in"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "MIT",
+            "en": "MIT"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Python + .NET",
+            "en": "Python + .NET"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "OTel nativ",
+            "en": "OTel Native"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "Built-in",
+            "en": "Built-in"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "partial",
+          "label": {
+            "de": "Azure-Fokus",
+            "en": "Azure-Fokus"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "6 Provider",
+            "en": "6 Providers"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "partial",
+          "label": {
+            "de": "Mittel",
+            "en": "Medium"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Unified Enterprise Framework · v1.0 GA",
+          "en": "Unified Enterprise Framework · v1.0 GA"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Open Source MIT · Successor zu AutoGen + SK",
+          "en": "Open Source MIT · Successor to AutoGen + SK"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "OSS Framework",
+              "en": "OSS Framework"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "DevUI",
+              "en": "DevUI"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Azure AI Foundry",
+              "en": "Azure AI Foundry"
+            },
+            "value": {
+              "de": "Usage-based",
+              "en": "Usage-based"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Enterprise",
+              "en": "Enterprise"
+            },
+            "value": {
+              "de": "Custom",
+              "en": "Custom"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "n8n": {
+      "name": "n8n",
+      "score": {
+        "value": 79,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Best No-Code",
+        "en": "Best No-Code"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "yes",
+          "label": {
+            "de": "Web App",
+            "en": "Web App"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "partial",
+          "label": {
+            "de": "Web-Access",
+            "en": "Web-Access"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "partial",
+          "label": {
+            "de": "Beta",
+            "en": "Beta"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "Apache 2.0",
+            "en": "Apache 2.0"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "REST API",
+            "en": "REST API"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Self-hosted",
+            "en": "Self-hosted"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Sehr niedrig",
+            "en": "Very Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Visual Low-Code Orchestration",
+          "en": "Visual Low-Code Orchestration"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Self-hosted Free · Cloud nur 14-Tage-Trial",
+          "en": "Self-hosted Free · Cloud 14-day trial only"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Self-hosted (Community)",
+              "en": "Self-hosted (Community)"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Cloud Starter",
+              "en": "Cloud Starter"
+            },
+            "value": {
+              "de": "~€24/Mo.",
+              "en": "~€24/mo."
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Cloud Pro",
+              "en": "Cloud Pro"
+            },
+            "value": {
+              "de": "~€60/Mo.",
+              "en": "~€60/mo."
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Business (SSO)",
+              "en": "Business (SSO)"
+            },
+            "value": {
+              "de": "~€800/Mo.",
+              "en": "~€800/mo."
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Enterprise",
+              "en": "Enterprise"
+            },
+            "value": {
+              "de": "Custom",
+              "en": "Custom"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "claude-sdk": {
+      "name": "Claude Agent SDK",
+      "score": {
+        "value": 78,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Code-First SDK",
+        "en": "Code-First SDK"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Subagents",
+            "en": "Subagents"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "no",
+          "label": {
+            "de": "SDK only",
+            "en": "SDK only"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Agent Loop",
+            "en": "Agent Loop"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "partial",
+          "label": {
+            "de": "Subagent Delegation",
+            "en": "Subagent Delegation"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "Deepest",
+            "en": "Deepest"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "MIT",
+            "en": "MIT"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Python + TS",
+            "en": "Python + TS"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "yes",
+          "label": {
+            "de": "OTel built-in",
+            "en": "OTel built-in"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "can_use_tool",
+            "en": "can_use_tool"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Self-hosted",
+            "en": "Self-hosted"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "no",
+          "label": {
+            "de": "Claude-only",
+            "en": "Claude-only"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Niedrig",
+            "en": "Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Anthropic-Native Agent Framework",
+          "en": "Anthropic-Native Agent Framework"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Open Source (MIT) · Claude-only · Billing-Plan pausiert (Jul 2026)",
+          "en": "Open Source (MIT) · Claude-only · Billing plan paused (Jul 2026)"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "SDK",
+              "en": "SDK"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Managed Agents (Beta)",
+              "en": "Managed Agents (Beta)"
+            },
+            "value": {
+              "de": "$0.08/Session-h",
+              "en": "$0.08/Session-hr"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "SDK-Credit (Abo)",
+              "en": "SDK Credit (subscription)"
+            },
+            "value": {
+              "de": "pausiert",
+              "en": "paused"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Claude API",
+              "en": "Claude API"
+            },
+            "value": {
+              "de": "Via Anthropic/Bedrock/Vertex",
+              "en": "Via Anthropic/Bedrock/Vertex"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "openai-sdk": {
+      "name": "OpenAI Agents SDK",
+      "score": {
+        "value": 76,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Fast Prototype · Enterprise Safety",
+        "en": "Fast Prototype · Enterprise Safety"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "partial",
+          "label": {
+            "de": "Sandbox Agents",
+            "en": "Sandbox Agents"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "partial",
+          "label": {
+            "de": "Handoffs",
+            "en": "Handoffs"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "yes",
+          "label": {
+            "de": "v0.14+",
+            "en": "v0.14+"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "MIT",
+            "en": "MIT"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "Python SDK",
+            "en": "Python SDK"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "partial",
+          "label": {
+            "de": "Basic Traces",
+            "en": "Basic Traces"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "Guardrails v2",
+            "en": "Guardrails v2"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "no",
+          "label": {
+            "de": "OpenAI-only",
+            "en": "OpenAI-only"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "v0.13 Any-LLM",
+            "en": "v0.13 Any-LLM"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Sehr niedrig",
+            "en": "Very Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "OpenAI-native Agent Framework",
+          "en": "OpenAI-native Agent Framework"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Open Source (MIT) · v0.14 · Sandbox Agents · Enterprise Safety",
+          "en": "Open Source (MIT) · v0.14 · Sandbox Agents · Enterprise Safety"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Framework",
+              "en": "Framework"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Any-LLM Adapter",
+              "en": "Any-LLM Adapter"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "GPT-5.4 API",
+              "en": "GPT-5.4 API"
+            },
+            "value": {
+              "de": "Usage-based",
+              "en": "Usage-based"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Enterprise",
+              "en": "Enterprise"
+            },
+            "value": {
+              "de": "Custom",
+              "en": "Custom"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "claude-squad": {
+      "name": "Claude Squad",
+      "score": {
+        "value": 72,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Lightweight CLI",
+        "en": "Lightweight CLI"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "no",
+          "label": {
+            "de": "Terminal",
+            "en": "Terminal"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "yes",
+          "label": {
+            "de": "Vollständig",
+            "en": "Full"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "partial",
+          "label": {
+            "de": "Tmux-Panes",
+            "en": "Tmux-Panes"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "partial",
+          "label": {
+            "de": "Via Claude",
+            "en": "Via Claude"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "MIT",
+            "en": "MIT"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "no",
+          "label": {
+            "de": "Minimal",
+            "en": "Minimal"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Lokal",
+            "en": "Local"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "no",
+          "label": {
+            "de": "Claude-only",
+            "en": "Claude-only"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Niedrig",
+            "en": "Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Terminal Multi-Claude Multiplexer",
+          "en": "Terminal Multi-Claude Multiplexer"
+        },
+        "main": {
+          "de": "Kostenlos",
+          "en": "Free"
+        },
+        "note": {
+          "de": "Open Source (MIT) · Lokal",
+          "en": "Open Source (MIT) · Local"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Self-hosted",
+              "en": "Self-hosted"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Claude API",
+              "en": "Claude API"
+            },
+            "value": {
+              "de": "Via Anthropic",
+              "en": "Via Anthropic"
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "manus-ai": {
+      "name": "Manus AI",
+      "score": {
+        "value": 70,
+        "source": null,
+        "checked": null,
+        "provenance": "legacy-unsourced"
+      },
+      "descriptor": {
+        "de": "Autonomous Web Agent",
+        "en": "Autonomous Web Agent"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "partial",
+          "label": {
+            "de": "Subagents",
+            "en": "Subagents"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "desktop-gui": {
+          "state": "yes",
+          "label": {
+            "de": "Web App",
+            "en": "Web App"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Browser Tasks",
+            "en": "Browser Tasks"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mobile-remote": {
+          "state": "partial",
+          "label": {
+            "de": "Web-Access",
+            "en": "Web-Access"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "group-chat": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "mcp-support": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "open-source": {
+          "state": "no",
+          "label": {
+            "de": "Proprietär",
+            "en": "Proprietary"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "cli-cicd": {
+          "state": "partial",
+          "label": {
+            "de": "API (Beta)",
+            "en": "API (Beta)"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "observability": {
+          "state": "partial",
+          "label": {
+            "de": "Task-Log",
+            "en": "Task Log"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "hitl": {
+          "state": "partial",
+          "label": {
+            "de": "Begrenzt",
+            "en": "Limited"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "eu-onprem": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "model-agnostic": {
+          "state": "partial",
+          "label": {
+            "de": "Multi-LLM intern",
+            "en": "Multi-LLM internal"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Sehr niedrig",
+            "en": "Very Low"
+          },
+          "source": null,
+          "checked": null,
+          "provenance": "legacy-unsourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Autonome Web-Agent-Plattform",
+          "en": "Autonomous Web Agent Platform"
+        },
+        "main": {
+          "de": "Credits",
+          "en": "Credits"
+        },
+        "note": {
+          "de": "Proprietär · Cloud-only · Kein Open Source",
+          "en": "Proprietary · Cloud-only · No open source"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Free",
+              "en": "Free"
+            },
+            "value": {
+              "de": "Begrenzte Credits",
+              "en": "Limited credits"
+            },
+            "tone": "free",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Pro",
+              "en": "Pro"
+            },
+            "value": {
+              "de": "~$39/Mo.",
+              "en": "~$39/mo."
+            },
+            "tone": "default",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          },
+          {
+            "label": {
+              "de": "Enterprise",
+              "en": "Enterprise"
+            },
+            "value": {
+              "de": "Custom",
+              "en": "Custom"
+            },
+            "tone": "muted",
+            "source": null,
+            "checked": null,
+            "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    }
+  }
+}
