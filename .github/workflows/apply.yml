@@ -9,7 +9,12 @@ name: refresh-apply
 #
 # This does NOT merge. Merging stays with Markus, per CLAUDE.md.
 #
-# Requires repository secret ANTHROPIC_API_KEY.
+# Secrets:
+#   ANTHROPIC_API_KEY  required — the workflow is inert without it.
+#   REFRESH_PAT        optional — see refresh.yml. Without it the push here
+#                      does not re-trigger `verify`, so the PR keeps showing
+#                      its pre-apply check result. The gate still holds:
+#                      this job runs the verifier itself before pushing.
 
 on:
   pull_request:
@@ -32,6 +37,12 @@ jobs:
         with:
           ref: ${{ github.event.pull_request.head.ref }}
           fetch-depth: 0
+          # checkout persists this token into .git/config, so the push step
+          # below uses it too. With REFRESH_PAT set, that push re-triggers
+          # `verify` on the PR; with the default GITHUB_TOKEN it does not,
+          # and the PR keeps showing the pre-apply check result.
+          # Falls back cleanly when the secret is absent.
+          token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -97,7 +108,7 @@ jobs:
 
       - name: Push the applied update
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
           if git diff --quiet; then

@@ -11,7 +11,13 @@ name: refresh-research
 # applied to the site until a human adds the `refresh:approved` label,
 # which triggers .github/workflows/apply.yml.
 #
-# Requires repository secret ANTHROPIC_API_KEY.
+# Secrets:
+#   ANTHROPIC_API_KEY  required — the workflow is inert without it.
+#   REFRESH_PAT        optional — a fine-grained PAT with Contents and Pull
+#                      requests read/write. Without it the proposal PR is
+#                      opened by GITHUB_TOKEN, which does not trigger
+#                      `pull_request` workflows, so `verify` never runs on
+#                      the PR. Everything else works either way.
 
 on:
   schedule:
@@ -40,6 +46,13 @@ jobs:
       - uses: actions/checkout@v4
         with:
           fetch-depth: 0
+          # checkout persists this token, so the branch push below uses it.
+          # A pull request opened with the default GITHUB_TOKEN does not
+          # trigger `pull_request` workflows, so `verify` would never run on
+          # the proposal at all. With REFRESH_PAT set it runs normally: red
+          # on the proposal, green once the approved page update lands.
+          # Falls back cleanly when the secret is absent.
+          token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
 
       - uses: actions/setup-node@v4
         with:
@@ -101,7 +114,7 @@ jobs:
 
       - name: Open proposal pull request
         env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
           ROUND: ${{ steps.round.outputs.id }}
         run: |
           set -euo pipefail
