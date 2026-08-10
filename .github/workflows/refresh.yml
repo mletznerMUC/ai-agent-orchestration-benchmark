@@ -1,0 +1,174 @@
+name: refresh-research
+
+# Phase 1 of the refresh line, on a schedule.
+#
+# Claude researches every tool in data/tools.json against its own primary
+# sources and writes TWO things: an updated data/tools.json and a report.
+# It does not touch index.html or index.en.html — the served pages are
+# never edited by the research phase.
+#
+# The result is a pull request labelled `refresh:proposed`. Nothing is
+# applied to the site until a human adds the `refresh:approved` label,
+# which triggers .github/workflows/apply.yml.
+#
+# Secrets:
+#   ANTHROPIC_API_KEY  required — the workflow is inert without it.
+#   REFRESH_PAT        optional — a fine-grained PAT with Contents and Pull
+#                      requests read/write. Without it the proposal PR is
+#                      opened by GITHUB_TOKEN, which does not trigger
+#                      `pull_request` workflows, so `verify` never runs on
+#                      the PR. Everything else works either way.
+
+on:
+  schedule:
+    # 06:00 UTC on the 1st of each month. Cadence matches the historical
+    # rhythm of the changelog (Mai 2026, Juli 2026, ...).
+    - cron: '0 6 1 * *'
+  workflow_dispatch:
+    inputs:
+      tools:
+        description: 'Tool keys to research (space-separated). Empty = all.'
+        required: false
+        default: ''
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: refresh-research
+  cancel-in-progress: false
+
+jobs:
+  research:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          # checkout persists this token, so the branch push below uses it.
+          # A pull request opened with the default GITHUB_TOKEN does not
+          # trigger `pull_request` workflows, so `verify` would never run on
+          # the proposal at all. With REFRESH_PAT set it runs normally: red
+          # on the proposal, green once the approved page update lands.
+          # Falls back cleanly when the secret is absent.
+          token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Compute round id
+        id: round
+        run: echo "id=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+      - name: Research tools and write proposal
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          claude_args: |
+            --model claude-opus-5
+            --max-turns 120
+            --allowedTools "Read,Grep,Glob,WebFetch,WebSearch,Write,Edit,Task"
+          prompt: |
+            You are running Phase 1 and 2 of the refresh line for the
+            AI agent orchestration benchmark. Read CLAUDE.md and
+            docs/decisions/ first — they are binding.
+
+            Scope: ${{ github.event.inputs.tools || 'every tool key in data/tools.json' }}
+            Round id: ${{ steps.round.outputs.id }}
+
+            RESEARCH
+            Dispatch one `researcher` subagent per tool, all in a single
+            message so they run in parallel. Each gets its tool key, its
+            current entry from data/tools.json, and its URL. The
+            researcher subagent is read-only by design — do not work
+            around that.
+
+            TRIAGE
+            Consolidate the reports. Drop every claim that has no
+            resolvable source URL, and list what you dropped. For score
+            movements, keep the criterion the researcher named; if none
+            was named, demote it to a fact and leave the score alone.
+            Surface source disagreements instead of resolving them.
+
+            WRITE EXACTLY TWO THINGS
+            1. data/tools.json — apply only the sourced changes. Every
+               value you change MUST gain a real `source` URL you
+               actually read and a `checked` date. Leave `provenance`
+               as "legacy-unsourced" on values you did not change.
+            2. docs/refresh/${{ steps.round.outputs.id }}-report.md —
+               the human-readable proposal: changes grouped by tool
+               (field, old -> new, source, reasoning), then dropped
+               claims, then unverified claims, then source
+               disagreements.
+
+            DO NOT
+            - Do not edit index.html or index.en.html. The page update
+              is a separate, human-approved phase.
+            - Do not invent a source URL. No source, no change. An
+              honest "no change found" is a good result.
+            - Do not use promotional language for or against any vendor.
+            - Do not commit, push, branch, or open a pull request. The
+              workflow does that deterministically after you finish.
+
+      - name: Open proposal pull request
+        env:
+          GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+          ROUND: ${{ steps.round.outputs.id }}
+        run: |
+          set -euo pipefail
+
+          if git diff --quiet -- data/tools.json && [ -z "$(git status --porcelain docs/refresh)" ]; then
+            echo "No sourced changes found this round — nothing to propose."
+            exit 0
+          fi
+
+          # The research phase must never touch the served pages.
+          if ! git diff --quiet -- index.html index.en.html; then
+            echo "::error::Research phase modified the served HTML. Refusing to open a PR."
+            git --no-pager diff --stat -- index.html index.en.html
+            exit 1
+          fi
+
+          # gh pr create --label fails on a label that does not exist yet,
+          # so make the two gate labels self-provisioning.
+          gh label create "refresh:proposed" --color FBCA04 \
+            --description "Benchmark data proposal awaiting human approval" 2>/dev/null || true
+          gh label create "refresh:approved" --color 0E8A16 \
+            --description "Approved — triggers the page update workflow" 2>/dev/null || true
+
+          BRANCH="refresh/${ROUND}"
+          git config user.name  "claude[bot]"
+          git config user.email "41898282+claude[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+          git add data/tools.json docs/refresh
+          git commit -m "data: proposed benchmark refresh for ${ROUND}
+
+          Sourced findings only; every changed value carries a source URL
+          and a checked date. Generated by the scheduled research line.
+          Awaiting human approval — see the report in docs/refresh/."
+          git push -u origin "$BRANCH"
+
+          gh pr create \
+            --title "data: proposed benchmark refresh — ${ROUND}" \
+            --body-file "docs/refresh/${ROUND}-report.md" \
+            --label "refresh:proposed" \
+            --base main --head "$BRANCH"
+
+          gh pr comment "$BRANCH" --body "$(cat <<'EOF'
+          **This is a proposal, not a change to the site.**
+
+          Only `data/tools.json` and the report were touched — the served
+          pages are untouched. The `verify` check is **expected to fail**
+          on this PR: the data no longer matches the pages, which is
+          precisely what it is there to detect.
+
+          To apply it: review the diff, then add the label
+          **`refresh:approved`**. That triggers the page update, which
+          writes both language files, adds the changelog entry, and turns
+          `verify` green. Then merge.
+
+          To reject it: close the PR. Nothing reaches the site.
+          EOF
+          )"

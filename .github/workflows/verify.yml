@@ -1,0 +1,40 @@
+name: verify
+
+# Proves data/tools.json, index.html and index.en.html agree, in both
+# languages, and that no data value changed without gaining a source.
+#
+# Note: a refresh proposal PR (label `refresh:proposed`) is EXPECTED to be
+# red here. It changes tools.json without yet changing the pages, which is
+# exactly the mismatch this job exists to catch. It goes green once the
+# approved page update is applied. Red on such a PR means the gate is
+# working, not that something is broken.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          # changedWithoutSource diffs data/tools.json against HEAD~,
+          # so the check needs more than a shallow clone.
+          fetch-depth: 0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      # No dependencies by design — there is nothing to install.
+      - name: Unit tests
+        run: npm test
+
+      - name: Verify site data
+        run: npm run verify
