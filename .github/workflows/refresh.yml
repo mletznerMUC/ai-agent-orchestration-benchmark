@@ -107,6 +107,11 @@ jobs:
           # OIDC token". We don't need an App token: every git and PR
           # operation happens in the shell steps below, not inside the action.
           github_token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+          # Without this the action prints only a pass/fail verdict and hides
+          # Claude's output, so a failed round is undiagnosable — run 6 burned
+          # $7.20 and reported `is_error: true` with no message. The repo is
+          # private, so the extra log detail stays with collaborators.
+          show_full_output: true
           claude_args: |
             --model claude-opus-5
             --max-turns 120
