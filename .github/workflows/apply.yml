@@ -10,7 +10,9 @@ name: refresh-apply
 # This does NOT merge. Merging stays with Markus, per CLAUDE.md.
 #
 # Secrets:
-#   ANTHROPIC_API_KEY  required — the workflow is inert without it.
+#   Git_AI_Benchmarks  required — the Anthropic API key. The workflow is
+#                      inert without it. ANTHROPIC_API_KEY is accepted as
+#                      a fallback name.
 #   REFRESH_PAT        optional — see refresh.yml. Without it the push here
 #                      does not re-trigger `verify`, so the PR keeps showing
 #                      its pre-apply check result. The gate still holds:
@@ -50,13 +52,13 @@ jobs:
 
       - name: Preflight — required secrets
         env:
-          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          KEY: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
         run: |
           if [ -z "$KEY" ]; then
-            echo "::error::Repository secret ANTHROPIC_API_KEY is empty or not set. Add it under Settings > Secrets and variables > Actions. The name must match exactly."
+            echo "::error::No Anthropic API key found. Set repository secret Git_AI_Benchmarks (or ANTHROPIC_API_KEY) under Settings > Secrets and variables > Actions. It must be a Repository secret, not an Environment secret."
             exit 1
           fi
-          echo "ANTHROPIC_API_KEY is present."
+          echo "Anthropic API key is present."
 
       - name: Confirm this is a data-only proposal
         run: |
@@ -71,7 +73,7 @@ jobs:
       - name: Apply approved data to both language files
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
           # See refresh.yml: supplying a token skips the action's OIDC ->
           # GitHub App token exchange, which otherwise needs `id-token: write`.
           github_token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
