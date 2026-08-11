@@ -8,8 +8,11 @@ pages, and a second human merges. Agents never merge, never push to `main`.
 human gate → apply agent → verify → human gate → GitHub Pages, plus the
 /feature and /hotfix coding-agent lines](agentic-workflow.svg)
 
-> The diagram above is a static SVG. If the pipeline changes, update
-> `agentic-workflow.svg` alongside the workflow files so the two stay in step.
+> The diagram above is a static SVG (canonical). A rendered
+> [`agentic-workflow.png`](agentic-workflow.png) (2400×3520) is kept alongside
+> it for download and for embedding where SVG is not supported. If the pipeline
+> changes, update the SVG next to the workflow files and re-export the PNG so
+> all three stay in step.
 
 ## The refresh line (the recurring data update)
 
