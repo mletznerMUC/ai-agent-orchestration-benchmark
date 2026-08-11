@@ -1165,12 +1165,12 @@
         "observability": {
           "state": "yes",
           "label": {
-            "de": "MLflow 3.0",
-            "en": "MLflow 3.0"
+            "de": "MLflow 3",
+            "en": "MLflow 3"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://docs.databricks.com/aws/en/mlflow3/genai/",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "hitl": {
           "state": "yes",
@@ -1195,12 +1195,12 @@
         "model-agnostic": {
           "state": "yes",
           "label": {
-            "de": "AI Gateway",
-            "en": "AI Gateway"
+            "de": "Unity AI Gateway",
+            "en": "Unity AI Gateway"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://www.databricks.com/blog/unity-ai-gateway-generally-available",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "learning-curve": {
           "state": "partial",
@@ -1826,12 +1826,12 @@
         "open-source": {
           "state": "yes",
           "label": {
-            "de": "Apache 2.0",
-            "en": "Apache 2.0"
+            "de": "Sustainable Use License",
+            "en": "Sustainable Use License"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://docs.n8n.io/privacy-and-security/sustainable-use-license",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "cli-cicd": {
           "state": "yes",
@@ -1928,13 +1928,13 @@
               "en": "Cloud Starter"
             },
             "value": {
-              "de": "~€24/Mo.",
-              "en": "~€24/mo."
+              "de": "€20/Mo.",
+              "en": "€20/mo."
             },
             "tone": "default",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://n8n.io/pricing",
+            "checked": "2026-08-11",
+            "provenance": "sourced"
           },
           {
             "label": {
@@ -1942,13 +1942,13 @@
               "en": "Cloud Pro"
             },
             "value": {
-              "de": "~€60/Mo.",
-              "en": "~€60/mo."
+              "de": "€50/Mo.",
+              "en": "€50/mo."
             },
             "tone": "default",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://n8n.io/pricing",
+            "checked": "2026-08-11",
+            "provenance": "sourced"
           },
           {
             "label": {
@@ -1956,13 +1956,13 @@
               "en": "Business (SSO)"
             },
             "value": {
-              "de": "~€800/Mo.",
-              "en": "~€800/mo."
+              "de": "€667/Mo.",
+              "en": "€667/mo."
             },
             "tone": "default",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://n8n.io/pricing",
+            "checked": "2026-08-11",
+            "provenance": "sourced"
           },
           {
             "label": {
@@ -2406,17 +2406,17 @@
           },
           {
             "label": {
-              "de": "GPT-5.4 API",
-              "en": "GPT-5.4 API"
+              "de": "GPT-5.6 API",
+              "en": "GPT-5.6 API"
             },
             "value": {
               "de": "Usage-based",
               "en": "Usage-based"
             },
             "tone": "default",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://github.com/openai/openai-agents-python/releases/tag/v0.20.0",
+            "checked": "2026-08-11",
+            "provenance": "sourced"
           },
           {
             "label": {
@@ -2521,12 +2521,12 @@
         "open-source": {
           "state": "yes",
           "label": {
-            "de": "MIT",
-            "en": "MIT"
+            "de": "AGPL-3.0",
+            "en": "AGPL-3.0"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://raw.githubusercontent.com/smtg-ai/claude-squad/main/LICENSE.md",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "cli-cicd": {
           "state": "partial",
@@ -2599,8 +2599,8 @@
           "en": "Free"
         },
         "note": {
-          "de": "Open Source (MIT) · Lokal",
-          "en": "Open Source (MIT) · Local"
+          "de": "Open Source (AGPL-3.0) · Lokal",
+          "en": "Open Source (AGPL-3.0) · Local"
         },
         "rows": [
           {
@@ -2660,12 +2660,12 @@
         "desktop-gui": {
           "state": "yes",
           "label": {
-            "de": "Web App",
-            "en": "Web App"
+            "de": "Web + Desktop App",
+            "en": "Web + Desktop App"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://manus.im/download",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "playbooks": {
           "state": "yes",
@@ -2678,14 +2678,14 @@
           "provenance": "legacy-unsourced"
         },
         "mobile-remote": {
-          "state": "partial",
+          "state": "yes",
           "label": {
-            "de": "Web-Access",
-            "en": "Web-Access"
+            "de": "Native App",
+            "en": "Native App"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://manus.im/download",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "git-worktrees": {
           "state": "no",
@@ -2708,14 +2708,14 @@
           "provenance": "legacy-unsourced"
         },
         "mcp-support": {
-          "state": "no",
+          "state": "yes",
           "label": {
-            "de": "Nein",
-            "en": "No"
+            "de": "MCP Connectors",
+            "en": "MCP Connectors"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://manus.im/docs/integrations/mcp-connectors",
+          "checked": "2026-08-11",
+          "provenance": "sourced"
         },
         "open-source": {
           "state": "no",
@@ -2822,13 +2822,13 @@
               "en": "Pro"
             },
             "value": {
-              "de": "~$39/Mo.",
-              "en": "~$39/mo."
+              "de": "ab $20/Mo.",
+              "en": "from $20/mo."
             },
             "tone": "default",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus",
+            "checked": "2026-08-11",
+            "provenance": "sourced"
           },
           {
             "label": {
