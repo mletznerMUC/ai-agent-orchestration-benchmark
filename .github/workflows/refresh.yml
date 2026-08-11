@@ -12,7 +12,9 @@ name: refresh-research
 # which triggers .github/workflows/apply.yml.
 #
 # Secrets:
-#   ANTHROPIC_API_KEY  required — the workflow is inert without it.
+#   Git_AI_Benchmarks  required — the Anthropic API key. The workflow is
+#                      inert without it. ANTHROPIC_API_KEY is accepted as
+#                      a fallback name.
 #   REFRESH_PAT        optional — a fine-grained PAT with Contents and Pull
 #                      requests read/write. Without it the proposal PR is
 #                      opened by GITHUB_TOKEN, which does not trigger
@@ -60,13 +62,13 @@ jobs:
 
       - name: Preflight — required secrets
         env:
-          KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          KEY: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
         run: |
           if [ -z "$KEY" ]; then
-            echo "::error::Repository secret ANTHROPIC_API_KEY is empty or not set. Add it under Settings > Secrets and variables > Actions. The name must match exactly."
+            echo "::error::No Anthropic API key found. Set repository secret Git_AI_Benchmarks (or ANTHROPIC_API_KEY) under Settings > Secrets and variables > Actions. It must be a Repository secret, not an Environment secret."
             exit 1
           fi
-          echo "ANTHROPIC_API_KEY is present."
+          echo "Anthropic API key is present."
 
       - name: Compute round id
         id: round
@@ -75,7 +77,7 @@ jobs:
       - name: Research tools and write proposal
         uses: anthropics/claude-code-action@v1
         with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
           # Supplying a token sets OVERRIDE_GITHUB_TOKEN in the action, which
           # skips its OIDC -> GitHub App token exchange. Without this the
           # action needs `id-token: write` and fails with "Could not fetch an
