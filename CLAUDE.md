@@ -26,7 +26,11 @@ must be sourced and reproducible. When in doubt, understate.
   One gate in the hotfix line: PR merge.
 - Two gates in the refresh line: change approval (the `refresh:approved`
   label on the proposal PR) and PR merge. The scheduled research runs
-  monthly and is read-only — it proposes, it never applies.
+  monthly and is read-only — it proposes, it never applies. Each round
+  researches **every** tool and also scouts the market for tools not yet
+  in the benchmark. Scouted tools become radar candidates only: adding
+  one to the benchmark means scoring it against every published
+  criterion, which is `/feature` work, not a data refresh.
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases.
 - Each phase = one subagent with a clean context. The plan file

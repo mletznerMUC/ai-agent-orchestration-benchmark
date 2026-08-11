@@ -70,6 +70,15 @@ jobs:
             exit 1
           fi
 
+          # Guard: there must be approved data to apply. A radar-only PR
+          # (label refresh:radar) carries findings, not data changes —
+          # labelling it refresh:approved would send Claude to edit the
+          # pages with nothing to edit them from.
+          if git diff --quiet origin/main...HEAD -- data/tools.json; then
+            echo "::error::This PR does not change data/tools.json, so there is nothing to apply. Radar findings are not applied by this workflow — adding a tool to the benchmark runs through /feature."
+            exit 1
+          fi
+
       - name: Apply approved data to both language files
         uses: anthropics/claude-code-action@v1
         with:

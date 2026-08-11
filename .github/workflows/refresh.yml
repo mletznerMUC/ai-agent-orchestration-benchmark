@@ -2,14 +2,31 @@ name: refresh-research
 
 # Phase 1 of the refresh line, on a schedule.
 #
-# Claude researches every tool in data/tools.json against its own primary
-# sources and writes TWO things: an updated data/tools.json and a report.
-# It does not touch index.html or index.en.html — the served pages are
-# never edited by the research phase.
+# Two read-only passes, every round:
+#   1a. one `researcher` subagent per tool in data/tools.json — ALL of
+#       them; the `tools` input exists only for debugging.
+#   1b. one `scout` subagent looking for orchestration tools NOT yet in
+#       the benchmark, returned as radar candidates with evidence.
 #
-# The result is a pull request labelled `refresh:proposed`. Nothing is
-# applied to the site until a human adds the `refresh:approved` label,
-# which triggers .github/workflows/apply.yml.
+# It does not touch index.html or index.en.html — the served pages are
+# never edited by the research phase, and a guard fails the run if they
+# change.
+#
+# The report is written and published every round, including rounds where
+# nothing changed: a round that verified twelve tools and found no
+# movement did real work, and the record is the only evidence of it.
+#
+# Outcomes:
+#   data changed          -> PR labelled `refresh:proposed`; a human adds
+#                            `refresh:approved` to trigger apply.yml
+#   only radar candidates -> PR labelled `refresh:radar`; nothing to
+#                            apply, the decision is whether to benchmark
+#   neither               -> no PR; report goes to the run summary and
+#                            an artifact
+#
+# Scouted tools are never added to data/tools.json here. Adding a tool
+# means scoring it against every published criterion (CLAUDE.md rule 2),
+# which is /feature work, not a data refresh.
 #
 # Secrets:
 #   Git_AI_Benchmarks  required — the Anthropic API key. The workflow is
@@ -29,9 +46,15 @@ on:
   workflow_dispatch:
     inputs:
       tools:
-        description: 'Tool keys to research (space-separated). Empty = all.'
+        description: 'Tool keys to research (space-separated). Empty = ALL tools, which is what the schedule does. Subsets are for debugging only.'
         required: false
         default: ''
+      scout:
+        description: 'Also search the market for tools not yet in the benchmark.'
+        required: false
+        default: 'true'
+        type: choice
+        options: ['true', 'false']
 
 permissions:
   contents: write
@@ -93,88 +116,181 @@ jobs:
             AI agent orchestration benchmark. Read CLAUDE.md and
             docs/decisions/ first — they are binding.
 
-            Scope: ${{ github.event.inputs.tools || 'every tool key in data/tools.json' }}
+            Tools to research: ${{ github.event.inputs.tools || 'EVERY tool key in data/tools.json — all of them, no subset' }}
+            Market scouting: ${{ github.event.inputs.scout || 'true' }}
             Round id: ${{ steps.round.outputs.id }}
 
-            RESEARCH
+            PHASE 1a — RESEARCH EVERY TOOL
             Dispatch one `researcher` subagent per tool, all in a single
             message so they run in parallel. Each gets its tool key, its
-            current entry from data/tools.json, and its URL. The
-            researcher subagent is read-only by design — do not work
+            current entry from data/tools.json, and its URL. Unless the
+            scope above names a subset, that means one subagent for
+            every key in data/tools.json — skipping tools leaves the
+            site claiming things nobody checked.
+
+            PHASE 1b — SCOUT THE MARKET
+            If market scouting is true, dispatch one `scout` subagent in
+            the same message. It searches for orchestration tools NOT in
+            data/tools.json and returns radar candidates with evidence.
+
+            Both subagent types are read-only by design — do not work
             around that.
 
-            TRIAGE
+            PHASE 2 — TRIAGE
             Consolidate the reports. Drop every claim that has no
             resolvable source URL, and list what you dropped. For score
             movements, keep the criterion the researcher named; if none
             was named, demote it to a fact and leave the score alone.
             Surface source disagreements instead of resolving them.
+            Carry the scout's candidates through with their evidence.
 
-            WRITE EXACTLY TWO THINGS
-            1. data/tools.json — apply only the sourced changes. Every
-               value you change MUST gain a real `source` URL you
-               actually read and a `checked` date. Leave `provenance`
-               as "legacy-unsourced" on values you did not change.
-            2. docs/refresh/${{ steps.round.outputs.id }}-report.md —
-               the human-readable proposal: changes grouped by tool
-               (field, old -> new, source, reasoning), then dropped
-               claims, then unverified claims, then source
-               disagreements.
+            WRITE THE REPORT — ALWAYS, EVEN IF NOTHING CHANGED
+            docs/refresh/${{ steps.round.outputs.id }}-report.md
+
+            Its FIRST line must be exactly this marker, with the real
+            number of radar candidates substituted:
+
+                <!-- refresh-status: candidates=N -->
+
+            Then, in order:
+            1. Data changes grouped by tool (field, old -> new, source,
+               reasoning). Say "none" if there were none.
+            2. Verified unchanged — which tools were checked and found
+               current. This is the evidence the round actually ran.
+            3. Dropped claims (no resolvable source) and unverified
+               claims.
+            4. Source disagreements.
+            5. Radar candidates from the scout, each with its evidence,
+               plus renames/aliases and rejected candidates.
+
+            A round that verified every tool and found no movement did
+            real work. Record it. Silence is indistinguishable from a
+            round that never ran.
+
+            WRITE data/tools.json ONLY IF THERE ARE SOURCED CHANGES
+            Apply only sourced changes. Every value you change MUST gain
+            a real `source` URL you actually read and a `checked` date.
+            Leave `provenance` as "legacy-unsourced" on values you did
+            not change.
 
             DO NOT
             - Do not edit index.html or index.en.html. The page update
               is a separate, human-approved phase.
             - Do not invent a source URL. No source, no change. An
               honest "no change found" is a good result.
+            - Do not add a scouted tool to data/tools.json. Radar
+              candidates are proposals for a human; adding a tool means
+              scoring it against every published criterion, which is
+              separate, human-gated work.
             - Do not use promotional language for or against any vendor.
             - Do not commit, push, branch, or open a pull request. The
               workflow does that deterministically after you finish.
 
-      - name: Open proposal pull request
+      - name: Publish the report
+        id: report
         env:
-          GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
           ROUND: ${{ steps.round.outputs.id }}
         run: |
           set -euo pipefail
-
-          if git diff --quiet -- data/tools.json && [ -z "$(git status --porcelain docs/refresh)" ]; then
-            echo "No sourced changes found this round — nothing to propose."
-            exit 0
-          fi
+          REPORT="docs/refresh/${ROUND}-report.md"
 
           # The research phase must never touch the served pages.
           if ! git diff --quiet -- index.html index.en.html; then
-            echo "::error::Research phase modified the served HTML. Refusing to open a PR."
+            echo "::error::Research phase modified the served HTML. Refusing to continue."
             git --no-pager diff --stat -- index.html index.en.html
             exit 1
           fi
 
+          # A round that wrote no report did not demonstrably run.
+          if [ ! -f "$REPORT" ]; then
+            echo "::error::No report at $REPORT. The research phase must write one every round, even when nothing changed."
+            exit 1
+          fi
+
+          # Always surface it on the run page, so a no-change round still
+          # leaves evidence of what was checked.
+          {
+            echo "## Refresh report — ${ROUND}"
+            echo
+            cat "$REPORT"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          DATA_CHANGED=false
+          git diff --quiet -- data/tools.json || DATA_CHANGED=true
+
+          # Radar-candidate count from the report's status marker. If the
+          # marker is missing we treat it as "unknown" and still publish —
+          # losing findings is the failure mode this guard exists to stop.
+          CANDIDATES=$(sed -n 's/.*candidates=\([0-9][0-9]*\).*/\1/p' "$REPORT" | head -1)
+          [ -z "$CANDIDATES" ] && CANDIDATES=unknown
+
+          echo "data_changed=$DATA_CHANGED" >> "$GITHUB_OUTPUT"
+          echo "candidates=$CANDIDATES"     >> "$GITHUB_OUTPUT"
+          echo "report=$REPORT"             >> "$GITHUB_OUTPUT"
+          echo "Data changed: $DATA_CHANGED — radar candidates: $CANDIDATES"
+
+      - name: Archive the report
+        if: always() && steps.report.outputs.report != ''
+        uses: actions/upload-artifact@v4
+        with:
+          name: refresh-report-${{ steps.round.outputs.id }}
+          path: ${{ steps.report.outputs.report }}
+          if-no-files-found: warn
+
+      - name: Open pull request
+        env:
+          GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+          ROUND: ${{ steps.round.outputs.id }}
+          DATA_CHANGED: ${{ steps.report.outputs.data_changed }}
+          CANDIDATES: ${{ steps.report.outputs.candidates }}
+        run: |
+          set -euo pipefail
+
+          # Nothing moved and nothing was spotted: the report is already on
+          # the run page and archived. Do not open a PR nobody needs to act on.
+          if [ "$DATA_CHANGED" = "false" ] && [ "$CANDIDATES" = "0" ]; then
+            echo "No data changes and no radar candidates. Report published to the run summary; no pull request needed."
+            exit 0
+          fi
+
           # gh pr create --label fails on a label that does not exist yet,
-          # so make the two gate labels self-provisioning.
+          # so make the gate labels self-provisioning.
           gh label create "refresh:proposed" --color FBCA04 \
             --description "Benchmark data proposal awaiting human approval" 2>/dev/null || true
           gh label create "refresh:approved" --color 0E8A16 \
             --description "Approved — triggers the page update workflow" 2>/dev/null || true
+          gh label create "refresh:radar"    --color 1D76DB \
+            --description "Market findings only — no data changes to apply" 2>/dev/null || true
 
           BRANCH="refresh/${ROUND}"
           git config user.name  "claude[bot]"
           git config user.email "41898282+claude[bot]@users.noreply.github.com"
           git checkout -b "$BRANCH"
           git add data/tools.json docs/refresh
-          git commit -m "data: proposed benchmark refresh for ${ROUND}
+
+          if [ "$DATA_CHANGED" = "true" ]; then
+            LABEL="refresh:proposed"
+            TITLE="data: proposed benchmark refresh — ${ROUND}"
+            git commit -m "data: proposed benchmark refresh for ${ROUND}
 
           Sourced findings only; every changed value carries a source URL
           and a checked date. Generated by the scheduled research line.
           Awaiting human approval — see the report in docs/refresh/."
+          else
+            LABEL="refresh:radar"
+            TITLE="docs: refresh report — ${ROUND} (radar findings, no data changes)"
+            git commit -m "docs: refresh report for ${ROUND}
+
+          No benchmark data moved this round. The scout surfaced radar
+          candidates that need a human decision; see the report."
+          fi
+
           git push -u origin "$BRANCH"
+          gh pr create --title "$TITLE" --body-file "docs/refresh/${ROUND}-report.md" \
+            --label "$LABEL" --base main --head "$BRANCH"
 
-          gh pr create \
-            --title "data: proposed benchmark refresh — ${ROUND}" \
-            --body-file "docs/refresh/${ROUND}-report.md" \
-            --label "refresh:proposed" \
-            --base main --head "$BRANCH"
-
-          gh pr comment "$BRANCH" --body "$(cat <<'EOF'
+          if [ "$DATA_CHANGED" = "true" ]; then
+            gh pr comment "$BRANCH" --body "$(cat <<'EOF'
           **This is a proposal, not a change to the site.**
 
           Only `data/tools.json` and the report were touched — the served
@@ -188,5 +304,29 @@ jobs:
           `verify` green. Then merge.
 
           To reject it: close the PR. Nothing reaches the site.
+
+          Radar candidates in the report are **not** covered by that
+          approval. Adding a tool to the benchmark means scoring it
+          against every published criterion — that runs through
+          `/feature`, not through this gate.
           EOF
           )"
+          else
+            gh pr comment "$BRANCH" --body "$(cat <<'EOF'
+          **No benchmark data changed this round.** Every tracked tool was
+          checked and found current — the report lists what was verified.
+
+          What needs your attention is the **radar candidates**: tools the
+          scout found that are not in the benchmark yet. Each carries its
+          evidence and a note on what could not be confirmed.
+
+          Do **not** add the `refresh:approved` label to this PR — there
+          is no data change to apply. Adding a tool means scoring it
+          against every published criterion, which runs through
+          `/feature`.
+
+          Merging this PR just files the report in `docs/refresh/`.
+          Closing it discards the record.
+          EOF
+          )"
+          fi
