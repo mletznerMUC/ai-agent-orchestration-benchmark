@@ -97,7 +97,94 @@ jobs:
         id: round
         run: echo "id=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
 
+      - name: Compose the research prompt (one source, both attempts share it)
+        run: |
+          {
+            echo 'RESEARCH_PROMPT<<REFRESH_PROMPT_EOF'
+            cat <<'REFRESH_PROMPT_BODY'
+          You are running Phase 1 and 2 of the refresh line for the
+          AI agent orchestration benchmark. Read CLAUDE.md and
+          docs/decisions/ first — they are binding.
+
+          Tools to research: ${{ github.event.inputs.tools || 'EVERY tool key in data/tools.json — all of them, no subset' }}
+          Market scouting: ${{ github.event.inputs.scout || 'true' }}
+          Round id: ${{ steps.round.outputs.id }}
+
+          PHASE 1a — RESEARCH EVERY TOOL
+          Dispatch one `researcher` subagent per tool, all in a single
+          message so they run in parallel. Each gets its tool key, its
+          current entry from data/tools.json, and its URL. Unless the
+          scope above names a subset, that means one subagent for
+          every key in data/tools.json — skipping tools leaves the
+          site claiming things nobody checked.
+
+          PHASE 1b — SCOUT THE MARKET
+          If market scouting is true, dispatch one `scout` subagent in
+          the same message. It searches for orchestration tools NOT in
+          data/tools.json and returns radar candidates with evidence.
+
+          Both subagent types are read-only by design — do not work
+          around that.
+
+          PHASE 2 — TRIAGE
+          Consolidate the reports. Drop every claim that has no
+          resolvable source URL, and list what you dropped. For score
+          movements, keep the criterion the researcher named; if none
+          was named, demote it to a fact and leave the score alone.
+          Surface source disagreements instead of resolving them.
+          Carry the scout's candidates through with their evidence.
+
+          WRITE THE REPORT — ALWAYS, EVEN IF NOTHING CHANGED
+          docs/refresh/${{ steps.round.outputs.id }}-report.md
+
+          Its FIRST line must be exactly this marker, with the real
+          number of radar candidates substituted:
+
+              <!-- refresh-status: candidates=N -->
+
+          Then, in order:
+          1. Data changes grouped by tool (field, old -> new, source,
+             reasoning). Say "none" if there were none.
+          2. Verified unchanged — which tools were checked and found
+             current. This is the evidence the round actually ran.
+          3. Dropped claims (no resolvable source) and unverified
+             claims.
+          4. Source disagreements.
+          5. Radar candidates from the scout, each with its evidence,
+             plus renames/aliases and rejected candidates.
+
+          A round that verified every tool and found no movement did
+          real work. Record it. Silence is indistinguishable from a
+          round that never ran.
+
+          WRITE data/tools.json ONLY IF THERE ARE SOURCED CHANGES
+          Apply only sourced changes. Every value you change MUST gain
+          a real `source` URL you actually read and a `checked` date.
+          Leave `provenance` as "legacy-unsourced" on values you did
+          not change.
+
+          DO NOT
+          - Do not edit index.html or index.en.html. The page update
+            is a separate, human-approved phase.
+          - Do not invent a source URL. No source, no change. An
+            honest "no change found" is a good result.
+          - Do not add a scouted tool to data/tools.json. Radar
+            candidates are proposals for a human; adding a tool means
+            scoring it against every published criterion, which is
+            separate, human-gated work.
+          - Do not use promotional language for or against any vendor.
+          - Do not commit, push, branch, or open a pull request. The
+            workflow does that deterministically after you finish.
+          REFRESH_PROMPT_BODY
+            echo 'REFRESH_PROMPT_EOF'
+          } >> "$GITHUB_ENV"
+
       - name: Research tools and write proposal
+        id: research
+        # Attempt 1. A transient API error can abort a run mid-flight
+        # (run 6 died with is_error:true after 23 turns). continue-on-error
+        # lets the reset+retry below take one more swing before the job fails.
+        continue-on-error: true
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
@@ -116,80 +203,42 @@ jobs:
             --model claude-opus-5
             --max-turns 120
             --allowedTools "Read,Grep,Glob,WebFetch,WebSearch,Write,Edit,Task"
-          prompt: |
-            You are running Phase 1 and 2 of the refresh line for the
-            AI agent orchestration benchmark. Read CLAUDE.md and
-            docs/decisions/ first — they are binding.
+          prompt: ${{ env.RESEARCH_PROMPT }}
 
-            Tools to research: ${{ github.event.inputs.tools || 'EVERY tool key in data/tools.json — all of them, no subset' }}
-            Market scouting: ${{ github.event.inputs.scout || 'true' }}
-            Round id: ${{ steps.round.outputs.id }}
+      - name: Reset the tree before retrying
+        if: steps.research.outcome == 'failure'
+        env:
+          ROUND: ${{ steps.round.outputs.id }}
+        run: |
+          set -euo pipefail
+          echo "::warning::Research attempt 1 failed — see the full Claude output above. Discarding any partial writes and retrying once."
+          # Start attempt 2 from a clean slate so a half-written report or a
+          # partially edited tools.json from attempt 1 cannot compound.
+          git checkout -- .
+          rm -f "docs/refresh/${ROUND}-report.md"
 
-            PHASE 1a — RESEARCH EVERY TOOL
-            Dispatch one `researcher` subagent per tool, all in a single
-            message so they run in parallel. Each gets its tool key, its
-            current entry from data/tools.json, and its URL. Unless the
-            scope above names a subset, that means one subagent for
-            every key in data/tools.json — skipping tools leaves the
-            site claiming things nobody checked.
-
-            PHASE 1b — SCOUT THE MARKET
-            If market scouting is true, dispatch one `scout` subagent in
-            the same message. It searches for orchestration tools NOT in
-            data/tools.json and returns radar candidates with evidence.
-
-            Both subagent types are read-only by design — do not work
-            around that.
-
-            PHASE 2 — TRIAGE
-            Consolidate the reports. Drop every claim that has no
-            resolvable source URL, and list what you dropped. For score
-            movements, keep the criterion the researcher named; if none
-            was named, demote it to a fact and leave the score alone.
-            Surface source disagreements instead of resolving them.
-            Carry the scout's candidates through with their evidence.
-
-            WRITE THE REPORT — ALWAYS, EVEN IF NOTHING CHANGED
-            docs/refresh/${{ steps.round.outputs.id }}-report.md
-
-            Its FIRST line must be exactly this marker, with the real
-            number of radar candidates substituted:
-
-                <!-- refresh-status: candidates=N -->
-
-            Then, in order:
-            1. Data changes grouped by tool (field, old -> new, source,
-               reasoning). Say "none" if there were none.
-            2. Verified unchanged — which tools were checked and found
-               current. This is the evidence the round actually ran.
-            3. Dropped claims (no resolvable source) and unverified
-               claims.
-            4. Source disagreements.
-            5. Radar candidates from the scout, each with its evidence,
-               plus renames/aliases and rejected candidates.
-
-            A round that verified every tool and found no movement did
-            real work. Record it. Silence is indistinguishable from a
-            round that never ran.
-
-            WRITE data/tools.json ONLY IF THERE ARE SOURCED CHANGES
-            Apply only sourced changes. Every value you change MUST gain
-            a real `source` URL you actually read and a `checked` date.
-            Leave `provenance` as "legacy-unsourced" on values you did
-            not change.
-
-            DO NOT
-            - Do not edit index.html or index.en.html. The page update
-              is a separate, human-approved phase.
-            - Do not invent a source URL. No source, no change. An
-              honest "no change found" is a good result.
-            - Do not add a scouted tool to data/tools.json. Radar
-              candidates are proposals for a human; adding a tool means
-              scoring it against every published criterion, which is
-              separate, human-gated work.
-            - Do not use promotional language for or against any vendor.
-            - Do not commit, push, branch, or open a pull request. The
-              workflow does that deterministically after you finish.
+      - name: Research tools and write proposal (retry)
+        id: research_retry
+        if: steps.research.outcome == 'failure'
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
+          # Supplying a token sets OVERRIDE_GITHUB_TOKEN in the action, which
+          # skips its OIDC -> GitHub App token exchange. Without this the
+          # action needs `id-token: write` and fails with "Could not fetch an
+          # OIDC token". We don't need an App token: every git and PR
+          # operation happens in the shell steps below, not inside the action.
+          github_token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+          # Without this the action prints only a pass/fail verdict and hides
+          # Claude's output, so a failed round is undiagnosable — run 6 burned
+          # $7.20 and reported `is_error: true` with no message. The repo is
+          # private, so the extra log detail stays with collaborators.
+          show_full_output: true
+          claude_args: |
+            --model claude-opus-5
+            --max-turns 120
+            --allowedTools "Read,Grep,Glob,WebFetch,WebSearch,Write,Edit,Task"
+          prompt: ${{ env.RESEARCH_PROMPT }}
 
       - name: Publish the report
         id: report

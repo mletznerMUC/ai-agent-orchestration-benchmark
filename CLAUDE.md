@@ -24,8 +24,12 @@ must be sourced and reproducible. When in doubt, understate.
   `/refresh`.
 - Two human gates in the feature line: plan approval and PR merge.
   One gate in the hotfix line: PR merge.
-- Two gates in the refresh line: change approval (the `refresh:approved`
-  label on the proposal PR) and PR merge. The scheduled research runs
+- Two gates in the refresh line, **in order**: change approval (the
+  `refresh:approved` label on the proposal PR, which triggers `apply.yml`
+  to write the pages and turn `verify` green) and *then* PR merge. Never
+  merge a `refresh:proposed` PR while `verify` is red — that red is the
+  gate detecting data that has not been applied to the pages yet, not
+  noise to merge past (see ADR-003). The scheduled research runs
   monthly and is read-only — it proposes, it never applies. Each round
   researches **every** tool and also scouts the market for tools not yet
   in the benchmark. Scouted tools become radar candidates only: adding
