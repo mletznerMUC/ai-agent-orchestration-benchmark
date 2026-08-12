@@ -1,0 +1,160 @@
+name: refresh-apply
+
+# Phase 3-5 of the refresh line, behind the human gate.
+#
+# Fires only when a human adds the `refresh:approved` label to a refresh
+# proposal PR. Claude applies the already-approved data to both language
+# files, writes the changelog entry, and updates the as-of stamp. The
+# verifier must pass before anything is pushed.
+#
+# This does NOT merge. Merging stays with Markus, per CLAUDE.md.
+#
+# Secrets:
+#   Git_AI_Benchmarks  required — the Anthropic API key. The workflow is
+#                      inert without it. ANTHROPIC_API_KEY is accepted as
+#                      a fallback name.
+#   REFRESH_PAT        optional — see refresh.yml. Without it the push here
+#                      does not re-trigger `verify`, so the PR keeps showing
+#                      its pre-apply check result. The gate still holds:
+#                      this job runs the verifier itself before pushing.
+
+on:
+  pull_request:
+    types: [labeled]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+concurrency:
+  group: refresh-apply-${{ github.event.pull_request.number }}
+  cancel-in-progress: false
+
+jobs:
+  apply:
+    if: github.event.label.name == 'refresh:approved'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.pull_request.head.ref }}
+          fetch-depth: 0
+          # checkout persists this token into .git/config, so the push step
+          # below uses it too. With REFRESH_PAT set, that push re-triggers
+          # `verify` on the PR; with the default GITHUB_TOKEN it does not,
+          # and the PR keeps showing the pre-apply check result.
+          # Falls back cleanly when the secret is absent.
+          token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Preflight — required secrets
+        env:
+          KEY: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
+        run: |
+          if [ -z "$KEY" ]; then
+            echo "::error::No Anthropic API key found. Set repository secret Git_AI_Benchmarks (or ANTHROPIC_API_KEY) under Settings > Secrets and variables > Actions. It must be a Repository secret, not an Environment secret."
+            exit 1
+          fi
+          echo "Anthropic API key is present."
+
+      - name: Confirm this is a data-only proposal
+        run: |
+          set -euo pipefail
+          # Guard: the approved diff must not already contain page edits.
+          # If it does, a human should look before an agent writes more.
+          if ! git diff --quiet origin/main...HEAD -- index.html index.en.html; then
+            echo "::error::This PR already modifies the served HTML. Apply aborted — review by hand."
+            exit 1
+          fi
+
+          # Guard: there must be approved data to apply. A radar-only PR
+          # (label refresh:radar) carries findings, not data changes —
+          # labelling it refresh:approved would send Claude to edit the
+          # pages with nothing to edit them from.
+          if git diff --quiet origin/main...HEAD -- data/tools.json; then
+            echo "::error::This PR does not change data/tools.json, so there is nothing to apply. Radar findings are not applied by this workflow — adding a tool to the benchmark runs through /feature."
+            exit 1
+          fi
+
+      - name: Apply approved data to both language files
+        uses: anthropics/claude-code-action@v1
+        with:
+          anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
+          # See refresh.yml: supplying a token skips the action's OIDC ->
+          # GitHub App token exchange, which otherwise needs `id-token: write`.
+          github_token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+          # See refresh.yml — without this a failed apply is undiagnosable.
+          show_full_output: true
+          claude_args: |
+            --model claude-opus-5
+            --max-turns 100
+            --allowedTools "Read,Grep,Glob,Write,Edit,Bash(npm test),Bash(npm run verify),Bash(node scripts/verify.mjs),Task"
+          prompt: |
+            A human has approved the data changes in this branch's
+            `data/tools.json`. Apply them to the site. Read CLAUDE.md and
+            docs/decisions/ first — they are binding.
+
+            The approved diff is `git diff origin/main...HEAD -- data/tools.json`.
+            Treat it as settled: do not re-research it, do not second-guess
+            the values, do not add values it does not contain.
+
+            Work through this in order, using subagents for the
+            independent per-file work where that helps:
+
+            1. index.html (DE) — every changed score, score-bar width,
+               matrix chip state and label, and price field, exactly as
+               tools.json now states them for `de`.
+            2. index.en.html (EN) — the same values for `en`.
+            3. A changelog entry in both files describing this round,
+               matching the existing entry style. Descriptive and
+               sourced; no promotional language.
+            4. The `Stand:` / `As of:` stamp in both files, matching
+               `meta.asOf` in tools.json and the new changelog entry.
+
+            Address every cell by its `data-tool` / `data-feature`
+            attribute. Never count columns: matrix column order differs
+            from score-grid order for ms-agent/n8n and
+            openai-sdk/claude-squad.
+
+            Then run `npm test && npm run verify`. Both must pass. If
+            verify reports a mismatch, fix the HTML to match tools.json —
+            tools.json is the approved artifact, not a draft. Do not edit
+            tools.json to match a mistake in the HTML.
+
+            Do not commit or push. The workflow does that once the
+            verifier is green.
+
+      - name: Verify before pushing
+        run: |
+          npm test
+          npm run verify
+
+      - name: Push the applied update
+        env:
+          GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          set -euo pipefail
+          if git diff --quiet; then
+            echo "::error::Nothing was applied. Expected page edits after approval."
+            exit 1
+          fi
+          git config user.name  "claude[bot]"
+          git config user.email "41898282+claude[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "feat: apply approved benchmark refresh to both language files
+
+          Applies the human-approved data/tools.json values to index.html
+          and index.en.html, adds the changelog entry, and updates the
+          as-of stamp. npm test and npm run verify pass."
+          git push
+
+          gh pr comment "${{ github.event.pull_request.number }}" --body "$(cat <<'EOF'
+          Applied to both language files. `npm test` and `npm run verify`
+          pass, so the data and the pages now agree in DE and EN.
+
+          Ready for your merge — this workflow does not merge.
+          EOF
+          )"

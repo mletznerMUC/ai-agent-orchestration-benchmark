@@ -9,8 +9,6 @@ must be sourced and reproducible. When in doubt, understate.
 1. **Data integrity.** Never change a score, ranking, or tool claim
    without a verifiable source (docs, changelog, release notes). Cite
    the source next to the data point. No source → no change.
-   Enforced by `npm run verify` against `data/tools.json`; see
-   ADR-001 and ADR-002 for what is and is not checked.
 2. **Methodology consistency.** All tools are scored against the same
    published criteria. Adding a criterion means re-evaluating every
    tool against it, not just the new one.
@@ -20,21 +18,9 @@ must be sourced and reproducible. When in doubt, understate.
    HTML/CSS/JS over frameworks. Every dependency needs a reason.
 
 ## Workflow rules (the factory)
-- Work runs through pipelines, started via `/feature`, `/hotfix`, or
-  `/refresh`.
+- Work runs through pipelines, started via `/feature` or `/hotfix`.
 - Two human gates in the feature line: plan approval and PR merge.
   One gate in the hotfix line: PR merge.
-- Two gates in the refresh line, **in order**: change approval (the
-  `refresh:approved` label on the proposal PR, which triggers `apply.yml`
-  to write the pages and turn `verify` green) and *then* PR merge. Never
-  merge a `refresh:proposed` PR while `verify` is red — that red is the
-  gate detecting data that has not been applied to the pages yet, not
-  noise to merge past (see ADR-003). The scheduled research runs
-  monthly and is read-only — it proposes, it never applies. Each round
-  researches **every** tool and also scouts the market for tools not yet
-  in the benchmark. Scouted tools become radar candidates only: adding
-  one to the benchmark means scoring it against every published
-  criterion, which is `/feature` work, not a data refresh.
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases.
 - Each phase = one subagent with a clean context. The plan file
