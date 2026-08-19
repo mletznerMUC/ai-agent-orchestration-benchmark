@@ -5,6 +5,7 @@
   "scripts": {
     "test": "node --test \"scripts/**/*.test.mjs\"",
     "verify": "node scripts/verify.mjs",
-    "extract": "node scripts/extract.mjs"
+    "extract": "node scripts/extract.mjs",
+    "cost": "node scripts/cost.mjs"
   }
 }
