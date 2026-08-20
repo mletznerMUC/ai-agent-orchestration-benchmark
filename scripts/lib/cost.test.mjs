@@ -196,10 +196,28 @@ test('dedupe does not merge the same message id across different agents', () => 
 
 test('collectCommands finds slash commands and skill invocations', () => {
   const text = [
-    '{"content":"<command-name>/refresh</command-name>"}',
+    '{"type":"user","message":{"role":"user","content":"<command-name>/refresh</command-name>"}}',
+    '{"type":"user","message":{"role":"user","content":[{"type":"text","text":"<command-name>hotfix</command-name>"}]}}',
     '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Skill","input":{"skill":"feature"}}]}}',
   ].join('\n');
-  assert.deepEqual(collectCommands(text), ['/feature', '/refresh']);
+  assert.deepEqual(collectCommands(text), ['/feature', '/hotfix', '/refresh']);
+});
+
+test('collectCommands does not credit a command that is merely quoted', () => {
+  // The transcript of writing this very file contains the literal string
+  // "<command-name>/refresh</command-name>". A raw-text scan reported /refresh
+  // as having run in a session that never invoked it.
+  const text = [
+    '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Write","input":{"file_path":"a.md","content":"see <command-name>/refresh</command-name>"}}]}}',
+    '{"type":"assistant","message":{"content":[{"type":"text","text":"Next step is /refresh, but I have not run it."}]}}',
+    '{"type":"user","toolUseResult":{"stdout":"<command-name>/hotfix</command-name>"}}',
+  ].join('\n');
+  assert.deepEqual(collectCommands(text), []);
+});
+
+test('collectCommands ignores a Skill call with no skill name', () => {
+  const text = '{"type":"assistant","message":{"content":[{"type":"tool_use","name":"Skill","input":{}}]}}';
+  assert.deepEqual(collectCommands(text), []);
 });
 
 // --- attribution ----------------------------------------------------------
