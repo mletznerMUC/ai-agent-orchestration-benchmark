@@ -1,18 +1,5 @@
 {
   "hooks": {
-    "Stop": [
-      {
-        "hooks": [
-          {
-            "type": "command",
-            "command": "cd \"${CLAUDE_PROJECT_DIR:-.}\" && npm run --silent cost >/dev/null 2>&1 || true",
-            "timeout": 60,
-            "async": true,
-            "statusMessage": "Updating COST_CONTROL.md"
-          }
-        ]
-      }
-    ],
     "SessionEnd": [
       {
         "hooks": [
