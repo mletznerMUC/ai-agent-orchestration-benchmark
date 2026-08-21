@@ -9,9 +9,9 @@
  */
   /* wt-formula:begin */
   /* The visitor's weighting, normalised to 100 and rounded once, half-up, on
-     the total only — full precision throughout (ADR-006). A dimension with no
+     the total only — full precision throughout. A dimension with no
      tier-A evidence yields no total at any weighting, including weight 0:
-     ADR-005 makes missing evidence a finding, not a zero. */
+     missing evidence is a finding, not a zero. */
   function wtSum(weights) {
     var keys = Object.keys(weights);
     var sum = 0;

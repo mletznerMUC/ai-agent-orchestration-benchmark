@@ -1345,7 +1345,7 @@
         Compare <span class="cmp-badge" id="cmp-header-count">0</span>
       </button>
     </div>
-    <p class="score-provenance"><strong>Provenance:</strong> the overall rating is computed from the rubric published below — six weighted dimensions, each criterion scored 0/1/2 against a cited source. The unrounded total is kept in <code>data/tools.json</code> and checked mechanically. Tools whose release maturity cannot be evidenced from dated primary sources are shown as <em>not rated</em> rather than estimated.</p>
+    <p class="score-provenance"><strong>Provenance:</strong> the overall rating is computed from the rubric published below — six weighted dimensions, each criterion scored 0/1/2 against a cited source. The unrounded total is checked mechanically. Tools whose release maturity cannot be evidenced from dated primary sources are shown as <em>not rated</em> rather than estimated.</p>
     <div class="score-grid">
 <div class="score-card is-adk" data-tool="google-adk">
         <div class="score-tool"><a href="https://adk.dev" target="_blank" rel="noopener">Google ADK</a> <span class="score-badge badge-adk">Best Multi-Cloud</span></div>
@@ -1519,7 +1519,7 @@
 
   <!-- Weighting Panel -->
   <div class="section" id="wt-panel" hidden>
-    <!-- This section sits inside the slice of the page that parseScores in scripts/lib/parse-html.mjs reads. Every new class and every id here therefore starts with wt-; the class names reserved inside that slice are listed in docs/decisions/006-reweighting-is-a-view.md. -->
+    <!-- This section sits inside the slice of the page that the score parser reads. Every new class and every id here therefore starts with wt-. -->
     <div class="section-header">
       <span class="section-title">Your own weighting — not the published rating</span>
     </div>
@@ -2170,7 +2170,7 @@
         <span class="news-date">August 2026</span>
       </div>
       <div class="news-body">
-        <p class="news-intro">Monthly research round (2026-08): all twelve tools checked against their current state. Five sourced corrections to existing data applied; sources and verified findings are in the refresh report at <code>docs/refresh/2026-08-report.md</code>.</p>
+        <p class="news-intro">Monthly research round (2026-08): all twelve tools checked against their current state. Five sourced corrections to existing data applied.</p>
         <ul class="news-list">
           <li><strong>n8n &mdash; licence &amp; pricing corrected:</strong> Licence corrected from &ldquo;Apache 2.0&rdquo; to &ldquo;Sustainable Use License&rdquo; (n8n does not describe itself as open source per its own licensing page). Cloud prices updated to the vendor's exact figures: Starter &euro;20/mo., Pro &euro;50/mo., Business &euro;667/mo. (previously rounded approximations).</li>
           <li><strong>Claude Squad &mdash; licence corrected:</strong> Corrected from &ldquo;MIT&rdquo; to &ldquo;AGPL-3.0&rdquo;; the repository's <code>LICENSE.md</code> is the GNU AGPL v3.0. Affects the feature matrix and pricing card.</li>
@@ -2442,9 +2442,9 @@
 
   /* wt-formula:begin */
   /* The visitor's weighting, normalised to 100 and rounded once, half-up, on
-     the total only — full precision throughout (ADR-006). A dimension with no
+     the total only — full precision throughout. A dimension with no
      tier-A evidence yields no total at any weighting, including weight 0:
-     ADR-005 makes missing evidence a finding, not a zero. */
+     missing evidence is a finding, not a zero. */
   function wtSum(weights) {
     var keys = Object.keys(weights);
     var sum = 0;
