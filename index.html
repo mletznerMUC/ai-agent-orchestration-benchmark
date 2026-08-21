@@ -390,6 +390,27 @@
   }
   .score-provenance a { color: var(--accent); }
 
+  .score-unrated {
+    font-size: 15px;
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    color: var(--text-muted);
+    padding: 8px 0 12px;
+  }
+  .score-card.is-unrated { background: var(--bg-subtle); }
+  .method-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .method-table th, .method-table td {
+    text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
+  }
+  .method-table th {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted);
+  }
+  .method-table td.w { font-family: 'JetBrains Mono', monospace; text-align: right; }
+  .method-table td.c { color: var(--text-secondary); font-size: 11px; }
+  .method-wrap { overflow-x: auto; }
+  .method-note { font-size: 11px; line-height: 1.6; color: var(--text-secondary); margin: 14px 0 0; }
+
   /* Feature matrix */
   .matrix-wrap {
     overflow-x: auto;
@@ -1145,82 +1166,81 @@
         Vergleichen <span class="cmp-badge" id="cmp-header-count">0</span>
       </button>
     </div>
-    <p class="score-provenance"><strong>Provenienz:</strong> Die Gesamtbewertung ist redaktionell. Sie trägt keine Quelle je Kriterium und wird nicht aus der Feature-Matrix unten berechnet — ein Tool kann in der Matrix führen, ohne in der Bewertung zu führen. Ein gewichtetes, quellenbasiertes Raster ist in Vorbereitung; bis zu dessen Veröffentlichung ist die Bewertung eine Rangfolge, keine Messung.</p>
+    <p class="score-provenance"><strong>Provenienz:</strong> Die Gesamtbewertung wird aus dem unten veröffentlichten Raster berechnet — sechs gewichtete Dimensionen, jedes Kriterium 0/1/2 gegen eine belegte Quelle. Die ungerundete Summe steht in <code>data/tools.json</code> und wird maschinell geprüft. Tools, deren Release-Reife sich nicht aus datierten Primärquellen belegen lässt, werden als <em>nicht bewertet</em> ausgewiesen statt geschätzt.</p>
     <div class="score-grid">
-      <div class="score-card" data-tool="maestro">
-        <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
-        <div class="score-number">84</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:84%"></div></div>
-        <div class="score-descriptor">Desktop Orchestrator</div>
-      </div>
-      <div class="score-card is-top" data-tool="langgraph">
-        <div class="score-tool"><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener">LangGraph</a> <span class="score-badge badge-top">Best Overall</span></div>
-        <div class="score-number">89</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:89%"></div></div>
-        <div class="score-descriptor">Code-First Framework</div>
-      </div>
-      <div class="score-card is-adk" data-tool="google-adk">
+<div class="score-card is-adk" data-tool="google-adk">
         <div class="score-tool"><a href="https://adk.dev" target="_blank" rel="noopener">Google ADK</a> <span class="score-badge badge-adk">Best Multi-Cloud</span></div>
-        <div class="score-number">88</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:88%"></div></div>
+        <div class="score-number">87</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:87%"></div></div>
         <div class="score-descriptor">Enterprise Framework · v2.0 GA</div>
       </div>
-      <div class="score-card" data-tool="strands">
+<div class="score-card" data-tool="strands">
         <div class="score-tool"><a href="https://strandsagents.com" target="_blank" rel="noopener">Strands Agents</a></div>
-        <div class="score-number">86</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:86%"></div></div>
+        <div class="score-number">87</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:87%"></div></div>
         <div class="score-descriptor">AWS-Native SDK</div>
       </div>
-      <div class="score-card is-databricks" data-tool="databricks">
-        <div class="score-tool"><a href="https://www.databricks.com/product/agent-bricks" target="_blank" rel="noopener">Databricks Agent Bricks</a> <span class="score-badge badge-databricks">Best Governance</span></div>
-        <div class="score-number">85</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:85%"></div></div>
-        <div class="score-descriptor">Managed Enterprise Platform</div>
-      </div>
-      <div class="score-card" data-tool="crewai">
-        <div class="score-tool"><a href="https://www.crewai.com" target="_blank" rel="noopener">CrewAI</a></div>
+<div class="score-card" data-tool="ms-agent">
+        <div class="score-tool"><a href="https://learn.microsoft.com/agent-framework" target="_blank" rel="noopener">MS Agent Framework</a></div>
         <div class="score-number">83</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
-        <div class="score-descriptor">Best Onboarding</div>
-      </div>
-      <div class="score-card" data-tool="ms-agent">
-        <div class="score-tool"><a href="https://learn.microsoft.com/agent-framework" target="_blank" rel="noopener">MS Agent Framework</a></div>
-        <div class="score-number">82</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:82%"></div></div>
         <div class="score-descriptor">Microsoft Stack · v1.0 GA</div>
       </div>
-      <div class="score-card" data-tool="n8n">
+<div class="score-card" data-tool="n8n">
         <div class="score-tool"><a href="https://n8n.io" target="_blank" rel="noopener">n8n</a></div>
-        <div class="score-number">79</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:79%"></div></div>
+        <div class="score-number">83</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
         <div class="score-descriptor">Best No-Code</div>
       </div>
-      <div class="score-card is-mcp" data-tool="claude-sdk">
-        <div class="score-tool"><a href="https://code.claude.com" target="_blank" rel="noopener">Claude Agent SDK</a> <span class="score-badge badge-mcp">Best MCP</span></div>
-        <div class="score-number">78</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:78%"></div></div>
-        <div class="score-descriptor">Code-First SDK</div>
+<div class="score-card" data-tool="maestro">
+        <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
+        <div class="score-number">83</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
+        <div class="score-descriptor">Desktop Orchestrator</div>
       </div>
-      <div class="score-card" data-tool="openai-sdk">
-        <div class="score-tool"><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI SDK</a></div>
+<div class="score-card" data-tool="langgraph">
+        <div class="score-tool"><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener">LangGraph</a></div>
+        <div class="score-number">81</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:81%"></div></div>
+        <div class="score-descriptor">Code-First Framework</div>
+      </div>
+<div class="score-card is-mcp" data-tool="claude-sdk">
+        <div class="score-tool"><a href="https://code.claude.com" target="_blank" rel="noopener">Claude Agent SDK</a> <span class="score-badge badge-mcp">Best MCP</span></div>
         <div class="score-number">76</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:76%"></div></div>
+        <div class="score-descriptor">Code-First SDK</div>
+      </div>
+<div class="score-card" data-tool="crewai">
+        <div class="score-tool"><a href="https://www.crewai.com" target="_blank" rel="noopener">CrewAI</a></div>
+        <div class="score-number">76</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:76%"></div></div>
+        <div class="score-descriptor">Best Onboarding</div>
+      </div>
+<div class="score-card is-databricks" data-tool="databricks">
+        <div class="score-tool"><a href="https://www.databricks.com/product/agent-bricks" target="_blank" rel="noopener">Databricks Agent Bricks</a> <span class="score-badge badge-databricks">Best Governance</span></div>
+        <div class="score-number">73</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:73%"></div></div>
+        <div class="score-descriptor">Managed Enterprise Platform</div>
+      </div>
+<div class="score-card" data-tool="openai-sdk">
+        <div class="score-tool"><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI SDK</a></div>
+        <div class="score-number">66</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:66%"></div></div>
         <div class="score-descriptor">Fast Prototype · Enterprise Safety</div>
       </div>
-      <div class="score-card" data-tool="claude-squad">
+<div class="score-card" data-tool="claude-squad">
         <div class="score-tool"><a href="https://github.com/smtg-ai/claude-squad" target="_blank" rel="noopener">Claude Squad</a></div>
-        <div class="score-number">72</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:72%"></div></div>
+        <div class="score-number">51</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:51%"></div></div>
         <div class="score-descriptor">Lightweight CLI</div>
       </div>
-      <div class="score-card" data-tool="manus-ai">
+<div class="score-card is-unrated" data-tool="manus-ai">
         <div class="score-tool"><a href="https://manus.im" target="_blank" rel="noopener">Manus AI</a></div>
-        <div class="score-number">70</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:70%"></div></div>
+        <div class="score-unrated">Nicht bewertet</div>
         <div class="score-descriptor">Autonomous Web Agent</div>
       </div>
     </div>
-  </div>
+</div>
 
   <!-- Feature Matrix -->
   <div class="section">
@@ -1815,6 +1835,27 @@
       </div>
 
     </div>
+  </div>
+
+  <!-- Methodology -->
+  <div class="section">
+    <div class="section-header">
+      <span class="section-title">Methodik — wie die Bewertung entsteht</span>
+    </div>
+    <div class="method-wrap">
+      <table class="method-table">
+        <thead><tr><th>Dimension</th><th>Gewicht</th><th>Kriterien</th></tr></thead>
+        <tbody>
+        <tr><td>Orchestrierung</td><td class="w">25</td><td class="c"><code>multi-agent-parallel, playbooks, group-chat, git-worktrees</code></td></tr>
+        <tr><td>Betreibbarkeit</td><td class="w">20</td><td class="c"><code>observability, hitl</code></td></tr>
+        <tr><td>Integration</td><td class="w">15</td><td class="c"><code>mcp-support, model-agnostic, cli-cicd</code></td></tr>
+        <tr><td>Deployment-Souveränität</td><td class="w">15</td><td class="c"><code>eu-onprem, open-source</code></td></tr>
+        <tr><td>Release-Reife</td><td class="w">15</td><td class="c"><code>ga-status, release-recency, sustained-cadence</code></td></tr>
+        <tr><td>Zugänglichkeit</td><td class="w">10</td><td class="c"><code>learning-curve, desktop-gui, mobile-remote</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <p class="method-note">Jedes Kriterium wird mit 0 (nicht vorhanden), 1 (teilweise) oder 2 (vollständig) bewertet. Eine Dimension erhält <em>Gewicht × erreichte Punkte ÷ mögliche Punkte</em>. Gerundet wird einmal, auf die Gesamtsumme, bei .5 aufwärts. Fünf Dimensionen lesen die vierzehn Kriterien der Feature-Matrix unten; <em>Release-Reife</em> wird aus datierten Primärquellen belegt (Tagged Releases, Changelogs, versionierte Release Notes). Vendor-Blogs, Roadmaps und Drittquellen gelten nicht als Belege. Lässt sich Release-Reife nicht so belegen, bleibt das Tool unbewertet.</p>
   </div>
 
   <!-- News / Changelog -->

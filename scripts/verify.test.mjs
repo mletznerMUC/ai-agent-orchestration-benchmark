@@ -1,12 +1,18 @@
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import { readFileSync } from 'node:fs';
-import { collectFailures, changedWithoutSource } from './verify.mjs';
+import { parseScores } from './lib/parse-html.mjs';
+import { collectFailures, changedWithoutSource, rubricFailures } from './verify.mjs';
 
 const root = new URL('../', import.meta.url);
 const DE = readFileSync(new URL('index.html', root), 'utf8');
 const EN = readFileSync(new URL('index.en.html', root), 'utf8');
 const DATA = JSON.parse(readFileSync(new URL('data/tools.json', root), 'utf8'));
+
+// Derived from the data, not hardcoded: these fixtures went stale silently
+// once the rubric moved langgraph off 89, and a no-op replace made the tests
+// pass while asserting nothing.
+const LG = DATA.tools.langgraph.score.value;
 
 // --- collectFailures ------------------------------------------------------
 
@@ -16,16 +22,18 @@ test('the unmodified site verifies clean', () => {
 
 test('a score changed in the DE file only is caught', () => {
   const broken = DE.replace(
-    '<div class="score-number">89</div>',
-    '<div class="score-number">91</div>',
+    `<div class="score-number">${LG}</div>`,
+    `<div class="score-number">${LG + 2}</div>`,
   );
+  assert.notEqual(broken, DE, 'fixture did not match — test would assert nothing');
   const failures = collectFailures(broken, EN, DATA);
-  assert.ok(failures.some((f) => f.includes('langgraph') && f.includes('89')),
+  assert.ok(failures.some((f) => f.includes('langgraph') && f.includes(String(LG))),
     `expected a langgraph score failure, got: ${failures.join(' | ')}`);
 });
 
 test('a score bar desynced from its number is caught', () => {
-  const broken = DE.replace('style="width:89%"', 'style="width:95%"');
+  const broken = DE.replace(`style="width:${LG}%"`, `style="width:${LG + 6}%"`);
+  assert.notEqual(broken, DE, 'fixture did not match — test would assert nothing');
   const failures = collectFailures(broken, EN, DATA);
   assert.ok(failures.some((f) => f.includes('bar')),
     `expected a bar-width failure, got: ${failures.join(' | ')}`);
@@ -100,4 +108,50 @@ test('a new tool with unsourced values is rejected', () => {
   const next = structuredClone(base);
   next.tools.beta = structuredClone(base.tools.alpha);
   assert.ok(changedWithoutSource(base, next).some((p) => p.includes('beta')));
+});
+
+// --- rubricFailures -------------------------------------------------------
+
+test('the committed rubric reproduces every published score', () => {
+  assert.deepEqual(rubricFailures(DATA), []);
+});
+
+test('a score that does not match its own rubric is caught', () => {
+  const bent = structuredClone(DATA);
+  bent.tools.langgraph.score.value += 3;
+  const problems = rubricFailures(bent);
+  assert.ok(problems.some((p) => p.includes('langgraph') && p.includes('rounds to')),
+    `expected a rounding failure, got: ${problems.join(' | ')}`);
+});
+
+test('a dimension whose points contradict weight*raw/max is caught', () => {
+  const bent = structuredClone(DATA);
+  bent.tools.crewai.score.rubric.operability.points += 2;
+  const problems = rubricFailures(bent);
+  assert.ok(problems.some((p) => p.includes('crewai.operability')),
+    `expected a dimension failure, got: ${problems.join(' | ')}`);
+});
+
+test('weights that no longer sum to 100 are caught', () => {
+  const bent = structuredClone(DATA);
+  bent.tools.n8n.score.rubric.maturity.weight = 20;
+  const problems = rubricFailures(bent);
+  assert.ok(problems.some((p) => p.includes('n8n') && p.includes('weights sum to')),
+    `expected a weight failure, got: ${problems.join(' | ')}`);
+});
+
+test('an unrated tool must carry a null score, not a number', () => {
+  const bent = structuredClone(DATA);
+  bent.tools['manus-ai'].score.value = 70;
+  const problems = rubricFailures(bent);
+  assert.ok(problems.some((p) => p.includes('manus-ai') && p.includes('incomplete')),
+    `expected an unrated failure, got: ${problems.join(' | ')}`);
+});
+
+test('the unrated card parses as a null score in both languages', () => {
+  for (const html of [DE, EN]) {
+    const card = parseScores(html).get('manus-ai');
+    assert.equal(card.score, null);
+    assert.equal(card.barWidth, null);
+  }
 });

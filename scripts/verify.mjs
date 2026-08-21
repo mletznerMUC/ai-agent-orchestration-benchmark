@@ -45,9 +45,11 @@ export function collectFailures(deHtml, enHtml, data) {
       const card = scores.get(key);
       if (card) {
         if (card.score !== tool.score.value) {
-          fail(`${file} ${key}: score is ${card.score}, tools.json says ${tool.score.value}`);
+          const shown = card.score === null ? 'unrated' : card.score;
+          const want = tool.score.value === null ? 'unrated' : tool.score.value;
+          fail(`${file} ${key}: score is ${shown}, tools.json says ${want}`);
         }
-        if (card.barWidth !== card.score) {
+        if (card.score !== null && card.barWidth !== card.score) {
           fail(`${file} ${key}: score bar is ${card.barWidth}% but score is ${card.score}`);
         }
         if (card.descriptor !== tool.descriptor[lang]) {
@@ -107,6 +109,53 @@ export function collectFailures(deHtml, enHtml, data) {
   }
 
   return failures;
+}
+
+/**
+ * The published score must be reproducible from its own rubric (ADR-005):
+ * the six dimension points sum to score.exact, and score.exact rounds
+ * half-up to score.value. This is what stops the rating being an assertion.
+ */
+export function rubricFailures(data) {
+  const problems = [];
+  const halfUp = (x) => Math.floor(x + 0.5);
+
+  for (const [key, tool] of Object.entries(data.tools ?? {})) {
+    const { value, exact, rubric } = tool.score ?? {};
+    if (!rubric) {
+      problems.push(`${key}: score has no rubric`);
+      continue;
+    }
+
+    const points = Object.values(rubric).map((d) => d.points);
+    const unrated = points.some((p) => p === null);
+
+    if (unrated) {
+      if (value !== null) problems.push(`${key}: rubric is incomplete but score is ${value}, expected null`);
+      if (exact !== null) problems.push(`${key}: rubric is incomplete but exact is ${exact}, expected null`);
+      continue;
+    }
+
+    const weights = Object.values(rubric).reduce((a, d) => a + d.weight, 0);
+    if (weights !== 100) problems.push(`${key}: rubric weights sum to ${weights}, expected 100`);
+
+    for (const [name, d] of Object.entries(rubric)) {
+      const expected = (d.weight * d.raw) / d.max;
+      if (Math.abs(d.points - expected) > 0.005) {
+        problems.push(`${key}.${name}: points ${d.points} != weight*raw/max ${expected.toFixed(4)}`);
+      }
+    }
+
+    const sum = points.reduce((a, p) => a + p, 0);
+    if (Math.abs(sum - exact) > 0.005) {
+      problems.push(`${key}: dimension points sum to ${sum.toFixed(4)}, exact says ${exact}`);
+    }
+    if (halfUp(exact) !== value) {
+      problems.push(`${key}: exact ${exact} rounds to ${halfUp(exact)}, score says ${value}`);
+    }
+  }
+
+  return problems;
 }
 
 export function sourceCoverage(data) {
@@ -184,6 +233,8 @@ if (process.argv[1] === fileURLToPath(import.meta.url)) {
   const data = JSON.parse(readFileSync(new URL('data/tools.json', root), 'utf8'));
 
   const failures = collectFailures(de, en, data);
+
+  failures.push(...rubricFailures(data).map((p) => `rubric: ${p}`));
 
   const previous = previousData();
   if (previous) {
