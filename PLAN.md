@@ -442,7 +442,7 @@ intermediate commits on a feature branch.)
      own assertion is inverted; the apply prompt names dimension figures, the
      rated↔unrated transition and `data-dim`.
 
-10. [ ] Record the decision as ADR-006
+10. [x] Record the decision as ADR-006
    - Files: `docs/decisions/006-reweighting-is-a-view.md` (new)
    - Follow `docs/decisions/000-template.md`. **Decision:** user reweighting is a
      **view**; the published rubric (ADR-005) is the **rating**. The rules that
