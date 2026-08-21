@@ -395,7 +395,7 @@ intermediate commits on a feature branch.)
      and nothing else, reload keeps the moved weights, and Reset restores the
      eleven published totals and bar widths and empties the storage key.
 
-9. [ ] Guard the invariants the panel could silently break, and teach the apply line about them
+9. [x] Guard the invariants the panel could silently break, and teach the apply line about them
    - Files: `scripts/verify.test.mjs` (or a new `scripts/panel.test.mjs` —
      `npm test` runs the whole `scripts/` directory),
      `.github/workflows/apply.yml`
