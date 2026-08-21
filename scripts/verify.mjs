@@ -8,7 +8,103 @@
 import { readFileSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { execFileSync } from 'node:child_process';
-import { parseScores, parseMatrix, parsePrices, parseMeta } from './lib/parse-html.mjs';
+import {
+  parseScores, parseMatrix, parsePrices, parseMeta, parseWeights, parseDimensions,
+} from './lib/parse-html.mjs';
+
+// The displayed dimension figures are localised: the German page writes
+// `3,33`, the English page `3.33` (D7). Everything checked below is parsed
+// per language and compared to data/tools.json individually, so dropping the
+// cross-language string comparison costs no coverage on any single figure.
+const DECIMAL_SEPARATOR = { de: ',', en: '.' };
+
+// Display rounding: half-up to two decimals. Only ever applied to what the
+// page shows — never to the arithmetic (ADR-006, D4).
+const displayPoints = (weight, raw, max) => Math.floor(((weight * raw) / max) * 100 + 0.5) / 100;
+
+/**
+ * Checks one tool's published rubric breakdown against data/tools.json.
+ *
+ * The weights come from the Methodology table, which is the page's only copy
+ * of them (D2), so a weight edited there and nowhere else is caught here too.
+ */
+function checkDimensions({ file, key, tool, rows, weights, fail }) {
+  const rubric = tool.score?.rubric;
+  if (!rubric) {
+    fail(`${file} ${key}: tools.json has no score.rubric to check the card against`);
+    return;
+  }
+
+  const shown = rows.map((r) => r.key);
+  const expectedSet = Object.keys(rubric).sort();
+  if (JSON.stringify([...shown].sort()) !== JSON.stringify(expectedSet)) {
+    fail(`${file} ${key}: card dimensions ${shown.join(', ')} != rubric ${Object.keys(rubric).join(', ')}`);
+    return;
+  }
+
+  const order = [...weights.keys()];
+  if (JSON.stringify(shown) !== JSON.stringify(order)) {
+    fail(`${file} ${key}: dimension order ${shown.join(', ')} != Methodology order ${order.join(', ')}`);
+  }
+
+  let total = 0;
+  for (const row of rows) {
+    const d = rubric[row.key];
+    const published = weights.get(row.key);
+    const at = `${file} ${key}/${row.key}`;
+
+    if (!published) {
+      fail(`${at}: no Methodology row publishes a weight for this dimension`);
+      continue;
+    }
+    if (published.weight !== d.weight) {
+      fail(`${at}: Methodology weight ${published.weight}, tools.json says ${d.weight}`);
+      continue;
+    }
+    if (row.name !== published.label) {
+      fail(`${at}: label "${row.name}" != Methodology label "${published.label}"`);
+    }
+    if (row.title !== row.name) {
+      fail(`${at}: title "${row.title}" != its own label "${row.name}"`);
+    }
+    if (row.max !== d.max) {
+      fail(`${at}: max ${row.max}, tools.json says ${d.max}`);
+    }
+    if (row.raw !== d.raw) {
+      const has = row.raw === null ? 'no data-raw' : `data-raw ${row.raw}`;
+      const want = d.raw === null ? 'null' : d.raw;
+      fail(`${at}: ${has}, tools.json says ${want}`);
+      continue;
+    }
+    if (d.raw === null) {
+      if (row.points !== null) fail(`${at}: shows a figure but tools.json has no raw score`);
+      continue;
+    }
+
+    const expected = displayPoints(published.weight, d.raw, d.max);
+    if (row.points !== expected) {
+      fail(`${at}: figure ${row.points} != weight*raw/max rounded to 2dp ${expected}`);
+    }
+    if (row.rawLabel !== `${d.raw}/${d.max}`) {
+      fail(`${at}: evidence label "${row.rawLabel}" != "${d.raw}/${d.max}"`);
+    }
+    total += (published.weight * d.raw) / d.max;
+  }
+
+  // The total is checked at full precision, never from the rounded figures.
+  if (tool.score.value === null) {
+    if (!rows.some((r) => r.raw === null)) {
+      fail(`${file} ${key}: tools.json says unrated but every dimension on the card carries evidence`);
+    }
+    return;
+  }
+  if (Math.abs(total - tool.score.exact) > 0.005) {
+    fail(`${file} ${key}: dimensions on the card sum to ${total.toFixed(4)}, score.exact says ${tool.score.exact}`);
+  }
+  if (Math.floor(total + 0.5) !== tool.score.value) {
+    fail(`${file} ${key}: dimensions on the card round to ${Math.floor(total + 0.5)}, score says ${tool.score.value}`);
+  }
+}
 
 export function collectFailures(deHtml, enHtml, data) {
   const failures = [];
@@ -18,12 +114,14 @@ export function collectFailures(deHtml, enHtml, data) {
   const expectedTools = Object.keys(data.tools);
 
   for (const [file, html, lang] of files) {
-    let scores, matrix, prices, meta;
+    let scores, matrix, prices, meta, weights, dimensions;
     try {
       scores = parseScores(html);
       matrix = parseMatrix(html);
       prices = parsePrices(html);
       meta = parseMeta(html);
+      weights = parseWeights(html);
+      dimensions = parseDimensions(html, DECIMAL_SEPARATOR[lang]);
     } catch (err) {
       fail(`${file}: parse error — ${err.message}`);
       continue;
@@ -56,6 +154,9 @@ export function collectFailures(deHtml, enHtml, data) {
           fail(`${file} ${key}: descriptor "${card.descriptor}" != "${tool.descriptor[lang]}"`);
         }
       }
+
+      const rows = dimensions.get(key);
+      if (rows) checkDimensions({ file, key, tool, rows, weights, fail });
 
       const cells = matrix.cells.get(key);
       if (cells) {

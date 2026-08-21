@@ -169,7 +169,7 @@ intermediate commits on a feature branch.)
      others; the existing `parseScores` / `parseMatrix` / `parsePrices` /
      `parseMeta` tests are untouched in the diff.
 
-3. [ ] Make `verify` fail on any hand-altered dimension figure
+3. [x] Make `verify` fail on any hand-altered dimension figure
    - Files: `scripts/verify.mjs`, `scripts/verify.test.mjs`
    - Inside `collectFailures`'s per-file loop (parse block lines 20–30, per-tool
      block lines 42–101), parse dimensions and weights in the same `try` and
