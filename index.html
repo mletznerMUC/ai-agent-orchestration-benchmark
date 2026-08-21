@@ -1384,7 +1384,7 @@
         Vergleichen <span class="cmp-badge" id="cmp-header-count">0</span>
       </button>
     </div>
-    <p class="score-provenance"><strong>Provenienz:</strong> Die Gesamtbewertung wird aus dem unten veröffentlichten Raster berechnet — sechs gewichtete Dimensionen, jedes Kriterium 0/1/2 gegen eine belegte Quelle. Die ungerundete Summe steht in <code>data/tools.json</code> und wird maschinell geprüft. Tools, deren Release-Reife sich nicht aus datierten Primärquellen belegen lässt, werden als <em>nicht bewertet</em> ausgewiesen statt geschätzt.</p>
+    <p class="score-provenance"><strong>Provenienz:</strong> Die Gesamtbewertung wird aus dem unten veröffentlichten Raster berechnet — sechs gewichtete Dimensionen, jedes Kriterium 0/1/2 gegen eine belegte Quelle. Die ungerundete Summe wird maschinell geprüft. Tools, deren Release-Reife sich nicht aus datierten Primärquellen belegen lässt, werden als <em>nicht bewertet</em> ausgewiesen statt geschätzt.</p>
     <div class="score-grid">
 <div class="score-card is-adk" data-tool="google-adk">
         <div class="score-tool"><a href="https://adk.dev" target="_blank" rel="noopener">Google ADK</a> <span class="score-badge badge-adk">Best Multi-Cloud</span></div>
@@ -1558,7 +1558,7 @@
 
   <!-- Weighting Panel -->
   <div class="section" id="wt-panel" hidden>
-    <!-- Dieser Abschnitt liegt in dem Ausschnitt der Seite, den parseScores in scripts/lib/parse-html.mjs liest. Deshalb beginnt hier jede neue Klasse und jede id mit wt-; welche Klassennamen in diesem Ausschnitt reserviert sind, steht in docs/decisions/006-reweighting-is-a-view.md. -->
+    <!-- Dieser Abschnitt liegt in dem Ausschnitt der Seite, den der Score-Parser liest. Deshalb beginnt hier jede neue Klasse und jede id mit wt-. -->
     <div class="section-header">
       <span class="section-title">Eigene Gewichtung — nicht die veröffentlichte Bewertung</span>
     </div>
@@ -2209,7 +2209,7 @@
         <span class="news-date">August 2026</span>
       </div>
       <div class="news-body">
-        <p class="news-intro">Monatliche Recherche-Runde (2026-08): Alle zw&ouml;lf Tools gegen den aktuellen Stand gepr&uuml;ft. F&uuml;nf belegte Korrekturen an bestehenden Daten &uuml;bernommen; Quellen und gepr&uuml;fte Funde im Refresh-Report unter <code>docs/refresh/2026-08-report.md</code>.</p>
+        <p class="news-intro">Monatliche Recherche-Runde (2026-08): Alle zw&ouml;lf Tools gegen den aktuellen Stand gepr&uuml;ft. F&uuml;nf belegte Korrekturen an bestehenden Daten &uuml;bernommen.</p>
         <ul class="news-list">
           <li><strong>n8n &mdash; Lizenz &amp; Preise korrigiert:</strong> Lizenz von &bdquo;Apache 2.0&ldquo; auf &bdquo;Sustainable Use License&ldquo; berichtigt (n8n bezeichnet sich laut eigener Lizenzseite nicht als Open Source). Cloud-Preise auf die exakten Vendor-Angaben aktualisiert: Starter &euro;20/Mo., Pro &euro;50/Mo., Business &euro;667/Mo. (zuvor gerundete N&auml;herungswerte).</li>
           <li><strong>Claude Squad &mdash; Lizenz korrigiert:</strong> Von &bdquo;MIT&ldquo; auf &bdquo;AGPL-3.0&ldquo; berichtigt; die <code>LICENSE.md</code> im Repository ist die GNU AGPL v3.0. Betrifft Feature-Matrix und Preiskarte.</li>
@@ -2489,9 +2489,9 @@
 
   /* wt-formula:begin */
   /* The visitor's weighting, normalised to 100 and rounded once, half-up, on
-     the total only — full precision throughout (ADR-006). A dimension with no
+     the total only — full precision throughout. A dimension with no
      tier-A evidence yields no total at any weighting, including weight 0:
-     ADR-005 makes missing evidence a finding, not a zero. */
+     missing evidence is a finding, not a zero. */
   function wtSum(weights) {
     var keys = Object.keys(weights);
     var sum = 0;
