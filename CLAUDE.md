@@ -45,10 +45,15 @@ must be sourced and reproducible. When in doubt, understate.
   re-implement existing work.
 
 ## Conventions
-- Branches: `feature/<slug>`, `hotfix/<slug>`
+- Branches: `feature/<slug>`, `hotfix/<slug>`, `chore/<slug>`
 - Commits: conventional commits (`feat:`, `fix:`, `data:`, `docs:`)
 - `data:` commits touch scoring/benchmark data and must reference a
   source in the commit body.
+- Generated ledgers (`COST_CONTROL.md`) are refreshed on their own
+  `chore/` branch, never inside a feature branch. A feature PR's diff
+  should contain only that feature — a reviewer reading it should not
+  have to decide which files are the change and which are along for the
+  ride.
 - Decisions that outlive a PR go to `docs/decisions/` as a short ADR
   (one file per decision, `NNN-title.md`).
 
