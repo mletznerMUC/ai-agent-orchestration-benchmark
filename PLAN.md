@@ -264,7 +264,7 @@ intermediate commits on a feature branch.)
      in a browser shows a closed disclosure on every card that opens to six
      labelled rows, with the compare checkboxes and modal still working.
 
-5. [ ] EN: the same breakdown in `index.en.html`
+5. [x] EN: the same breakdown in `index.en.html`
    - Files: `index.en.html`
    - Byte-identical CSS block in the same position. Identical markup and
      identical `data-raw` / `data-max` / `dim-raw` / `dim-points` values.
