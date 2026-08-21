@@ -117,7 +117,7 @@ the state this project's standards are hostile to. (ADR-003 is about not merging
 a `refresh:proposed` PR while `verify` is red; it says nothing about
 intermediate commits on a feature branch.)
 
-1. [ ] Key the Methodology table rows with their rubric dimension slug, in both files
+1. [x] Key the Methodology table rows with their rubric dimension slug, in both files
    - Files: `index.html` (lines 1849–1854), `index.en.html` (lines 1810–1815)
    - Change only the opening tag of each of the six `<tr>`: `<tr>` →
      `<tr data-dim="orchestration">`, then `operability`, `integration`,
