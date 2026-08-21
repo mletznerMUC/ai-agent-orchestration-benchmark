@@ -280,7 +280,7 @@ intermediate commits on a feature branch.)
      prints nothing; **`npm run verify` prints `OK` and `npm test` is fully
      green for the first time since step 2.**
 
-6. [ ] DE: add the weighting panel markup and CSS to `index.html`
+6. [x] DE: add the weighting panel markup and CSS to `index.html`
    - Files: `index.html`
    - Insert a new `<!-- Weighting Panel -->` section between the closing `</div>`
      of the Score Overview section (line 1243) and `<!-- Feature Matrix -->`
