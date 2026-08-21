@@ -127,7 +127,7 @@ intermediate commits on a feature branch.)
      both files, `git diff` shows twelve changed lines and nothing else, and
      `npm run verify` and `npm test` are still green.
 
-2. [ ] Teach the parser to read dimensions and published weights
+2. [x] Teach the parser to read dimensions and published weights
    - Files: `scripts/lib/parse-html.mjs`, `scripts/lib/parse-html.test.mjs`
    - Add `parseDimensions(html)`: reuse the existing slice
      (`'<div class="score-grid">'` → `'<!-- Feature Matrix -->'`) and the
