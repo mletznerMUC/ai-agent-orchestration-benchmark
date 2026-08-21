@@ -105,8 +105,15 @@ jobs:
             independent per-file work where that helps:
 
             1. index.html (DE) — every changed score, score-bar width,
-               matrix chip state and label, and price field, exactly as
-               tools.json now states them for `de`.
+               rubric dimension figure (`data-raw`, `data-max`, the
+               `dim-raw` text and the rounded `dim-points` text), matrix
+               chip state and label, and price field, exactly as
+               tools.json now states them for `de`. The `dim-points`
+               figure is `weight * raw / max` rounded half-up to two
+               decimals, with the weight taken from the Methodology
+               table row for that dimension, and it is written with a
+               decimal point on both pages — the German page too, so the
+               two files stay byte-identical on the figures.
             2. index.en.html (EN) — the same values for `en`.
             3. A changelog entry in both files describing this round,
                matching the existing entry style. Descriptive and
@@ -114,10 +121,21 @@ jobs:
             4. The `Stand:` / `As of:` stamp in both files, matching
                `meta.asOf` in tools.json and the new changelog entry.
 
-            Address every cell by its `data-tool` / `data-feature`
-            attribute. Never count columns: matrix column order differs
-            from score-grid order for ms-agent/n8n and
-            openai-sdk/claude-squad.
+            If a tool gains or loses tier-A maturity evidence, the whole
+            rated/unrated presentation has to move together in both
+            files — none of it counts as a "changed figure", so it will
+            not show up as one: the card's `is-unrated` class, the
+            `score-number` plus `score-bar-fill` versus `score-unrated`,
+            and on the maturity row the `dim is-unevidenced` class, the
+            presence or absence of `data-raw`, the `—` / `nicht belegt`
+            | `not evidenced` texts and the `data-reason` and `title`.
+
+            Address every cell by its `data-tool` / `data-feature` /
+            `data-dim` attribute. Never count columns or rows: matrix
+            column order differs from score-grid order for ms-agent/n8n
+            and openai-sdk/claude-squad, and the dimension rows follow
+            the Methodology table's order, not the key order in
+            tools.json.
 
             Then run `npm test && npm run verify`. Both must pass. If
             verify reports a mismatch, fix the HTML to match tools.json —

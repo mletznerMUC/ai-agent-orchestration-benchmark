@@ -142,3 +142,123 @@ export function parseMeta(html) {
 
   return { asOf: asOf.trim(), newsDates };
 }
+
+/**
+ * Reads the six published weights and their labels out of the Methodology
+ * table. The weights exist exactly once per page (ADR-006, D2): the score
+ * cards do not repeat them, the weighting panel does not repeat them, and
+ * verify.mjs checks this one copy against data/tools.json.
+ *
+ * Document order is the display order the whole feature keys off — it is
+ * *not* the key order in data/tools.json, which stores accessibility before
+ * maturity. Those two dimensions share both weight (15) and max (6), so only
+ * the labels distinguish them.
+ */
+export function parseWeights(html) {
+  const block = sliceBetween(html, '<!-- Methodology -->', '<!-- News / Changelog -->');
+  const rows = [...block.matchAll(/<tr[^>]*\bdata-dim="([^"]+)"[^>]*>([\s\S]*?)<\/tr>/g)];
+  if (rows.length < 6) {
+    throw new Error(`methodology: ${rows.length} weighted dimension rows, expected at least 6`);
+  }
+
+  const weights = new Map();
+  for (const [, dim, cells] of rows) {
+    const label = /<td>([\s\S]*?)<\/td>/.exec(cells)?.[1];
+    const weight = /<td class="w">([\s\S]*?)<\/td>/.exec(cells)?.[1];
+    if (label === undefined) throw new Error(`methodology ${dim}: no label cell`);
+    if (weight === undefined) throw new Error(`methodology ${dim}: no weight cell`);
+    if (!/^\d+(\.\d+)?$/.test(weight.trim())) {
+      throw new Error(`methodology ${dim}: weight "${weight.trim()}" is not a number`);
+    }
+    weights.set(dim, { label: label.trim(), weight: Number(weight.trim()) });
+  }
+
+  return weights;
+}
+
+/**
+ * Reads the rubric breakdown rows off the score cards.
+ *
+ * The displayed points figure is rounded to two decimals and written the same
+ * way on both pages — `3.33`, with a dot, in German too — so the two files
+ * carry byte-identical figure strings and `verify` can compare them directly.
+ */
+function dimensionNumber(text) {
+  const value = text.trim();
+  if (!/^\d+(\.\d+)?$/.test(value)) return null;
+  return Number(value);
+}
+
+function dimensionRow(toolKey, row) {
+  const tagEnd = row.indexOf('>');
+  if (tagEnd === -1) throw new Error(`score card ${toolKey}: unterminated dimension row`);
+  const tag = row.slice(0, tagEnd);
+
+  // Every attribute is read by name, never by position: a future editor
+  // reordering them must not change what this returns.
+  const attr = (name) => new RegExp(`\\b${name}="([^"]*)"`).exec(tag)?.[1];
+
+  const key = attr('data-dim');
+  if (key === undefined) throw new Error(`score card ${toolKey}: dimension row without data-dim`);
+
+  const maxText = attr('data-max');
+  if (maxText === undefined) throw new Error(`score card ${toolKey}/${key}: no data-max`);
+  if (!/^\d+(\.\d+)?$/.test(maxText)) {
+    throw new Error(`score card ${toolKey}/${key}: data-max "${maxText}" is not a number`);
+  }
+
+  const rawText = attr('data-raw');
+  if (rawText !== undefined && !/^\d+(\.\d+)?$/.test(rawText)) {
+    throw new Error(`score card ${toolKey}/${key}: data-raw "${rawText}" is not a number`);
+  }
+
+  const name = /<span class="dim-name"[^>]*>([\s\S]*?)<\/span>/.exec(row)?.[1];
+  if (name === undefined) throw new Error(`score card ${toolKey}/${key}: no dim-name`);
+  const title = /<span class="dim-name"[^>]*\stitle="([^"]*)"/.exec(row)?.[1] ?? null;
+
+  const rawLabel = /<span class="dim-raw">([\s\S]*?)<\/span>/.exec(row)?.[1];
+  if (rawLabel === undefined) throw new Error(`score card ${toolKey}/${key}: no dim-raw`);
+
+  const pointsText = /<span class="dim-points">([\s\S]*?)<\/span>/.exec(row)?.[1];
+  if (pointsText === undefined) throw new Error(`score card ${toolKey}/${key}: no dim-points`);
+
+  const raw = rawText === undefined ? null : Number(rawText);
+  const points = dimensionNumber(pointsText);
+
+  // A row either carries evidence and a figure, or neither. Half of each is
+  // how an unrated dimension quietly becomes a zero (ADR-005).
+  if (raw !== null && points === null) {
+    throw new Error(`score card ${toolKey}/${key}: has data-raw but dim-points "${pointsText.trim()}" is not a number`);
+  }
+  if (raw === null && points !== null) {
+    throw new Error(`score card ${toolKey}/${key}: dim-points "${pointsText.trim()}" is a number but data-raw is absent`);
+  }
+
+  return {
+    key,
+    name: name.trim(),
+    title,
+    raw,
+    max: Number(maxText),
+    points,
+    rawLabel: rawLabel.trim(),
+  };
+}
+
+export function parseDimensions(html) {
+  const block = sliceBetween(html, '<div class="score-grid">', '<!-- Feature Matrix -->');
+  const chunks = block.split('<div class="score-card').slice(1);
+  const dimensions = new Map();
+
+  for (const chunk of chunks) {
+    const key = /^[^>]*data-tool="([^"]+)"/.exec(chunk)?.[1];
+    if (!key) throw new Error('score card without data-tool attribute');
+
+    const rows = chunk.split('<div class="dim').slice(1);
+    if (rows.length === 0) throw new Error(`score card ${key}: no dimension rows`);
+
+    dimensions.set(key, rows.map((row) => dimensionRow(key, row)));
+  }
+
+  return dimensions;
+}

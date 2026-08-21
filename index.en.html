@@ -398,6 +398,224 @@
     padding: 8px 0 12px;
   }
   .score-card.is-unrated { background: var(--bg-subtle); }
+
+  /* Rubric breakdown */
+  .score-dims {
+    margin-top: 12px;
+    padding-top: 8px;
+    border-top: 1px solid var(--border);
+  }
+
+  .score-dims-sum {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    list-style: none;
+    cursor: pointer;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-secondary);
+  }
+
+  .score-dims-sum::-webkit-details-marker { display: none; }
+
+  .score-dims-sum::before {
+    content: '+';
+    flex: none;
+    width: 12px;
+    height: 12px;
+    line-height: 11px;
+    text-align: center;
+    border: 1px solid var(--border-strong);
+    border-radius: 3px;
+  }
+
+  .score-dims[open] > .score-dims-sum::before { content: '\2212'; }
+  .score-dims-sum:hover { color: var(--text); }
+
+  .score-dims-sum:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .dim {
+    display: grid;
+    grid-template-columns: 1fr auto auto;
+    gap: 8px;
+    align-items: baseline;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    line-height: 1.9;
+    color: var(--text-secondary);
+  }
+
+  .dim:first-of-type { margin-top: 6px; }
+
+  .dim-name {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .dim-raw { color: var(--text-muted); }
+
+  .dim-points {
+    min-width: 34px;
+    text-align: right;
+    font-weight: 500;
+    color: var(--text);
+  }
+
+  .dim.is-unevidenced .dim-points { font-weight: 400; color: var(--text-muted); }
+
+  /* Own weighting */
+  .section[hidden] { display: none; }
+
+  .wt-note {
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 0 0 16px;
+  }
+
+  .wt-presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+
+  .wt-preset, #wt-reset {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+
+  .wt-preset:hover, #wt-reset:hover { color: var(--text); border-color: var(--text-muted); }
+
+  .wt-preset[aria-pressed="true"] {
+    color: var(--accent);
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+
+  .wt-preset:focus-visible,
+  #wt-reset:focus-visible,
+  .wt-row input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .wt-sliders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4px 32px;
+  }
+
+  .wt-row {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 52px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .wt-label { font-size: 12px; color: var(--text-secondary); }
+  .wt-row input { width: 100%; accent-color: var(--accent); }
+
+  .wt-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: right;
+    color: var(--text);
+  }
+
+  .wt-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 16px 0 14px;
+  }
+
+  .wt-head, .wt-rank {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) 56px 56px 110px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .wt-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wt-head span:first-child { grid-column: 3; text-align: right; }
+  .wt-head span:last-child { grid-column: 4; text-align: right; }
+
+  .wt-rank {
+    font-size: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wt-pos, .wt-total, .wt-pub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .wt-pos { color: var(--text-muted); }
+  .wt-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wt-total { text-align: right; font-weight: 500; color: var(--text); }
+  .wt-pub { text-align: right; color: var(--text-muted); }
+
+  .wt-bar {
+    display: block;
+    height: 3px;
+    background: var(--border-strong);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .wt-bar-fill { display: block; height: 100%; background: var(--text-secondary); border-radius: 2px; }
+
+  .wt-empty { font-size: 12px; color: var(--text-secondary); padding: 12px 0; }
+
+  #wt-unrated { margin-top: 18px; }
+
+  .wt-norank-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .wt-norank {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 2fr;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wt-reason { font-size: 11px; color: var(--text-secondary); }
   .method-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .method-table th, .method-table td {
     text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
@@ -1134,74 +1352,196 @@
         <div class="score-number">87</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:87%"></div></div>
         <div class="score-descriptor">Enterprise Framework · v2.0 GA</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="6"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">6/8</span><span class="dim-points">18.75</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="strands">
         <div class="score-tool"><a href="https://strandsagents.com" target="_blank" rel="noopener">Strands Agents</a></div>
         <div class="score-number">87</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:87%"></div></div>
         <div class="score-descriptor">AWS-Native SDK</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="6"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">6/8</span><span class="dim-points">18.75</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="ms-agent">
         <div class="score-tool"><a href="https://learn.microsoft.com/agent-framework" target="_blank" rel="noopener">MS Agent Framework</a></div>
         <div class="score-number">83</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
         <div class="score-descriptor">Microsoft Stack · v1.0 GA</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="6"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">6/8</span><span class="dim-points">18.75</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="3"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">3/4</span><span class="dim-points">11.25</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="n8n">
         <div class="score-tool"><a href="https://n8n.io" target="_blank" rel="noopener">n8n</a></div>
         <div class="score-number">83</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
         <div class="score-descriptor">Workflow Automation Tool</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="4"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">4/8</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="5"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="5"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">5/6</span><span class="dim-points">8.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="maestro">
         <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
         <div class="score-number">83</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:83%"></div></div>
         <div class="score-descriptor">Desktop Orchestrator</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="8"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">8/8</span><span class="dim-points">25</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="2"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">2/4</span><span class="dim-points">10</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="3"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">3/6</span><span class="dim-points">7.5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="6"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">6/6</span><span class="dim-points">10</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="langgraph">
         <div class="score-tool"><a href="https://www.langchain.com/langgraph" target="_blank" rel="noopener">LangGraph</a></div>
         <div class="score-number">81</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:81%"></div></div>
         <div class="score-descriptor">Code-First Framework</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="6"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">6/8</span><span class="dim-points">18.75</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="5"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="0"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">0/6</span><span class="dim-points">0</span></div>
+</details>
       </div>
 <div class="score-card is-mcp" data-tool="claude-sdk">
         <div class="score-tool"><a href="https://code.claude.com" target="_blank" rel="noopener">Claude Agent SDK</a> <span class="score-badge badge-mcp">Best MCP</span></div>
         <div class="score-number">76</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:76%"></div></div>
         <div class="score-descriptor">Code-First SDK</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="5"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">5/8</span><span class="dim-points">15.63</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="4"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">4/6</span><span class="dim-points">10</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="crewai">
         <div class="score-tool"><a href="https://www.crewai.com" target="_blank" rel="noopener">CrewAI</a></div>
         <div class="score-number">76</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:76%"></div></div>
         <div class="score-descriptor">Role-Playing Crew Framework</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="5"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">5/8</span><span class="dim-points">15.63</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="2"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">2/4</span><span class="dim-points">10</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="3"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">3/6</span><span class="dim-points">5</span></div>
+</details>
       </div>
 <div class="score-card is-databricks" data-tool="databricks">
         <div class="score-tool"><a href="https://www.databricks.com/product/agent-bricks" target="_blank" rel="noopener">Databricks Agent Bricks</a> <span class="score-badge badge-databricks">Best Governance</span></div>
         <div class="score-number">73</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:73%"></div></div>
         <div class="score-descriptor">Managed Enterprise Platform</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="6"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">6/8</span><span class="dim-points">18.75</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="4"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">4/4</span><span class="dim-points">20</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="1"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">1/4</span><span class="dim-points">3.75</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="openai-sdk">
         <div class="score-tool"><a href="https://openai.github.io/openai-agents-python/" target="_blank" rel="noopener">OpenAI SDK</a></div>
         <div class="score-number">66</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:66%"></div></div>
         <div class="score-descriptor">Fast Prototype · Enterprise Safety</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="4"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">4/8</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="3"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">3/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="2"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">2/4</span><span class="dim-points">7.5</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card" data-tool="claude-squad">
         <div class="score-tool"><a href="https://github.com/smtg-ai/claude-squad" target="_blank" rel="noopener">Claude Squad</a></div>
         <div class="score-number">51</div>
         <div class="score-bar-track"><div class="score-bar-fill" style="width:51%"></div></div>
         <div class="score-descriptor">Lightweight CLI</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="5"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">5/8</span><span class="dim-points">15.63</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="0"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">0/4</span><span class="dim-points">0</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="2"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">2/6</span><span class="dim-points">5</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+</details>
       </div>
 <div class="score-card is-unrated" data-tool="manus-ai">
         <div class="score-tool"><a href="https://manus.im" target="_blank" rel="noopener">Manus AI</a></div>
         <div class="score-unrated">Not rated</div>
         <div class="score-descriptor">Autonomous Web Agent</div>
+        <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="4"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">4/8</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="2"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">2/4</span><span class="dim-points">10</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="4"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">4/6</span><span class="dim-points">10</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="0"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">0/4</span><span class="dim-points">0</span></div>
+<div class="dim is-unevidenced" data-dim="maturity" data-max="6" data-reason="release maturity cannot be evidenced from a dated primary source" title="release maturity cannot be evidenced from a dated primary source"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">—</span><span class="dim-points">not evidenced</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="6"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">6/6</span><span class="dim-points">10</span></div>
+</details>
       </div>
     </div>
 </div>
+
+  <!-- Weighting Panel -->
+  <div class="section" id="wt-panel" hidden>
+    <!-- This section sits inside the slice of the page that parseScores in scripts/lib/parse-html.mjs reads. Every new class and every id here therefore starts with wt-; the class names reserved inside that slice are listed in docs/decisions/006-reweighting-is-a-view.md. -->
+    <div class="section-header">
+      <span class="section-title">Your own weighting — not the published rating</span>
+    </div>
+    <p class="wt-note">This order comes from your weights and stays in this browser. The published rating above is unchanged. Weights are normalised to 100.</p>
+    <div class="wt-presets">
+      <button type="button" class="wt-preset" data-preset="published" aria-pressed="false">Published weights</button>
+      <button type="button" class="wt-preset" data-preset="equal" aria-pressed="false">Equal weights</button>
+    </div>
+    <div class="wt-sliders">
+        <div class="wt-row"><label class="wt-label" for="wt-s-orchestration">Orchestration</label><input type="range" id="wt-s-orchestration" data-dim="orchestration" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-operability">Operability</label><input type="range" id="wt-s-operability" data-dim="operability" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-integration">Integration</label><input type="range" id="wt-s-integration" data-dim="integration" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-sovereignty">Deployment sovereignty</label><input type="range" id="wt-s-sovereignty" data-dim="sovereignty" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-maturity">Release maturity</label><input type="range" id="wt-s-maturity" data-dim="maturity" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-accessibility">Accessibility</label><input type="range" id="wt-s-accessibility" data-dim="accessibility" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+    </div>
+    <p class="wt-sum"></p>
+    <button type="button" id="wt-reset">Reset to published weights</button>
+    <div class="wt-head"><span>Your weighting</span><span>Published</span></div>
+    <div id="wt-ranking"></div>
+    <div id="wt-unrated"></div>
+  </div>
 
   <!-- Feature Matrix -->
   <div class="section">
@@ -1807,16 +2147,16 @@
       <table class="method-table">
         <thead><tr><th>Dimension</th><th>Weight</th><th>Criteria</th></tr></thead>
         <tbody>
-        <tr><td>Orchestration</td><td class="w">25</td><td class="c"><code>multi-agent-parallel, playbooks, group-chat, git-worktrees</code></td></tr>
-        <tr><td>Operability</td><td class="w">20</td><td class="c"><code>observability, hitl</code></td></tr>
-        <tr><td>Integration</td><td class="w">15</td><td class="c"><code>mcp-support, model-agnostic, cli-cicd</code></td></tr>
-        <tr><td>Deployment sovereignty</td><td class="w">15</td><td class="c"><code>eu-onprem, open-source</code></td></tr>
-        <tr><td>Release maturity</td><td class="w">15</td><td class="c"><code>ga-status, release-recency, sustained-cadence</code></td></tr>
-        <tr><td>Accessibility</td><td class="w">10</td><td class="c"><code>learning-curve, desktop-gui, mobile-remote</code></td></tr>
+        <tr data-dim="orchestration"><td>Orchestration</td><td class="w">25</td><td class="c"><code>multi-agent-parallel, playbooks, group-chat, git-worktrees</code></td></tr>
+        <tr data-dim="operability"><td>Operability</td><td class="w">20</td><td class="c"><code>observability, hitl</code></td></tr>
+        <tr data-dim="integration"><td>Integration</td><td class="w">15</td><td class="c"><code>mcp-support, model-agnostic, cli-cicd</code></td></tr>
+        <tr data-dim="sovereignty"><td>Deployment sovereignty</td><td class="w">15</td><td class="c"><code>eu-onprem, open-source</code></td></tr>
+        <tr data-dim="maturity"><td>Release maturity</td><td class="w">15</td><td class="c"><code>ga-status, release-recency, sustained-cadence</code></td></tr>
+        <tr data-dim="accessibility"><td>Accessibility</td><td class="w">10</td><td class="c"><code>learning-curve, desktop-gui, mobile-remote</code></td></tr>
         </tbody>
       </table>
     </div>
-    <p class="method-note">Each criterion scores 0 (absent), 1 (partial) or 2 (full). A dimension earns <em>weight × points achieved ÷ points available</em>. Rounding happens once, on the total, with .5 rounding up. Five dimensions read the fourteen criteria of the feature matrix below; <em>release maturity</em> is evidenced from dated primary sources (tagged releases, changelogs, versioned release notes). Vendor blogs, roadmaps and third-party summaries do not count as evidence. Where release maturity cannot be evidenced that way, the tool stays unrated.</p>
+    <p class="method-note">Each criterion scores 0 (absent), 1 (partial) or 2 (full). A dimension earns <em>weight × points achieved ÷ points available</em>. Rounding happens once, on the total, with .5 rounding up. Five dimensions read the fourteen criteria of the feature matrix below; <em>release maturity</em> is evidenced from dated primary sources (tagged releases, changelogs, versioned release notes). Vendor blogs, roadmaps and third-party summaries do not count as evidence. Where release maturity cannot be evidenced that way, the tool stays unrated. The breakdown on the score cards shows each dimension’s points rounded to two decimals; the exact inputs — points achieved ÷ points available — are shown beside them.</p>
   </div>
 
   <!-- News / Changelog -->
@@ -2084,6 +2424,271 @@
   function esc(s) {
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
+})();
+
+(function () {
+  /* wt-engine:begin */
+  /* wt-strings:begin */
+  var T = {
+    yours: 'Your weighting',
+    published: 'Published',
+    unratedHead: 'Not rated',
+    allZero: 'Every weight is 0 — with no weight there is no ranking.',
+    sumLabel: 'Sum of raw weights',
+    normalised: 'normalised to 100',
+    percent: '%'
+  };
+  /* wt-strings:end */
+
+  /* wt-formula:begin */
+  /* The visitor's weighting, normalised to 100 and rounded once, half-up, on
+     the total only — full precision throughout (ADR-006). A dimension with no
+     tier-A evidence yields no total at any weighting, including weight 0:
+     ADR-005 makes missing evidence a finding, not a zero. */
+  function wtSum(weights) {
+    var keys = Object.keys(weights);
+    var sum = 0;
+    for (var i = 0; i < keys.length; i++) sum += weights[keys[i]];
+    return sum;
+  }
+
+  function wtTotal(weights, dims) {
+    var keys = Object.keys(weights);
+    var sum = wtSum(weights);
+    if (sum === 0) return null;
+    var total = 0;
+    for (var i = 0; i < keys.length; i++) {
+      var dim = dims[keys[i]];
+      if (!dim || dim.raw === null) return null;
+      total += ((100 * weights[keys[i]]) / sum) * (dim.raw / dim.max);
+    }
+    return Math.floor(total + 0.5);
+  }
+  /* wt-formula:end */
+
+  var KEY = 'aiab.dimension-weights.v1';
+  var EQUAL = 17;
+
+  var panel = document.getElementById('wt-panel');
+  var ranking = document.getElementById('wt-ranking');
+  var unratedBox = document.getElementById('wt-unrated');
+  var sumLine = document.querySelector('.wt-sum');
+  var resetBtn = document.getElementById('wt-reset');
+  var sliders = [].slice.call(document.querySelectorAll('.wt-row input[type="range"]'));
+  var presetBtns = [].slice.call(document.querySelectorAll('.wt-preset'));
+  if (!panel || !ranking || !unratedBox || !sumLine || !resetBtn || !sliders.length) return;
+
+  /* The published weights live exactly once per page, in the Methodology
+     table. They are read from there, never copied into this script. */
+  function defaults() {
+    var out = {};
+    [].forEach.call(document.querySelectorAll('.method-table tr[data-dim]'), function (tr) {
+      var cell = tr.querySelector('td.w');
+      if (cell) out[tr.getAttribute('data-dim')] = Number(cell.textContent.trim());
+    });
+    return out;
+  }
+
+  /* Every figure comes out of the published cards, including the reason a
+     tool is unrated: this script keeps no second copy of the data. */
+  function readTools() {
+    return [].map.call(document.querySelectorAll('.score-card[data-tool]'), function (card) {
+      var link = card.querySelector('.score-tool a') || card.querySelector('.score-tool');
+      var number = card.querySelector('.score-number');
+      var dims = {};
+      var reason = '';
+      [].forEach.call(card.querySelectorAll('.score-dims .dim[data-dim]'), function (row) {
+        var raw = row.getAttribute('data-raw');
+        dims[row.getAttribute('data-dim')] = {
+          raw: raw === null ? null : Number(raw),
+          max: Number(row.getAttribute('data-max'))
+        };
+        if (raw === null) reason = row.getAttribute('data-reason') || reason;
+      });
+      return {
+        key: card.getAttribute('data-tool'),
+        name: link ? link.textContent.trim() : card.getAttribute('data-tool'),
+        published: number ? Number(number.textContent.trim()) : null,
+        dims: dims,
+        reason: reason
+      };
+    });
+  }
+
+  var PUBLISHED = defaults();
+  var TOOLS = readTools();
+  var PRESETS = { published: PUBLISHED, equal: {} };
+  Object.keys(PUBLISHED).forEach(function (dim) { PRESETS.equal[dim] = EQUAL; });
+
+  function readWeights() {
+    var out = {};
+    sliders.forEach(function (slider) {
+      out[slider.getAttribute('data-dim')] = Number(slider.value);
+    });
+    return out;
+  }
+
+  function writeWeights(weights) {
+    sliders.forEach(function (slider) {
+      var dim = slider.getAttribute('data-dim');
+      if (typeof weights[dim] === 'number') slider.value = String(weights[dim]);
+    });
+  }
+
+  /* A stored weighting this page does not understand is left alone, not
+     deleted: a future schema's data is not this page's to destroy. */
+  function restore() {
+    var dims = Object.keys(PUBLISHED);
+    var raw;
+    try { raw = window.localStorage.getItem(KEY); } catch (err) { return null; }
+    if (!raw) return null;
+    var parsed;
+    try { parsed = JSON.parse(raw); } catch (err) { return null; }
+    if (!parsed || parsed.v !== 1 || !parsed.w || typeof parsed.w !== 'object') return null;
+    var out = {};
+    for (var i = 0; i < dims.length; i++) {
+      var value = parsed.w[dims[i]];
+      if (typeof value !== 'number' || !isFinite(value) || Math.floor(value) !== value) return null;
+      if (value < 0 || value > 50) return null;
+      out[dims[i]] = value;
+    }
+    return out;
+  }
+
+  function persist(weights) {
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify({ v: 1, w: weights }));
+    } catch (err) { /* private mode or a full quota: the panel still works */ }
+  }
+
+  function forget() {
+    try { window.localStorage.removeItem(KEY); } catch (err) { /* nothing to do */ }
+  }
+
+  function num(value, places) {
+    return places === undefined ? String(value) : value.toFixed(places);
+  }
+
+  function esc(value) {
+    return String(value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* Compared as normalised shares, so 17,17,17,17,17,17 and 20,20,20,20,20,20
+     both read as the equal-weights preset. */
+  function signature(weights) {
+    var sum = wtSum(weights);
+    return Object.keys(weights).sort().map(function (dim) {
+      return sum === 0 ? 0 : Math.round((10000 * weights[dim]) / sum);
+    }).join(',');
+  }
+
+  function syncPresets(weights) {
+    var sig = signature(weights);
+    presetBtns.forEach(function (button) {
+      var preset = PRESETS[button.getAttribute('data-preset')];
+      var active = preset && signature(preset) === sig;
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  /* Unrated is a property of the evidence, not of the weighting: a dimension
+     with no tier-A source leaves the tool without a total at any weights, so
+     it is never listed as ranked and never listed with a zero. */
+  function unevidenced(tool) {
+    return Object.keys(tool.dims).some(function (dim) { return tool.dims[dim].raw === null; });
+  }
+
+  function renderUnrated(list) {
+    if (!list.length) { unratedBox.innerHTML = ''; return; }
+    var html = '<div class="wt-norank-head">' + esc(T.unratedHead) + '</div>';
+    list.forEach(function (tool) {
+      html += '<div class="wt-norank"><span class="wt-name">' + esc(tool.name) + '</span>'
+        + '<span class="wt-reason">' + esc(tool.reason) + '</span></div>';
+    });
+    unratedBox.innerHTML = html;
+  }
+
+  function render() {
+    var weights = readWeights();
+    var sum = wtSum(weights);
+
+    sliders.forEach(function (slider) {
+      var cell = slider.parentNode.querySelector('.wt-pct');
+      if (!cell) return;
+      var dim = slider.getAttribute('data-dim');
+      var share = sum === 0 ? 0 : (100 * weights[dim]) / sum;
+      cell.textContent = num(share, 1) + T.percent;
+    });
+
+    sumLine.textContent = T.sumLabel + ': ' + num(sum) + ' — ' + T.normalised;
+    syncPresets(weights);
+
+    var rated = [];
+    var unrated = [];
+    TOOLS.forEach(function (tool, index) {
+      if (unevidenced(tool)) { unrated.push(tool); return; }
+      var total = wtTotal(weights, tool.dims);
+      if (total !== null) rated.push({ tool: tool, total: total, order: index });
+    });
+    renderUnrated(unrated);
+
+    if (sum === 0) {
+      ranking.innerHTML = '<p class="wt-empty">' + esc(T.allZero) + '</p>';
+      return;
+    }
+
+    /* Ties keep score-grid order and share a rank number. */
+    rated.sort(function (a, b) { return b.total - a.total || a.order - b.order; });
+
+    var html = '';
+    var rank = 0;
+    var previous = null;
+    rated.forEach(function (row, index) {
+      if (previous === null || row.total !== previous) { rank = index + 1; previous = row.total; }
+      var pub = row.tool.published === null ? '—' : String(row.tool.published);
+      html += '<div class="wt-rank">'
+        + '<span class="wt-pos">' + rank + '</span>'
+        + '<span class="wt-name">' + esc(row.tool.name) + '</span>'
+        + '<span class="wt-total" aria-label="' + esc(T.yours + ': ' + row.total) + '">'
+        + row.total + '</span>'
+        + '<span class="wt-pub" aria-label="' + esc(T.published + ': ' + pub) + '">' + pub + '</span>'
+        + '<span class="wt-bar"><span class="wt-bar-fill" style="width:' + row.total + '%"></span></span>'
+        + '</div>';
+    });
+    ranking.innerHTML = html;
+  }
+
+  /* Live on input, stored on change: a drag would otherwise fire a hundred
+     synchronous setItem calls a second. */
+  sliders.forEach(function (slider) {
+    slider.addEventListener('input', render);
+    slider.addEventListener('change', function () { persist(readWeights()); render(); });
+  });
+
+  presetBtns.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var preset = PRESETS[button.getAttribute('data-preset')];
+      if (!preset) return;
+      writeWeights(preset);
+      persist(readWeights());
+      render();
+    });
+  });
+
+  resetBtn.addEventListener('click', function () {
+    writeWeights(PUBLISHED);
+    forget();
+    render();
+  });
+
+  writeWeights(PUBLISHED);
+  var saved = restore();
+  if (saved) writeWeights(saved);
+  render();
+  panel.hidden = false;
+  /* wt-engine:end */
 })();
 </script>
 </body>
