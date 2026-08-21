@@ -377,6 +377,19 @@
     letter-spacing: 0.06em;
   }
 
+  .score-provenance {
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 0 0 16px;
+  }
+  .score-provenance a { color: var(--accent); }
+
   /* Feature matrix */
   .matrix-wrap {
     overflow-x: auto;
@@ -1132,6 +1145,7 @@
         Vergleichen <span class="cmp-badge" id="cmp-header-count">0</span>
       </button>
     </div>
+    <p class="score-provenance"><strong>Provenienz:</strong> Die Gesamtbewertung ist redaktionell. Sie trägt keine Quelle je Kriterium und wird nicht aus der Feature-Matrix unten berechnet — ein Tool kann in der Matrix führen, ohne in der Bewertung zu führen. Ein gewichtetes, quellenbasiertes Raster ist in Vorbereitung; bis zu dessen Veröffentlichung ist die Bewertung eine Rangfolge, keine Messung.</p>
     <div class="score-grid">
       <div class="score-card" data-tool="maestro">
         <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
