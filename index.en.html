@@ -377,6 +377,19 @@
     letter-spacing: 0.06em;
   }
 
+  .score-provenance {
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 0 0 16px;
+  }
+  .score-provenance a { color: var(--accent); }
+
   /* Feature matrix */
   .matrix-wrap {
     overflow-x: auto;
@@ -1093,6 +1106,7 @@
         Compare <span class="cmp-badge" id="cmp-header-count">0</span>
       </button>
     </div>
+    <p class="score-provenance"><strong>Provenance:</strong> the overall rating is editorial. It carries no per-criterion source and is not computed from the feature matrix below — a tool can lead the matrix without leading the rating. A weighted, sourced rubric is in preparation; until it is published, treat the rating as an ordering rather than a measurement.</p>
     <div class="score-grid">
       <div class="score-card" data-tool="maestro">
         <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
