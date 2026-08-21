@@ -335,7 +335,7 @@ intermediate commits on a feature branch.)
      prints nothing, and the same holds for `data-preset="[a-z]*"` and for
      `data-dim="[a-z]*"` inside the panel; `npm run verify` and `npm test` green.
 
-8. [ ] Add the weighting engine to both files
+8. [x] Add the weighting engine to both files
    - Files: `index.html` (a second IIFE after the existing one, i.e. after line
      2134 `})();` and before `</script>`), `index.en.html` (same position),
      `scripts/lib/rubric.mjs` (new)

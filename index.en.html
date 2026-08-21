@@ -2425,6 +2425,273 @@
     return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
   }
 })();
+
+(function () {
+  /* wt-engine:begin */
+  /* wt-strings:begin */
+  var T = {
+    yours: 'Your weighting',
+    published: 'Published',
+    unratedHead: 'Not rated',
+    allZero: 'Every weight is 0 — with no weight there is no ranking.',
+    sumLabel: 'Sum of raw weights',
+    normalised: 'normalised to 100',
+    decimal: '.',
+    percent: '%'
+  };
+  /* wt-strings:end */
+
+  /* wt-formula:begin */
+  /* The visitor's weighting, normalised to 100 and rounded once, half-up, on
+     the total only — full precision throughout (ADR-006). A dimension with no
+     tier-A evidence yields no total at any weighting, including weight 0:
+     ADR-005 makes missing evidence a finding, not a zero. */
+  function wtSum(weights) {
+    var keys = Object.keys(weights);
+    var sum = 0;
+    for (var i = 0; i < keys.length; i++) sum += weights[keys[i]];
+    return sum;
+  }
+
+  function wtTotal(weights, dims) {
+    var keys = Object.keys(weights);
+    var sum = wtSum(weights);
+    if (sum === 0) return null;
+    var total = 0;
+    for (var i = 0; i < keys.length; i++) {
+      var dim = dims[keys[i]];
+      if (!dim || dim.raw === null) return null;
+      total += ((100 * weights[keys[i]]) / sum) * (dim.raw / dim.max);
+    }
+    return Math.floor(total + 0.5);
+  }
+  /* wt-formula:end */
+
+  var KEY = 'aiab.dimension-weights.v1';
+  var EQUAL = 17;
+
+  var panel = document.getElementById('wt-panel');
+  var ranking = document.getElementById('wt-ranking');
+  var unratedBox = document.getElementById('wt-unrated');
+  var sumLine = document.querySelector('.wt-sum');
+  var resetBtn = document.getElementById('wt-reset');
+  var sliders = [].slice.call(document.querySelectorAll('.wt-row input[type="range"]'));
+  var presetBtns = [].slice.call(document.querySelectorAll('.wt-preset'));
+  if (!panel || !ranking || !unratedBox || !sumLine || !resetBtn || !sliders.length) return;
+
+  /* The published weights live exactly once per page, in the Methodology
+     table. They are read from there, never copied into this script. */
+  function defaults() {
+    var out = {};
+    [].forEach.call(document.querySelectorAll('.method-table tr[data-dim]'), function (tr) {
+      var cell = tr.querySelector('td.w');
+      if (cell) out[tr.getAttribute('data-dim')] = Number(cell.textContent.trim());
+    });
+    return out;
+  }
+
+  /* Every figure comes out of the published cards, including the reason a
+     tool is unrated: this script keeps no second copy of the data. */
+  function readTools() {
+    return [].map.call(document.querySelectorAll('.score-card[data-tool]'), function (card) {
+      var link = card.querySelector('.score-tool a') || card.querySelector('.score-tool');
+      var number = card.querySelector('.score-number');
+      var dims = {};
+      var reason = '';
+      [].forEach.call(card.querySelectorAll('.score-dims .dim[data-dim]'), function (row) {
+        var raw = row.getAttribute('data-raw');
+        dims[row.getAttribute('data-dim')] = {
+          raw: raw === null ? null : Number(raw),
+          max: Number(row.getAttribute('data-max'))
+        };
+        if (raw === null) reason = row.getAttribute('data-reason') || reason;
+      });
+      return {
+        key: card.getAttribute('data-tool'),
+        name: link ? link.textContent.trim() : card.getAttribute('data-tool'),
+        published: number ? Number(number.textContent.trim()) : null,
+        dims: dims,
+        reason: reason
+      };
+    });
+  }
+
+  var PUBLISHED = defaults();
+  var TOOLS = readTools();
+  var PRESETS = { published: PUBLISHED, equal: {} };
+  Object.keys(PUBLISHED).forEach(function (dim) { PRESETS.equal[dim] = EQUAL; });
+
+  function readWeights() {
+    var out = {};
+    sliders.forEach(function (slider) {
+      out[slider.getAttribute('data-dim')] = Number(slider.value);
+    });
+    return out;
+  }
+
+  function writeWeights(weights) {
+    sliders.forEach(function (slider) {
+      var dim = slider.getAttribute('data-dim');
+      if (typeof weights[dim] === 'number') slider.value = String(weights[dim]);
+    });
+  }
+
+  /* A stored weighting this page does not understand is left alone, not
+     deleted: a future schema's data is not this page's to destroy. */
+  function restore() {
+    var dims = Object.keys(PUBLISHED);
+    var raw;
+    try { raw = window.localStorage.getItem(KEY); } catch (err) { return null; }
+    if (!raw) return null;
+    var parsed;
+    try { parsed = JSON.parse(raw); } catch (err) { return null; }
+    if (!parsed || parsed.v !== 1 || !parsed.w || typeof parsed.w !== 'object') return null;
+    var out = {};
+    for (var i = 0; i < dims.length; i++) {
+      var value = parsed.w[dims[i]];
+      if (typeof value !== 'number' || !isFinite(value) || Math.floor(value) !== value) return null;
+      if (value < 0 || value > 50) return null;
+      out[dims[i]] = value;
+    }
+    return out;
+  }
+
+  function persist(weights) {
+    try {
+      window.localStorage.setItem(KEY, JSON.stringify({ v: 1, w: weights }));
+    } catch (err) { /* private mode or a full quota: the panel still works */ }
+  }
+
+  function forget() {
+    try { window.localStorage.removeItem(KEY); } catch (err) { /* nothing to do */ }
+  }
+
+  function num(value, places) {
+    var text = places === undefined ? String(value) : value.toFixed(places);
+    return T.decimal === ',' ? text.replace('.', ',') : text;
+  }
+
+  function esc(value) {
+    return String(value)
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+  }
+
+  /* Compared as normalised shares, so 17,17,17,17,17,17 and 20,20,20,20,20,20
+     both read as the equal-weights preset. */
+  function signature(weights) {
+    var sum = wtSum(weights);
+    return Object.keys(weights).sort().map(function (dim) {
+      return sum === 0 ? 0 : Math.round((10000 * weights[dim]) / sum);
+    }).join(',');
+  }
+
+  function syncPresets(weights) {
+    var sig = signature(weights);
+    presetBtns.forEach(function (button) {
+      var preset = PRESETS[button.getAttribute('data-preset')];
+      var active = preset && signature(preset) === sig;
+      button.setAttribute('aria-pressed', active ? 'true' : 'false');
+    });
+  }
+
+  /* Unrated is a property of the evidence, not of the weighting: a dimension
+     with no tier-A source leaves the tool without a total at any weights, so
+     it is never listed as ranked and never listed with a zero. */
+  function unevidenced(tool) {
+    return Object.keys(tool.dims).some(function (dim) { return tool.dims[dim].raw === null; });
+  }
+
+  function renderUnrated(list) {
+    if (!list.length) { unratedBox.innerHTML = ''; return; }
+    var html = '<div class="wt-norank-head">' + esc(T.unratedHead) + '</div>';
+    list.forEach(function (tool) {
+      html += '<div class="wt-norank"><span class="wt-name">' + esc(tool.name) + '</span>'
+        + '<span class="wt-reason">' + esc(tool.reason) + '</span></div>';
+    });
+    unratedBox.innerHTML = html;
+  }
+
+  function render() {
+    var weights = readWeights();
+    var sum = wtSum(weights);
+
+    sliders.forEach(function (slider) {
+      var cell = slider.parentNode.querySelector('.wt-pct');
+      if (!cell) return;
+      var dim = slider.getAttribute('data-dim');
+      var share = sum === 0 ? 0 : (100 * weights[dim]) / sum;
+      cell.textContent = num(share, 1) + T.percent;
+    });
+
+    sumLine.textContent = T.sumLabel + ': ' + num(sum) + ' — ' + T.normalised;
+    syncPresets(weights);
+
+    var rated = [];
+    var unrated = [];
+    TOOLS.forEach(function (tool, index) {
+      if (unevidenced(tool)) { unrated.push(tool); return; }
+      var total = wtTotal(weights, tool.dims);
+      if (total !== null) rated.push({ tool: tool, total: total, order: index });
+    });
+    renderUnrated(unrated);
+
+    if (sum === 0) {
+      ranking.innerHTML = '<p class="wt-empty">' + esc(T.allZero) + '</p>';
+      return;
+    }
+
+    /* Ties keep score-grid order and share a rank number. */
+    rated.sort(function (a, b) { return b.total - a.total || a.order - b.order; });
+
+    var html = '';
+    var rank = 0;
+    var previous = null;
+    rated.forEach(function (row, index) {
+      if (previous === null || row.total !== previous) { rank = index + 1; previous = row.total; }
+      var pub = row.tool.published === null ? '—' : String(row.tool.published);
+      html += '<div class="wt-rank">'
+        + '<span class="wt-pos">' + rank + '</span>'
+        + '<span class="wt-name">' + esc(row.tool.name) + '</span>'
+        + '<span class="wt-total" aria-label="' + esc(T.yours + ': ' + row.total) + '">'
+        + row.total + '</span>'
+        + '<span class="wt-pub" aria-label="' + esc(T.published + ': ' + pub) + '">' + pub + '</span>'
+        + '<span class="wt-bar"><span class="wt-bar-fill" style="width:' + row.total + '%"></span></span>'
+        + '</div>';
+    });
+    ranking.innerHTML = html;
+  }
+
+  /* Live on input, stored on change: a drag would otherwise fire a hundred
+     synchronous setItem calls a second. */
+  sliders.forEach(function (slider) {
+    slider.addEventListener('input', render);
+    slider.addEventListener('change', function () { persist(readWeights()); render(); });
+  });
+
+  presetBtns.forEach(function (button) {
+    button.addEventListener('click', function () {
+      var preset = PRESETS[button.getAttribute('data-preset')];
+      if (!preset) return;
+      writeWeights(preset);
+      persist(readWeights());
+      render();
+    });
+  });
+
+  resetBtn.addEventListener('click', function () {
+    writeWeights(PUBLISHED);
+    forget();
+    render();
+  });
+
+  writeWeights(PUBLISHED);
+  var saved = restore();
+  if (saved) writeWeights(saved);
+  render();
+  panel.hidden = false;
+  /* wt-engine:end */
+})();
 </script>
 </body>
 </html>
