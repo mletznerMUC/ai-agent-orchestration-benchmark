@@ -78,6 +78,11 @@ function checkDimensions({ file, key, tool, rows, weights, fail }) {
     const expected = displayPoints(published.weight, d.raw, d.max);
     if (row.points !== expected) {
       fail(`${at}: figure ${row.points} != weight*raw/max rounded to 2dp ${expected}`);
+    } else if (row.pointsText !== String(expected)) {
+      // Value and spelling are separate assertions. apply.yml now instructs
+      // agents to write these figures, so "18.750" would pass a numeric check
+      // and still be a figure the site never published.
+      fail(`${at}: figure written "${row.pointsText}", published form is "${String(expected)}"`);
     }
     if (row.rawLabel !== `${d.raw}/${d.max}`) {
       fail(`${at}: evidence label "${row.rawLabel}" != "${d.raw}/${d.max}"`);

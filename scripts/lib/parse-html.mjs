@@ -241,6 +241,9 @@ function dimensionRow(toolKey, row) {
     raw,
     max: Number(maxText),
     points,
+    // The figure as written, so verify can pin its spelling and not just its
+    // value: 18.750 and 18.75 are the same number but only one is published.
+    pointsText: pointsText.trim(),
     rawLabel: rawLabel.trim(),
   };
 }

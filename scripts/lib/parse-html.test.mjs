@@ -315,6 +315,7 @@ test('parseDimensions keys rows by data-dim, not by position', () => {
     raw: 2,
     max: 6,
     points: 3.33,
+    pointsText: '3.33',
     rawLabel: '2/6',
   });
   // Attributes are read by name: this row writes data-max before data-dim.

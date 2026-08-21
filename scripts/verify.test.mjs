@@ -194,6 +194,20 @@ test('a dimension figure hand-altered in the DE file only is caught', () => {
   assert.ok(!failures.some((f) => f.includes('index.en.html')), 'EN must stay clean');
 });
 
+test('a figure padded with a trailing zero is caught, though its value is right', () => {
+  // 3.330 is 3.33 as a number, so the numeric check passes and only the
+  // spelling check can catch it. apply.yml instructs agents to write these
+  // figures, so this is the way the published form could drift.
+  const was = figure('google-adk', 'accessibility');
+  assert.ok(!Number.isInteger(was), `fixture needs a non-integer figure, got ${was}`);
+  const broken = patchRow(DE, 'google-adk', 'accessibility',
+    (r) => r.replace(`>${was}<`, `>${was}0<`));
+  assert.notEqual(broken, DE, 'fixture did not match — test would assert nothing');
+  const failures = collectFailures(broken, EN, DATA);
+  assert.ok(failures.some((f) => f.includes('published form is')),
+    `expected a figure spelling failure, got: ${failures.join(' | ')}`);
+});
+
 test('a data-raw hand-altered in the EN file only is caught', () => {
   const raw = DATA.tools.crewai.score.rubric.integration.raw;
   const broken = patchRow(EN, 'crewai', 'integration',
