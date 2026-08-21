@@ -210,7 +210,7 @@ intermediate commits on a feature branch.)
      its own assertion is inverted; `npm run verify` fails naming missing
      dimension rows rather than crashing.
 
-4. [ ] DE: add the per-dimension breakdown to all twelve score cards in `index.html`
+4. [x] DE: add the per-dimension breakdown to all twelve score cards in `index.html`
    - Files: `index.html`
    - CSS: insert a `/* Rubric breakdown */` block immediately after the
      `.score-card.is-unrated` rule (line 400) and before `.method-table`
