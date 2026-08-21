@@ -160,8 +160,6 @@ test('the unrated card parses as a null score in both languages', () => {
 
 // Every fixture below is derived from DATA, never from a typed-in number, and
 // every one asserts it actually changed the file before trusting the result.
-const DIM_DE = (n) => String(n).replace('.', ',');
-
 function figure(tool, dim) {
   const d = DATA.tools[tool].score.rubric[dim];
   return Math.floor(((d.weight * d.raw) / d.max) * 100 + 0.5) / 100;
@@ -188,7 +186,7 @@ function patchMethodologyWeight(html, dim, rewrite) {
 test('a dimension figure hand-altered in the DE file only is caught', () => {
   const was = figure('maestro', 'operability');
   const broken = patchRow(DE, 'maestro', 'operability',
-    (r) => r.replace(`>${DIM_DE(was)}<`, `>${DIM_DE(was + 1)}<`));
+    (r) => r.replace(`>${was}<`, `>${was + 1}<`));
   assert.notEqual(broken, DE, 'fixture did not match — test would assert nothing');
   const failures = collectFailures(broken, EN, DATA);
   assert.ok(failures.some((f) => f.includes('index.html maestro/operability')),
@@ -244,8 +242,8 @@ test('a Methodology weight that disagrees with tools.json is caught', () => {
 });
 
 test('both files publish the same evidence and the same figures', () => {
-  const de = parseDimensions(DE, ',');
-  const en = parseDimensions(EN, '.');
+  const de = parseDimensions(DE);
+  const en = parseDimensions(EN);
   assert.deepEqual([...de.keys()], [...en.keys()]);
   for (const [key, rows] of de) {
     const other = en.get(key);
@@ -255,25 +253,38 @@ test('both files publish the same evidence and the same figures', () => {
       assert.equal(row.raw, other[i].raw, `${key}/${row.key}: raw differs`);
       assert.equal(row.max, other[i].max, `${key}/${row.key}: max differs`);
       assert.equal(row.rawLabel, other[i].rawLabel, `${key}/${row.key}: evidence label differs`);
-      // Numeric, not byte: the DE page writes 3,33 where the EN page writes
-      // 3.33 (D7). Each string is checked against tools.json on its own page.
-      assert.equal(row.points, other[i].points, `${key}/${row.key}: figure differs`);
     });
   }
 });
 
-test('the language-neutral dimension attributes are byte-identical', () => {
+test('the dimension attributes and figures are byte-identical in both files', () => {
   const shape = (html) => [...html.matchAll(/data-dim="[a-z]+" data-max="\d+"( data-raw="\d+")?/g)]
     .map((m) => m[0]);
   assert.equal(shape(DE).length, 72, 'expected 72 dimension rows in the DE file');
   assert.deepEqual(shape(DE), shape(EN));
+
   const evidence = (html) => [...html.matchAll(/<span class="dim-raw">([^<]*)<\/span>/g)].map((m) => m[1]);
   assert.deepEqual(evidence(DE), evidence(EN));
+
+  // One decimal convention on both pages — a dot, in German too — so the
+  // figures themselves compare byte-for-byte. The single row that is prose
+  // rather than a figure ("nicht belegt" / "not evidenced") is language-bound
+  // by design and is checked structurally instead: no data-raw on either page.
+  const figures = (html) => [...parseDimensions(html)].flatMap(([key, rows]) => rows
+    .filter((row) => row.raw !== null)
+    .map((row) => `${key}/${row.key}=${row.points}`));
+  const points = (html) => [...html.matchAll(/<span class="dim-points">([^<]*)<\/span>/g)]
+    .map((m) => m[1]).filter((text) => /^\d/.test(text));
+  assert.equal(points(DE).length, 71, 'expected 71 published figures in the DE file');
+  assert.deepEqual(points(DE), points(EN), 'the two files disagree on a figure string');
+  assert.deepEqual(figures(DE), figures(EN));
+  assert.ok(!points(DE).some((text) => text.includes(',')), 'no figure may use a decimal comma');
+  assert.ok(!points(EN).some((text) => text.includes(',')), 'no figure may use a decimal comma');
 });
 
 test('the unrated card publishes no maturity figure in either language', () => {
-  for (const [html, sep] of [[DE, ','], [EN, '.']]) {
-    const rows = parseDimensions(html, sep).get('manus-ai');
+  for (const html of [DE, EN]) {
+    const rows = parseDimensions(html).get('manus-ai');
     const maturity = rows.find((r) => r.key === 'maturity');
     assert.equal(maturity.raw, null);
     assert.equal(maturity.points, null);

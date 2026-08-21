@@ -179,24 +179,17 @@ export function parseWeights(html) {
 /**
  * Reads the rubric breakdown rows off the score cards.
  *
- * The displayed points figure is rounded to two decimals and localised: the
- * German page writes `3,33`, the English page `3.33`. Pass the page's decimal
- * separator so a figure formatted in the wrong language reads as non-numeric
- * rather than being silently accepted.
+ * The displayed points figure is rounded to two decimals and written the same
+ * way on both pages — `3.33`, with a dot, in German too — so the two files
+ * carry byte-identical figure strings and `verify` can compare them directly.
  */
-function dimensionNumber(text, decimalSeparator) {
-  let value = text.trim();
-  if (decimalSeparator === ',') {
-    if (value.includes('.')) return null;
-    value = value.replace(',', '.');
-  } else if (value.includes(',')) {
-    return null;
-  }
+function dimensionNumber(text) {
+  const value = text.trim();
   if (!/^\d+(\.\d+)?$/.test(value)) return null;
   return Number(value);
 }
 
-function dimensionRow(toolKey, row, decimalSeparator) {
+function dimensionRow(toolKey, row) {
   const tagEnd = row.indexOf('>');
   if (tagEnd === -1) throw new Error(`score card ${toolKey}: unterminated dimension row`);
   const tag = row.slice(0, tagEnd);
@@ -230,7 +223,7 @@ function dimensionRow(toolKey, row, decimalSeparator) {
   if (pointsText === undefined) throw new Error(`score card ${toolKey}/${key}: no dim-points`);
 
   const raw = rawText === undefined ? null : Number(rawText);
-  const points = dimensionNumber(pointsText, decimalSeparator);
+  const points = dimensionNumber(pointsText);
 
   // A row either carries evidence and a figure, or neither. Half of each is
   // how an unrated dimension quietly becomes a zero (ADR-005).
@@ -252,7 +245,7 @@ function dimensionRow(toolKey, row, decimalSeparator) {
   };
 }
 
-export function parseDimensions(html, decimalSeparator = '.') {
+export function parseDimensions(html) {
   const block = sliceBetween(html, '<div class="score-grid">', '<!-- Feature Matrix -->');
   const chunks = block.split('<div class="score-card').slice(1);
   const dimensions = new Map();
@@ -264,7 +257,7 @@ export function parseDimensions(html, decimalSeparator = '.') {
     const rows = chunk.split('<div class="dim').slice(1);
     if (rows.length === 0) throw new Error(`score card ${key}: no dimension rows`);
 
-    dimensions.set(key, rows.map((row) => dimensionRow(key, row, decimalSeparator)));
+    dimensions.set(key, rows.map((row) => dimensionRow(key, row)));
   }
 
   return dimensions;

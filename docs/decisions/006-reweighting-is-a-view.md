@@ -108,9 +108,13 @@ ADR-005 names as its input — nothing checks that link, and these checks must
 not be read as if they did.
 
 **(d) Two precisions, deliberately.** The figures on the cards are rounded
-half-up to two decimals so they fit a card (`3,33` where the exact value is
+half-up to two decimals so they fit a card (`3.33` where the exact value is
 `3.3333`); the method note says they are rounded and the exact inputs sit
-beside them. Every check and the weighting engine run on full precision, with
+beside them. Both pages write the figure the same way, with a dot — the German
+page too, against German convention — so that the two files carry
+byte-identical figure strings and `verify` can compare them directly instead of
+parsing each page in its own locale. The panel's own readouts follow the same
+convention. Every check and the weighting engine run on full precision, with
 a single half-up rounding on the total only. The displayed rounding is
 therefore never an input to anything, and the displayed figures are not claimed
 to sum to `score.exact`.

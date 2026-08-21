@@ -12,12 +12,6 @@ import {
   parseScores, parseMatrix, parsePrices, parseMeta, parseWeights, parseDimensions,
 } from './lib/parse-html.mjs';
 
-// The displayed dimension figures are localised: the German page writes
-// `3,33`, the English page `3.33` (D7). Everything checked below is parsed
-// per language and compared to data/tools.json individually, so dropping the
-// cross-language string comparison costs no coverage on any single figure.
-const DECIMAL_SEPARATOR = { de: ',', en: '.' };
-
 // Display rounding: half-up to two decimals. Only ever applied to what the
 // page shows — never to the arithmetic (ADR-006, D4).
 const displayPoints = (weight, raw, max) => Math.floor(((weight * raw) / max) * 100 + 0.5) / 100;
@@ -121,7 +115,7 @@ export function collectFailures(deHtml, enHtml, data) {
       prices = parsePrices(html);
       meta = parseMeta(html);
       weights = parseWeights(html);
-      dimensions = parseDimensions(html, DECIMAL_SEPARATOR[lang]);
+      dimensions = parseDimensions(html);
     } catch (err) {
       fail(`${file}: parse error — ${err.message}`);
       continue;

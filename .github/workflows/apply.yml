@@ -111,8 +111,9 @@ jobs:
                tools.json now states them for `de`. The `dim-points`
                figure is `weight * raw / max` rounded half-up to two
                decimals, with the weight taken from the Methodology
-               table row for that dimension; the German page writes it
-               with a decimal comma, the English page with a point.
+               table row for that dimension, and it is written with a
+               decimal point on both pages — the German page too, so the
+               two files stay byte-identical on the figures.
             2. index.en.html (EN) — the same values for `en`.
             3. A changelog entry in both files describing this round,
                matching the existing entry style. Descriptive and

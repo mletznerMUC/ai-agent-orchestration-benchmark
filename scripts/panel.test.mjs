@@ -15,8 +15,8 @@ import { wtTotal } from './lib/rubric.mjs';
 
 const root = new URL('../', import.meta.url);
 const FILES = [
-  ['index.html', readFileSync(new URL('index.html', root), 'utf8'), ','],
-  ['index.en.html', readFileSync(new URL('index.en.html', root), 'utf8'), '.'],
+  ['index.html', readFileSync(new URL('index.html', root), 'utf8')],
+  ['index.en.html', readFileSync(new URL('index.en.html', root), 'utf8')],
 ];
 const DATA = JSON.parse(readFileSync(new URL('data/tools.json', root), 'utf8'));
 const RUBRIC = readFileSync(new URL('scripts/lib/rubric.mjs', root), 'utf8');
@@ -85,6 +85,12 @@ test('the two engines differ only in their strings block', () => {
     const engine = sliceBetween(html, '/* wt-engine:begin */', '/* wt-engine:end */');
     const strings = sliceBetween(engine, '/* wt-strings:begin */', '/* wt-strings:end */');
     assert.ok(strings.length > 0, 'no wt-strings block found');
+    // One decimal convention on both pages: nothing in the engine or its
+    // string table localises a separator.
+    assert.ok(!strings.includes('decimal'),
+      'the strings block must not declare a decimal separator');
+    assert.ok(!engine.includes("replace('.', ','"),
+      'the engine must not rewrite a decimal point into a comma');
     return engine.replace(strings, '');
   });
   assert.equal(stripped[0], stripped[1]);
@@ -98,9 +104,9 @@ function published(html) {
   return weights;
 }
 
-function cardDims(html, sep) {
+function cardDims(html) {
   const out = new Map();
-  for (const [key, rows] of parseDimensions(html, sep)) {
+  for (const [key, rows] of parseDimensions(html)) {
     const dims = {};
     for (const row of rows) dims[row.key] = { raw: row.raw, max: row.max };
     out.set(key, dims);
@@ -109,10 +115,10 @@ function cardDims(html, sep) {
 }
 
 test('recomputing from the published pages reproduces every published score', () => {
-  for (const [name, html, sep] of FILES) {
+  for (const [name, html] of FILES) {
     const weights = published(html);
     let rated = 0;
-    for (const [key, dims] of cardDims(html, sep)) {
+    for (const [key, dims] of cardDims(html)) {
       const expected = DATA.tools[key].score.value;
       const total = wtTotal(weights, dims);
       assert.equal(total, expected, `${name} ${key}: recomputed ${total}, published ${expected}`);
@@ -123,18 +129,18 @@ test('recomputing from the published pages reproduces every published score', ()
 });
 
 test('an unevidenced dimension weighted 0 still yields no total', () => {
-  for (const [name, html, sep] of FILES) {
+  for (const [name, html] of FILES) {
     const weights = { ...published(html), maturity: 0 };
-    const dims = cardDims(html, sep).get('manus-ai');
+    const dims = cardDims(html).get('manus-ai');
     assert.equal(wtTotal(weights, dims), null,
       `${name}: manus-ai must stay unrated even when maturity is weighted 0`);
   }
 });
 
 test('a weighting of nothing at all yields no total', () => {
-  const [, html, sep] = FILES[0];
+  const [, html] = FILES[0];
   const weights = Object.fromEntries(Object.keys(published(html)).map((d) => [d, 0]));
-  for (const [, dims] of cardDims(html, sep)) {
+  for (const [, dims] of cardDims(html)) {
     assert.equal(wtTotal(weights, dims), null);
   }
 });

@@ -2436,7 +2436,6 @@
     allZero: 'Every weight is 0 — with no weight there is no ranking.',
     sumLabel: 'Sum of raw weights',
     normalised: 'normalised to 100',
-    decimal: '.',
     percent: '%'
   };
   /* wt-strings:end */
@@ -2567,8 +2566,7 @@
   }
 
   function num(value, places) {
-    var text = places === undefined ? String(value) : value.toFixed(places);
-    return T.decimal === ',' ? text.replace('.', ',') : text;
+    return places === undefined ? String(value) : value.toFixed(places);
   }
 
   function esc(value) {

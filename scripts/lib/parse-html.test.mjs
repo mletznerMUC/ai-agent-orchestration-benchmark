@@ -276,8 +276,8 @@ const DIMS_FIXTURE = `
       <div class="score-card" data-tool="alpha">
         <div class="score-descriptor">Desktop Orchestrator</div>
         <details class="score-dims"><summary class="score-dims-sum">Aufschl&uuml;sselung</summary>
-<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Zug&auml;nglichkeit">Zug&auml;nglichkeit</span><span class="dim-raw">2/6</span><span class="dim-points">3,33</span></div>
-<div class="dim" data-max="8" data-dim="orchestration" data-raw="4"><span class="dim-name" title="Orchestrierung">Orchestrierung</span><span class="dim-raw">4/8</span><span class="dim-points">12,5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Zug&auml;nglichkeit">Zug&auml;nglichkeit</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
+<div class="dim" data-max="8" data-dim="orchestration" data-raw="4"><span class="dim-name" title="Orchestrierung">Orchestrierung</span><span class="dim-raw">4/8</span><span class="dim-points">12.5</span></div>
 </details>
       </div>
       <div class="score-card is-unrated" data-tool="omega">
@@ -306,7 +306,7 @@ const WEIGHTS_FIXTURE = `
 `;
 
 test('parseDimensions keys rows by data-dim, not by position', () => {
-  const rows = parseDimensions(DIMS_FIXTURE, ',').get('alpha');
+  const rows = parseDimensions(DIMS_FIXTURE).get('alpha');
   assert.deepEqual(rows.map((r) => r.key), ['accessibility', 'orchestration']);
   assert.deepEqual(rows[0], {
     key: 'accessibility',
@@ -324,13 +324,13 @@ test('parseDimensions keys rows by data-dim, not by position', () => {
 });
 
 test('parseDimensions reads a dim-name that carries a title attribute', () => {
-  const row = parseDimensions(DIMS_FIXTURE, ',').get('alpha')[0];
+  const row = parseDimensions(DIMS_FIXTURE).get('alpha')[0];
   assert.equal(row.name, 'Zug&auml;nglichkeit');
   assert.equal(row.title, 'Zug&auml;nglichkeit');
 });
 
 test('parseDimensions reports an unevidenced row as raw null, points null', () => {
-  const row = parseDimensions(DIMS_FIXTURE, ',').get('omega')[0];
+  const row = parseDimensions(DIMS_FIXTURE).get('omega')[0];
   assert.equal(row.raw, null);
   assert.equal(row.points, null);
   assert.equal(row.max, 6);
@@ -343,30 +343,28 @@ test('parseDimensions throws on a card with no dimension rows', () => {
 
 test('parseDimensions throws on a row without data-dim', () => {
   const broken = DIMS_FIXTURE.replace(' data-dim="accessibility"', '');
-  assert.throws(() => parseDimensions(broken, ','), /without data-dim/);
+  assert.throws(() => parseDimensions(broken), /without data-dim/);
 });
 
 test('parseDimensions throws on a row without data-max', () => {
   const broken = DIMS_FIXTURE.replace('data-dim="accessibility" data-max="6" ', 'data-dim="accessibility" ');
-  assert.throws(() => parseDimensions(broken, ','), /accessibility.*no data-max/);
+  assert.throws(() => parseDimensions(broken), /accessibility.*no data-max/);
 });
 
 test('parseDimensions throws when evidence and figure disagree about existing', () => {
   const noRaw = DIMS_FIXTURE.replace(' data-raw="2"', '');
-  assert.throws(() => parseDimensions(noRaw, ','), /accessibility.*data-raw is absent/);
-  const noFigure = DIMS_FIXTURE.replace('<span class="dim-points">3,33</span>', '<span class="dim-points">nicht belegt</span>');
-  assert.throws(() => parseDimensions(noFigure, ','), /accessibility.*has data-raw/);
+  assert.throws(() => parseDimensions(noRaw), /accessibility.*data-raw is absent/);
+  const noFigure = DIMS_FIXTURE.replace('<span class="dim-points">3.33</span>', '<span class="dim-points">nicht belegt</span>');
+  assert.throws(() => parseDimensions(noFigure), /accessibility.*has data-raw/);
 });
 
-test('parseDimensions rejects a figure formatted for the other language', () => {
-  // The DE page writes 3,33 and the EN page 3.33; a figure in the wrong
-  // format is not silently read as a number.
-  assert.throws(() => parseDimensions(DIMS_FIXTURE, '.'), /accessibility.*3,33/);
-  const dotted = DIMS_FIXTURE
-    .replace('<span class="dim-points">3,33</span>', '<span class="dim-points">3.33</span>')
-    .replace('<span class="dim-points">12,5</span>', '<span class="dim-points">12.5</span>');
-  assert.throws(() => parseDimensions(dotted, ','), /accessibility.*3\.33/);
-  assert.equal(parseDimensions(dotted, '.').get('alpha')[0].points, 3.33);
+test('parseDimensions rejects a figure written with a decimal comma', () => {
+  // One convention on both pages: a dot, in German too. A comma is not a
+  // number here, so a localised figure fails rather than being accepted.
+  const comma = DIMS_FIXTURE.replace('<span class="dim-points">3.33</span>',
+    '<span class="dim-points">3,33</span>');
+  assert.notEqual(comma, DIMS_FIXTURE, 'fixture did not match');
+  assert.throws(() => parseDimensions(comma), /accessibility.*3,33/);
 });
 
 test('parseWeights reads the table in document order, keyed by data-dim', () => {
@@ -403,8 +401,8 @@ test('both real files publish the same six weights in the same order', () => {
 });
 
 test('parseDimensions finds 12 cards x 6 rows in both real files', () => {
-  for (const [name, html, sep] of [['de', DE, ','], ['en', EN, '.']]) {
-    const dims = parseDimensions(html, sep);
+  for (const [name, html] of [['de', DE], ['en', EN]]) {
+    const dims = parseDimensions(html);
     assert.equal(dims.size, 12, `${name}: expected 12 cards with dimension rows`);
     for (const key of TOOL_KEYS) {
       assert.deepEqual(dims.get(key)?.map((r) => r.key), DIM_ORDER, `${name}/${key}: rows`);
@@ -415,8 +413,8 @@ test('parseDimensions finds 12 cards x 6 rows in both real files', () => {
 });
 
 test('the unrated card publishes no maturity figure in either real file', () => {
-  for (const [name, html, sep] of [['de', DE, ','], ['en', EN, '.']]) {
-    const row = parseDimensions(html, sep).get('manus-ai').find((r) => r.key === 'maturity');
+  for (const [name, html] of [['de', DE], ['en', EN]]) {
+    const row = parseDimensions(html).get('manus-ai').find((r) => r.key === 'maturity');
     assert.equal(row.raw, null, `${name}: manus-ai maturity raw`);
     assert.equal(row.points, null, `${name}: manus-ai maturity points`);
   }
