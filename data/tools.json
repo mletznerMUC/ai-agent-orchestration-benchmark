@@ -1673,8 +1673,8 @@
         }
       },
       "descriptor": {
-        "de": "Best Onboarding",
-        "en": "Best Onboarding"
+        "de": "Role-Playing Crew Framework",
+        "en": "Role-Playing Crew Framework"
       },
       "matrix": {
         "multi-agent-parallel": {
@@ -2253,8 +2253,8 @@
         }
       },
       "descriptor": {
-        "de": "Best No-Code",
-        "en": "Best No-Code"
+        "de": "Workflow Automation Tool",
+        "en": "Workflow Automation Tool"
       },
       "matrix": {
         "multi-agent-parallel": {
