@@ -31,13 +31,23 @@ export function parseScores(html) {
     const barWidth = /score-bar-fill" style="width:(\d+)%/.exec(chunk)?.[1];
     const descriptor = /<div class="score-descriptor">([\s\S]*?)<\/div>/.exec(chunk)?.[1];
 
-    if (score === undefined) throw new Error(`score card ${key}: no score-number`);
-    if (barWidth === undefined) throw new Error(`score card ${key}: no score-bar-fill width`);
+    // A card marked is-unrated publishes no number and no bar: under ADR-005 a
+    // tool whose maturity cannot be evidenced at tier A carries no rating at
+    // all rather than a guessed one.
+    const unrated = /^[^>]*\bis-unrated\b/.test(chunk);
+
     if (descriptor === undefined) throw new Error(`score card ${key}: no score-descriptor`);
+    if (unrated) {
+      if (score !== undefined) throw new Error(`score card ${key}: is-unrated but has a score-number`);
+      if (barWidth !== undefined) throw new Error(`score card ${key}: is-unrated but has a score bar`);
+    } else {
+      if (score === undefined) throw new Error(`score card ${key}: no score-number`);
+      if (barWidth === undefined) throw new Error(`score card ${key}: no score-bar-fill width`);
+    }
 
     scores.set(key, {
-      score: Number(score),
-      barWidth: Number(barWidth),
+      score: unrated ? null : Number(score),
+      barWidth: unrated ? null : Number(barWidth),
       descriptor: descriptor.trim(),
     });
   }

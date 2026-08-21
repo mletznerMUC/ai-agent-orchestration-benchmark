@@ -1,7 +1,7 @@
 # ADR-005: The overall rating is a published rubric, published before it is used
 
 Date: 2026-08-21
-Status: proposed
+Status: accepted
 
 ## Decision
 The `/100` overall rating is defined as a weighted sum over six published
@@ -28,8 +28,8 @@ time. Three rules bind it:
 | 1 | Orchestration capability | 25 | `multi-agent-parallel`, `playbooks`, `group-chat`, `git-worktrees` |
 | 2 | Operability | 20 | `observability`, `hitl` |
 | 3 | Integration & interoperability | 15 | `mcp-support`, `model-agnostic`, `cli-cicd` |
-| 4 | Deployment & governance | 15 | `eu-onprem`, `open-source` |
-| 5 | Maturity | 15 | GA status, release cadence, breaking-change history |
+| 4 | Deployment sovereignty | 15 | `eu-onprem`, `open-source` |
+| 5 | Maturity | 15 | `ga-status`, `release-recency`, `sustained-cadence` |
 | 6 | Accessibility | 10 | `learning-curve`, `desktop-gui`, `mobile-remote` |
 
 Dimensions 1–4 and 6 draw entirely on the fourteen existing matrix
@@ -124,3 +124,53 @@ of the rating data would be worse than none.
 
 Should the rubric be rejected, the provenance note stands on its own: the
 scores are unsourced whether or not this is the rubric that fixes them.
+
+## Amendments (2026-08-21, on first application)
+
+Applying the rubric surfaced two things the draft got wrong. Both are
+recorded here rather than silently absorbed.
+
+**`breaking-change-history` is replaced by `sustained-cadence`.** The
+draft named "breaking-change history" as a Maturity criterion and in the
+same breath restricted Maturity to tier-A evidence. Those two rules
+contradict each other: establishing a twelve-month breaking-change record
+means reading migration guides and diffing majors, which is archaeology,
+not a dated primary source. A criterion that cannot be evidenced at the
+tier its own dimension demands would have been filled by judgment wearing
+a citation — the exact failure ADR-002 exists to prevent. The three
+Maturity criteria are therefore all read straight off tagged releases:
+
+| Criterion | 2 | 1 | 0 |
+| --- | --- | --- | --- |
+| `ga-status` | major >= 1, or GA in vendor docs | pre-1.0, or GA with beta components | alpha / experimental |
+| `release-recency` | latest stable <= 30 days | 31–90 days | > 90 days |
+| `sustained-cadence` | >= 6 stable releases in trailing 90 days | 2–5 | <= 1 |
+
+`ga-status` measures how far the product has come, `release-recency`
+whether it is alive now, `sustained-cadence` whether it is consistently
+alive. Rounding to a whole number happens once, on the exact total, and
+ties round up: maestro's 82.50 publishes as 83. The unrounded total is
+kept in `score.exact` so the arithmetic stays checkable.
+
+**A criterion with no tier-A source makes the tool unrated, not zero.**
+The draft never said what to do when the evidence does not exist. Scoring
+absent evidence as 0 would publish "immature" on the strength of nothing,
+which is not a neutral statement (CLAUDE.md rule 3); redistributing the
+weight would give that tool a different denominator and break
+comparability. So a tool whose Maturity cannot be evidenced at tier A
+carries no overall rating at all, with the reason stated on the page.
+
+This is not a proxy for being closed-source: Databricks Agent Bricks is
+proprietary and satisfies tier A through dated platform release notes.
+It bites only where a vendor publishes no dated release information of
+any kind, and that absence is itself the finding.
+
+**Dimension 4 is "deployment sovereignty", not "governance".** The draft
+called it governance, which collides with a different and equally valid
+meaning already on the page: Databricks Agent Bricks carries a "Best
+Governance" badge for Unity Catalog lineage and access control. Dimension
+4 measures neither of those — `eu-onprem` and `open-source` measure
+whether you can run the thing yourself under a licence you control.
+Leaving the draft's name would have published a rubric that scores
+Databricks last on "governance" while a badge two lines above calls it
+best, from two different definitions of one word.
