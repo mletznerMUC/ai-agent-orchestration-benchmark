@@ -1673,8 +1673,8 @@
         }
       },
       "descriptor": {
-        "de": "Best Onboarding",
-        "en": "Best Onboarding"
+        "de": "Role-Playing Crew Framework",
+        "en": "Role-Playing Crew Framework"
       },
       "matrix": {
         "multi-agent-parallel": {
