@@ -322,7 +322,7 @@ intermediate commits on a feature branch.)
      `verify.test.mjs:151` test still reports `manus-ai` as
      `score: null, barWidth: null`.
 
-7. [ ] EN: the same panel in `index.en.html`
+7. [x] EN: the same panel in `index.en.html`
    - Files: `index.en.html`
    - Byte-identical CSS block and byte-identical structure (same ids, same
      `data-dim` / `data-preset` values, same element order); only visible

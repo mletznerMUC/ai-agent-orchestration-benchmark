@@ -470,6 +470,152 @@
   }
 
   .dim.is-unevidenced .dim-points { font-weight: 400; color: var(--text-muted); }
+
+  /* Own weighting */
+  .section[hidden] { display: none; }
+
+  .wt-note {
+    font-size: 11px;
+    line-height: 1.55;
+    color: var(--text-secondary);
+    background: var(--bg-subtle);
+    border: 1px solid var(--border);
+    border-left: 2px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 14px;
+    margin: 0 0 16px;
+  }
+
+  .wt-presets { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+
+  .wt-preset, #wt-reset {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+    background: var(--bg);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 7px 12px;
+    cursor: pointer;
+  }
+
+  .wt-preset:hover, #wt-reset:hover { color: var(--text); border-color: var(--text-muted); }
+
+  .wt-preset[aria-pressed="true"] {
+    color: var(--accent);
+    background: var(--accent-bg);
+    border-color: var(--accent-border);
+  }
+
+  .wt-preset:focus-visible,
+  #wt-reset:focus-visible,
+  .wt-row input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+
+  .wt-sliders {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 4px 32px;
+  }
+
+  .wt-row {
+    display: grid;
+    grid-template-columns: 150px minmax(0, 1fr) 52px;
+    align-items: center;
+    gap: 12px;
+  }
+
+  .wt-label { font-size: 12px; color: var(--text-secondary); }
+  .wt-row input { width: 100%; accent-color: var(--accent); }
+
+  .wt-pct {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-align: right;
+    color: var(--text);
+  }
+
+  .wt-sum {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text-muted);
+    margin: 16px 0 14px;
+  }
+
+  .wt-head, .wt-rank {
+    display: grid;
+    grid-template-columns: 26px minmax(0, 1fr) 56px 56px 110px;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .wt-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    padding-bottom: 6px;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wt-head span:first-child { grid-column: 3; text-align: right; }
+  .wt-head span:last-child { grid-column: 4; text-align: right; }
+
+  .wt-rank {
+    font-size: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wt-pos, .wt-total, .wt-pub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .wt-pos { color: var(--text-muted); }
+  .wt-name { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .wt-total { text-align: right; font-weight: 500; color: var(--text); }
+  .wt-pub { text-align: right; color: var(--text-muted); }
+
+  .wt-bar {
+    display: block;
+    height: 3px;
+    background: var(--border-strong);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+
+  .wt-bar-fill { display: block; height: 100%; background: var(--text-secondary); border-radius: 2px; }
+
+  .wt-empty { font-size: 12px; color: var(--text-secondary); padding: 12px 0; }
+
+  #wt-unrated { margin-top: 18px; }
+
+  .wt-norank-head {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-muted);
+    margin-bottom: 6px;
+  }
+
+  .wt-norank {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 2fr;
+    gap: 10px;
+    align-items: baseline;
+    font-size: 12px;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--border);
+  }
+
+  .wt-reason { font-size: 11px; color: var(--text-secondary); }
   .method-table { width: 100%; border-collapse: collapse; font-size: 12px; }
   .method-table th, .method-table td {
     text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--border);
@@ -1370,6 +1516,32 @@
       </div>
     </div>
 </div>
+
+  <!-- Weighting Panel -->
+  <div class="section" id="wt-panel" hidden>
+    <!-- This section sits inside the slice of the page that parseScores in scripts/lib/parse-html.mjs reads. Every new class and every id here therefore starts with wt-; the class names reserved inside that slice are listed in docs/decisions/006-reweighting-is-a-view.md. -->
+    <div class="section-header">
+      <span class="section-title">Your own weighting — not the published rating</span>
+    </div>
+    <p class="wt-note">This order comes from your weights and stays in this browser. The published rating above is unchanged. Weights are normalised to 100.</p>
+    <div class="wt-presets">
+      <button type="button" class="wt-preset" data-preset="published" aria-pressed="false">Published weights</button>
+      <button type="button" class="wt-preset" data-preset="equal" aria-pressed="false">Equal weights</button>
+    </div>
+    <div class="wt-sliders">
+        <div class="wt-row"><label class="wt-label" for="wt-s-orchestration">Orchestration</label><input type="range" id="wt-s-orchestration" data-dim="orchestration" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-operability">Operability</label><input type="range" id="wt-s-operability" data-dim="operability" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-integration">Integration</label><input type="range" id="wt-s-integration" data-dim="integration" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-sovereignty">Deployment sovereignty</label><input type="range" id="wt-s-sovereignty" data-dim="sovereignty" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-maturity">Release maturity</label><input type="range" id="wt-s-maturity" data-dim="maturity" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+        <div class="wt-row"><label class="wt-label" for="wt-s-accessibility">Accessibility</label><input type="range" id="wt-s-accessibility" data-dim="accessibility" min="0" max="50" step="1"><span class="wt-pct" aria-hidden="true"></span></div>
+    </div>
+    <p class="wt-sum"></p>
+    <button type="button" id="wt-reset">Reset to published weights</button>
+    <div class="wt-head"><span>Your weighting</span><span>Published</span></div>
+    <div id="wt-ranking"></div>
+    <div id="wt-unrated"></div>
+  </div>
 
   <!-- Feature Matrix -->
   <div class="section">
