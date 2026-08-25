@@ -38,7 +38,12 @@ must be sourced and reproducible. When in doubt, understate.
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases.
 - Each phase = one subagent with a clean context. The plan file
-  (`PLAN.md`) is the only shared state between phases.
+  (`PLAN.md`) is the only shared state between phases. The expert
+  panel is the one exception: three lens subagents in parallel,
+  merged by the orchestrator.
+- Every agent pins its own model in frontmatter, by full model ID —
+  see ADR-007 for the tier per agent and the rule behind it. Changing
+  what the factory runs on is a commit, never a session setting.
 - Implementer marks each plan step as done **immediately** after
   completing it, before starting the next. If a step is already
   implemented in the codebase, mark it done and move on — never

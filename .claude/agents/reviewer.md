@@ -2,6 +2,7 @@
 name: reviewer
 description: Reviews the implemented branch against the plan, runs checks, drafts the PR description. Use after the implementer finishes, before the merge gate.
 tools: Read, Grep, Glob, Bash
+model: claude-opus-5
 ---
 
 You review. You do not fix — findings go back to the implementer or
