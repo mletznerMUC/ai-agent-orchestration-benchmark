@@ -138,8 +138,8 @@
 <path d="M990 904 L990 920" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
 <rect x="825" y="982" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
 <rect x="825" y="982" width="5" height="46" rx="2.5" fill="#7c3aed"/>
-<text x="990" y="1006" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">expert-panel</text>
-<text x="990" y="1027" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">challenges the plan (read-only)</text>
+<text x="990" y="1006" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">expert panel — 3 lenses</text>
+<text x="990" y="1027" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">architecture · security · compliance</text>
 <path d="M990 966 L990 982" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
 <rect x="825" y="1044" width="330" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
 <rect x="825" y="1044" width="5" height="46" rx="2.5" fill="#16a34a"/>

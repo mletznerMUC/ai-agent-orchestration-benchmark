@@ -65,12 +65,16 @@ PR means "not yet applied," never "ready to merge."
 
 Scouted radar candidates are **not** added automatically — adding a tool means
 scoring it against every published criterion, which runs through the
-**`/feature`** line: `refine` → `planner` (writes `PLAN.md`) → `expert-panel`
-→ **★ gate: plan approval** → `implementer` → `reviewer` → **★ gate: merge**.
+**`/feature`** line: `refine` → `planner` (writes `PLAN.md`) → the expert
+panel (`panel-architecture`, `panel-security`, `panel-compliance`, run in
+parallel and merged by the orchestrator) → **★ gate: plan approval** →
+`implementer` → `reviewer` → **★ gate: merge**.
 Only then does a new tool enter `data/tools.json`. The **`/hotfix`** line is
 the fast path: investigate → fix → reviewer → one gate (merge). Each phase is
-one sub-agent with a clean context; `PLAN.md` is the only shared state between
-phases.
+one sub-agent with a clean context — except the panel, which is three, one
+per lens (see [ADR-007](../decisions/007-one-model-per-agent.md)); `PLAN.md`
+is the only shared state between phases. Each agent pins its own model in
+frontmatter.
 
 ## Why the gates and guards
 

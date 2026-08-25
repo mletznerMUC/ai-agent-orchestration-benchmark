@@ -18,9 +18,25 @@ Delegate the chosen task card to the `planner` subagent. Result:
 `PLAN.md`.
 
 ## Phase 3 — Expert panel
-Delegate `PLAN.md` to the `expert-panel` subagent. If the verdict is
-APPROVE WITH CHANGES, have the planner fold the consolidated changes
-into `PLAN.md` (one round only). If REWORK, go back to Phase 2.
+Delegate `PLAN.md` to all three lens subagents **in parallel, in one
+message**: `panel-architecture`, `panel-security`,
+`panel-compliance`. Each returns its own verdict and proposed edits;
+none of them sees the others' output.
+
+Merge the three into one panel verdict yourself — this is
+orchestration, not lens work:
+- **Panel verdict = the worst of the three.** One REWORK is a REWORK.
+- Group findings under their lens, in the order above.
+- Deduplicate the proposed `PLAN.md` edits. The security and
+  compliance lenses both look at third-party origins, so an embedded
+  external resource will often be reported twice — that is one edit,
+  not two, and it is worth noting when both lenses raised it.
+- Carry `### Incidental` lines through to the gate under the lens
+  that owns them, not the one that spotted them.
+
+If the merged verdict is APPROVE WITH CHANGES, have the planner fold
+the deduplicated changes into `PLAN.md` (one round only). If REWORK,
+go back to Phase 2.
 
 ## GATE 1 — Plan approval (STOP)
 Present to me, compactly:
