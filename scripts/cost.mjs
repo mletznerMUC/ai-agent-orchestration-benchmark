@@ -15,6 +15,8 @@
  * Env:
  *   CLAUDE_PROJECTS_DIR   override the transcript directory
  *   COST_RUN_LOG_LIMIT    sessions listed in the run log (default 30)
+ *   COST_ALLOW_SHRINK     set to 1 to publish a ledger smaller than the
+ *                         committed one (see the shrink guard in main)
  */
 import { readFileSync, readdirSync, existsSync, writeFileSync, statSync } from 'node:fs';
 import { join, basename } from 'node:path';
@@ -27,6 +29,8 @@ import {
   aggregate,
   recordsFromManual,
   classifyWorkflow,
+  recordedTotals,
+  shrinkRefusal,
 } from './lib/cost.mjs';
 
 const ROOT = new URL('../', import.meta.url);
@@ -354,6 +358,26 @@ function main() {
   });
 
   const outPath = new URL('COST_CONTROL.md', ROOT);
+  const outFile = fileURLToPath(outPath);
+
+  // The ledger only ever grows on the machine that does the work, so a run
+  // reporting less than the committed file is a machine that cannot see the
+  // history — an ephemeral cloud container, a fresh clone, a pruned cache.
+  // Refuse rather than publish a total that is an order of magnitude too low.
+  const previous = existsSync(outFile) ? recordedTotals(readFileSync(outFile, 'utf8')) : null;
+  const refusal = shrinkRefusal(previous, {
+    requests: agg.totals.requests,
+    sessions: agg.sessions.size,
+  });
+  if (refusal && process.env.COST_ALLOW_SHRINK !== '1') {
+    console.error(`cost: refusing to overwrite COST_CONTROL.md — it would shrink (${refusal}).`);
+    console.error(`cost: only ${agg.totals.requests} request(s) are visible in ${dir},`);
+    console.error('cost: which is fewer than the committed ledger records. This machine');
+    console.error('cost: cannot see the full transcript history, so the file is left as is.');
+    console.error('cost: if the shrink is intended, rerun with COST_ALLOW_SHRINK=1.');
+    process.exit(1);
+  }
+
   writeFileSync(outPath, markdown.endsWith('\n') ? markdown : `${markdown}\n`);
   console.log(
     `cost: COST_CONTROL.md updated — ${agg.totals.requests} requests, ` +

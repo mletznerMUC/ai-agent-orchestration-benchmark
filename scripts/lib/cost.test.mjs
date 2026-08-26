@@ -13,6 +13,8 @@ import {
   monthOf,
   aggregate,
   recordsFromManual,
+  recordedTotals,
+  shrinkRefusal,
 } from './cost.mjs';
 
 const PRICING = JSON.parse(
@@ -297,4 +299,58 @@ test('recordsFromManual prices a hand-recorded CI run like any other request', (
   assert.equal(monthOf(record.timestamp), '2026-08');
   assert.equal(classifyWorkflow(record.branch), 'refresh line');
   assert.equal(priceRecord(record, PRICING).total, 5 + 1);
+});
+
+// --- the shrink guard -----------------------------------------------------
+
+const LEDGER = [
+  '# Cost Control',
+  '',
+  '## Totals to date',
+  '',
+  '| Metric | Value |',
+  '| --- | --- |',
+  '| Cost (list price) | **$103.92** |',
+  '| API requests | 727 |',
+  '| Output tokens | 747,915 |',
+  '| Sessions | 5 |',
+  '',
+].join('\n');
+
+test('recordedTotals reads the counts a rendered ledger reports', () => {
+  assert.deepEqual(recordedTotals(LEDGER), { requests: 727, sessions: 5 });
+});
+
+test('recordedTotals strips the thousands separators num() writes', () => {
+  const big = LEDGER.replace('| API requests | 727 |', '| API requests | 1,234,567 |');
+  assert.equal(recordedTotals(big).requests, 1234567);
+});
+
+test('recordedTotals returns null when a figure is missing, never zero', () => {
+  assert.equal(recordedTotals('# Cost Control\n\nnothing here\n'), null);
+  assert.equal(recordedTotals(LEDGER.replace('| Sessions | 5 |', '')), null);
+});
+
+test('shrinkRefusal allows the first write, when there is nothing to lose', () => {
+  assert.equal(shrinkRefusal(null, { requests: 3, sessions: 1 }), null);
+});
+
+test('shrinkRefusal allows a run that grows the ledger', () => {
+  const previous = { requests: 727, sessions: 5 };
+  assert.equal(shrinkRefusal(previous, { requests: 800, sessions: 6 }), null);
+  assert.equal(shrinkRefusal(previous, { requests: 727, sessions: 5 }), null);
+});
+
+test('shrinkRefusal refuses the ephemeral-container overwrite that started this', () => {
+  // The real numbers from the session that clobbered the ledger four times.
+  const refusal = shrinkRefusal({ requests: 727, sessions: 5 }, { requests: 100, sessions: 1 });
+  assert.match(refusal, /requests 727 -> 100/);
+  assert.match(refusal, /sessions 5 -> 1/);
+});
+
+test('shrinkRefusal catches a session-count drop even when requests grow', () => {
+  // One busy container can out-request the whole history and still be blind to it.
+  const refusal = shrinkRefusal({ requests: 727, sessions: 5 }, { requests: 900, sessions: 1 });
+  assert.match(refusal, /sessions 5 -> 1/);
+  assert.doesNotMatch(refusal, /requests/);
 });
