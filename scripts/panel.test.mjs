@@ -19,6 +19,13 @@ const FILES = [
   ['index.en.html', readFileSync(new URL('index.en.html', root), 'utf8')],
 ];
 const DATA = JSON.parse(readFileSync(new URL('data/tools.json', root), 'utf8'));
+
+// Derived, not hardcoded. A refresh can rate a tool that was unrated — that
+// is the whole point of the tier-A maturity rule, and apply.yml carries a
+// paragraph on moving a card between the two presentations. A literal here
+// would then fail on correct data, and since ADR-010 apply.yml may not patch
+// a test to get past it, so the round would block.
+const RATED = Object.values(DATA.tools).filter((t) => t.score.value !== null).length;
 const RUBRIC = readFileSync(new URL('scripts/lib/rubric.mjs', root), 'utf8');
 
 const RESERVED = [
@@ -115,6 +122,7 @@ function cardDims(html) {
 }
 
 test('recomputing from the published pages reproduces every published score', () => {
+  assert.ok(RATED > 0, 'no rated tool in tools.json — this test would assert nothing');
   for (const [name, html] of FILES) {
     const weights = published(html);
     let rated = 0;
@@ -124,7 +132,7 @@ test('recomputing from the published pages reproduces every published score', ()
       assert.equal(total, expected, `${name} ${key}: recomputed ${total}, published ${expected}`);
       if (expected !== null) rated += 1;
     }
-    assert.equal(rated, 11, `${name}: expected 11 rated tools`);
+    assert.equal(rated, RATED, `${name}: expected ${RATED} rated tools`);
   }
 });
 
