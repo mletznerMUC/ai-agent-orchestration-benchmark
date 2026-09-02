@@ -1489,13 +1489,13 @@
       </div>
 <div class="score-card" data-tool="claude-squad">
         <div class="score-tool"><a href="https://github.com/smtg-ai/claude-squad" target="_blank" rel="noopener">Claude Squad</a></div>
-        <div class="score-number">51</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:51%"></div></div>
+        <div class="score-number">56</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:56%"></div></div>
         <div class="score-descriptor">Lightweight CLI</div>
         <details class="score-dims"><summary class="score-dims-sum">Rating breakdown</summary>
 <div class="dim" data-dim="orchestration" data-max="8" data-raw="5"><span class="dim-name" title="Orchestration">Orchestration</span><span class="dim-raw">5/8</span><span class="dim-points">15.63</span></div>
 <div class="dim" data-dim="operability" data-max="4" data-raw="0"><span class="dim-name" title="Operability">Operability</span><span class="dim-raw">0/4</span><span class="dim-points">0</span></div>
-<div class="dim" data-dim="integration" data-max="6" data-raw="2"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">2/6</span><span class="dim-points">5</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="4"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">4/6</span><span class="dim-points">10</span></div>
 <div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment sovereignty">Deployment sovereignty</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
 <div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release maturity">Release maturity</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
 <div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Accessibility">Accessibility</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
@@ -1764,7 +1764,7 @@
             <td><span class="chip chip-yes">Full</span></td>
             <td><span class="chip chip-yes">6 Providers</span></td>
             <td><span class="chip chip-no">Claude-only</span></td>
-            <td><span class="chip chip-no">Claude-only</span></td>
+            <td><span class="chip chip-yes">Any agent CLI</span></td>
             <td><span class="chip chip-yes">v0.13 Any-LLM</span></td>
             <td><span class="chip chip-partial">Multi-LLM internal</span></td>
           </tr>
@@ -2169,14 +2169,15 @@
         <span class="news-date">September 2026</span>
       </div>
       <div class="news-body">
-        <p class="news-intro">Monthly research round (2026-09): all twelve tools checked against their current state. Release maturity was re-derived against the trailing 90-day window 2026-06-04 to 2026-09-02. One published rating moved.</p>
+        <p class="news-intro">Monthly research round (2026-09): all twelve tools checked against their current state. Release maturity was re-derived against the trailing 90-day window 2026-06-04 to 2026-09-02. Two published ratings moved.</p>
         <ul class="news-list">
           <li><strong>n8n &mdash; MCP support now GA:</strong> The 2.34 release notes (August 4, 2026) record that instance-level MCP settings are generally available and that the &ldquo;preview&rdquo; label has been removed; the MCP Client node and MCP Server Trigger doc pages no longer carry a status label. Matrix cell from &ldquo;Beta&rdquo; (partial) to &ldquo;GA&rdquo; (full), the Integration dimension from 5/6 to 6/6, score from 83 to 86.<span class="news-tag-inline">Score +3</span></li>
+              <li><strong>Claude Squad &mdash; not Claude-only:</strong> The vendor&rsquo;s README states that the tool &ldquo;manages multiple Claude Code, Codex, Gemini (and other local agents including Aider)&rdquo;, and documents choosing the program per session (<code>cs -p &quot;codex&quot;</code>, <code>cs -p &quot;gemini&quot;</code>, <code>-p &quot;aider --model ollama_chat/gemma3:1b&quot;</code>). The published &ldquo;Claude-only&rdquo; label was therefore inaccurate. Matrix cell to &ldquo;Any agent CLI&rdquo; (full), the Integration dimension from 2/6 to 4/6, score from 51 to 56.<span class="news-tag-inline">Score +5</span></li>
           <li><strong>Databricks &mdash; two criteria moved, score unchanged:</strong> GA status from 2 to 1, because central Agent Bricks surfaces are labelled Beta or Public Preview in dated vendor docs (multi-agent supervisor, updated August 3, 2026; custom LLM, July 28, 2026; managed MCP, August 17, 2026). Release cadence from 1 to 2, counting the dated entries in the platform release notes rather than the monthly pages. Release maturity stays 5/6 and the score stays 73.</li>
           <li><strong>CrewAI &mdash; &ldquo;Cloud Pro&rdquo; price tier removed:</strong> The vendor pricing page now lists two tiers only: Basic (free, 50 workflow executions per month) and Enterprise (custom). The previously unsourced &ldquo;~&euro;25/mo.&rdquo; row was removed rather than re-priced; the Enterprise row is now sourced.</li>
           <li><strong>Google ADK &mdash; a fifth language:</strong> Kotlin is documented as an installable ADK language in the installation docs, so the CLI / CI/CD cell now reads &ldquo;Py/TS/Go/Java/Kotlin&rdquo;. A label correction with no score effect (87).</li>
           <li><strong>Strands Agents &mdash; citations repointed:</strong> The repository <code>strands-agents/sdk-python</code> is now <code>strands-agents/harness-sdk</code>. Four citations point at the new address; tag history is continuous across the rename and no criterion is affected.</li>
-          <li><strong>Evidence and check dates only:</strong> For Maestro, LangGraph, MS Agent Framework, Claude Agent SDK, OpenAI Agents SDK and Claude Squad only the maturity evidence was refreshed &mdash; the moved 90-day window changes the release counts but no rating. Manus AI remains unrated: <code>manus.im/changelog</code> and <code>manus.im/help/release-notes</code> still return 404 and no dated primary source for release maturity exists.</li>
+          <li><strong>Evidence and check dates only:</strong> For Maestro, LangGraph, MS Agent Framework, Claude Agent SDK and OpenAI Agents SDK only the maturity evidence was refreshed &mdash; the moved 90-day window changes the release counts but no rating. Manus AI remains unrated: <code>manus.im/changelog</code> and <code>manus.im/help/release-notes</code> still return 404 and no dated primary source for release maturity exists.</li>
         </ul>
       </div>
     </div>
