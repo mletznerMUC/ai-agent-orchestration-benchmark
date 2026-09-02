@@ -165,13 +165,42 @@ jobs:
           GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
         run: |
           set -euo pipefail
-          if git diff --quiet; then
-            echo "::error::Nothing was applied. Expected page edits after approval. If the Claude step above reported success, check its 'subagent_stats': 'completed' below 'started_in_background' means it ended its turn while subagents were still running, so their edits never landed."
+          if git diff --quiet -- index.html index.en.html; then
+            echo "::error::Nothing was applied to the served pages. Expected edits to index.html and index.en.html after approval. If the Claude step above reported success, check its 'subagent_stats': 'completed' below 'started_in_background' means it ended its turn while subagents were still running, so their edits never landed."
             exit 1
           fi
+
+          # This job may commit the two served pages and nothing else.
+          #
+          # It used to `git add -A`, which commits whatever the apply step
+          # happened to touch. In the 2026-09 round that swept two test files
+          # into the data PR — scripts/lib/parse-html.test.mjs and
+          # scripts/verify.test.mjs. Both edits were in fact correct, and one
+          # of them repaired a genuinely rotten assertion, but nothing here
+          # established that: the pre-push gate runs `npm test`, so by the time
+          # it passes it is running the *edited* tests. A gate that executes
+          # the change it is meant to police cannot police it. The edits
+          # reached a human only because someone read the file list.
+          #
+          # So refuse instead of guessing. An apply run that wants to change
+          # anything beyond the pages is telling us something a person needs
+          # to see, whether that is a necessary test update or a model
+          # quietly rewriting a check to get green.
+          STRAY=$(git diff --name-only -- . ':(exclude)index.html' ':(exclude)index.en.html')
+          if [ -n "$STRAY" ]; then
+            echo "::error::The apply step modified tracked files other than the served pages. Refusing to push a mixed commit — review these by hand. A needed change here (for example a test asserting a value the approved data moves) belongs in its own PR against main, not folded into a data proposal."
+            echo "Files modified outside index.html / index.en.html:"
+            echo "$STRAY" | sed 's/^/  /'
+            git --no-pager diff -- . ':(exclude)index.html' ':(exclude)index.en.html'
+            exit 1
+          fi
+
           git config user.name  "claude[bot]"
           git config user.email "41898282+claude[bot]@users.noreply.github.com"
-          git add -A
+          # Explicit paths, not -A: untracked scratch files stay out of the
+          # commit, and the stray guard above has already ruled out tracked
+          # edits elsewhere.
+          git add index.html index.en.html
           git commit -m "feat: apply approved benchmark refresh to both language files
 
           Applies the human-approved data/tools.json values to index.html
