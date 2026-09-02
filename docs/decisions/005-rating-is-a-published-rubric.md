@@ -174,3 +174,46 @@ whether you can run the thing yourself under a licence you control.
 Leaving the draft's name would have published a rubric that scores
 Databricks last on "governance" while a badge two lines above calls it
 best, from two different definitions of one word.
+
+## Amendment (2026-09-02, on the first contested matrix cell)
+
+**`model-agnostic` scores what the operator can choose, not how the tool
+reaches the model.**
+
+The rubric listed `model-agnostic` among dimension 3's criteria and never
+said what its three tiers mean. That was survivable while every tool either
+talked to models directly or did not. It stopped being survivable with
+Claude Squad, which does neither: it spawns other vendors' agent CLIs and
+never selects a model itself. Two readings were both defensible and they
+differ by two points on the published score. The 2026-08 and 2026-09 rounds
+each flagged the cell and each correctly declined to move it — a criterion
+with no published tiers cannot be applied mechanically, and applying it by
+private judgment is what ADR-002 exists to prevent.
+
+| Tier | Test | Published example |
+| --- | --- | --- |
+| 2 (`yes`) | the operator can point the tool at more than one vendor's models, and the vendor documents how | google-adk, via a LiteLLM bridge; claude-squad, via `-p <agent CLI>` |
+| 1 (`partial`) | more than one model is in play but the operator cannot choose which; or multi-vendor support exists only as a `Planned` label, per the evidence standard above | manus-ai, "Multi-LLM internal" |
+| 0 (`no`) | one vendor's models, with no documented way out | claude-sdk, "Claude-only" |
+
+The mechanism is deliberately not part of the test. Native multi-provider
+support, a router, a gateway, and spawning a third-party CLI are different
+engineering, but this criterion sits in *Integration & interoperability*,
+which asks what a tool can be connected to rather than how it connects.
+Making the mechanism decide would already have contradicted google-adk,
+which has held `yes` on a bridge since the rubric was first applied.
+
+**Re-evaluated against all twelve tools, as CLAUDE.md rule 2 requires: no
+tier moves.** Nine hold `yes`, manus-ai holds `partial` because its routing
+is internal and unselectable, claude-sdk holds `no`. The rule codifies what
+the matrix already published rather than re-scoring it — which is the right
+outcome for an amendment that follows a contested cell instead of preceding
+one. The check was against the published tiers and labels, not a
+re-verification of each vendor's documentation; that is a refresh-round job,
+and this amendment does not stand in for one.
+
+**What this does not settle: the label.** `ms-agent` publishes "6 Providers"
+while current vendor docs support 9, 11 or 8 depending on which list is
+counted, and the 2026-09 round dropped the finding for want of a counting
+rule. The tier is unaffected — ms-agent is `yes` at any of those counts — so
+that is a label-accuracy question, not a scoring one, and it remains open.
