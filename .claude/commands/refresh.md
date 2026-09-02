@@ -36,6 +36,13 @@ Both subagent types have no write tools. Nothing can reach the
 repository in this phase — that is deliberate: the hallucination-prone
 step must not be able to touch data.
 
+**Run them in the foreground and collect every one of them.** Dispatch
+in one message, with the Task tool's background option set to false if
+it has one, and do not end your turn while a subagent is still running.
+Interactively that only stalls the round; in `refresh.yml` it ends it —
+the headless session closes when the orchestrator stops, and every
+uncollected subagent is discarded with its work unrecorded. See ADR-008.
+
 ## Phase 2 — Triage
 Consolidate the reports into a proposed diff against `data/tools.json`
 plus a radar section:

@@ -23,6 +23,10 @@ message**: `panel-architecture`, `panel-security`,
 `panel-compliance`. Each returns its own verdict and proposed edits;
 none of them sees the others' output.
 
+Run them in the foreground and wait for all three — do not end your
+turn with a lens still running. A dispatched-but-uncollected subagent
+is work paid for and thrown away (ADR-008).
+
 Merge the three into one panel verdict yourself — this is
 orchestration, not lens work:
 - **Panel verdict = the worst of the three.** One REWORK is a REWORK.
