@@ -3054,11 +3054,11 @@
     "claude-squad": {
       "name": "Claude Squad",
       "score": {
-        "value": 51,
+        "value": 56,
         "source": "https://github.com/smtg-ai/claude-squad/releases",
         "checked": "2026-09-02",
         "provenance": "computed-rubric",
-        "exact": 51.4583,
+        "exact": 56.4583,
         "rubric": {
           "orchestration": {
             "points": 15.625,
@@ -3073,9 +3073,9 @@
             "max": 4
           },
           "integration": {
-            "points": 5.0,
+            "points": 10.0,
             "weight": 15,
-            "raw": 2,
+            "raw": 4,
             "max": 6
           },
           "sovereignty": {
@@ -3248,14 +3248,14 @@
           "provenance": "legacy-unsourced"
         },
         "model-agnostic": {
-          "state": "no",
+          "state": "yes",
           "label": {
-            "de": "Claude-only",
-            "en": "Claude-only"
+            "de": "Beliebige Agent-CLI",
+            "en": "Any agent CLI"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://raw.githubusercontent.com/smtg-ai/claude-squad/main/README.md",
+          "checked": "2026-09-02",
+          "provenance": "sourced"
         },
         "learning-curve": {
           "state": "yes",

@@ -1528,13 +1528,13 @@
       </div>
 <div class="score-card" data-tool="claude-squad">
         <div class="score-tool"><a href="https://github.com/smtg-ai/claude-squad" target="_blank" rel="noopener">Claude Squad</a></div>
-        <div class="score-number">51</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:51%"></div></div>
+        <div class="score-number">56</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:56%"></div></div>
         <div class="score-descriptor">Lightweight CLI</div>
         <details class="score-dims"><summary class="score-dims-sum">Aufschlüsselung der Bewertung</summary>
 <div class="dim" data-dim="orchestration" data-max="8" data-raw="5"><span class="dim-name" title="Orchestrierung">Orchestrierung</span><span class="dim-raw">5/8</span><span class="dim-points">15.63</span></div>
 <div class="dim" data-dim="operability" data-max="4" data-raw="0"><span class="dim-name" title="Betreibbarkeit">Betreibbarkeit</span><span class="dim-raw">0/4</span><span class="dim-points">0</span></div>
-<div class="dim" data-dim="integration" data-max="6" data-raw="2"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">2/6</span><span class="dim-points">5</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="4"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">4/6</span><span class="dim-points">10</span></div>
 <div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment-Souveränität">Deployment-Souveränität</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
 <div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release-Reife">Release-Reife</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
 <div class="dim" data-dim="accessibility" data-max="6" data-raw="2"><span class="dim-name" title="Zugänglichkeit">Zugänglichkeit</span><span class="dim-raw">2/6</span><span class="dim-points">3.33</span></div>
@@ -1803,7 +1803,7 @@
             <td><span class="chip chip-yes">Vollständig</span></td>
             <td><span class="chip chip-yes">6 Provider</span></td>
             <td><span class="chip chip-no">Claude-only</span></td>
-            <td><span class="chip chip-no">Claude-only</span></td>
+            <td><span class="chip chip-yes">Beliebige Agent-CLI</span></td>
             <td><span class="chip chip-yes">v0.13 Any-LLM</span></td>
             <td><span class="chip chip-partial">Multi-LLM intern</span></td>
           </tr>
@@ -2208,14 +2208,15 @@
         <span class="news-date">September 2026</span>
       </div>
       <div class="news-body">
-        <p class="news-intro">Monatliche Recherche-Runde (2026-09): Alle zw&ouml;lf Tools gegen den aktuellen Stand gepr&uuml;ft. Die Release-Reife wurde gegen das 90-Tage-Fenster 2026-06-04 bis 2026-09-02 neu hergeleitet. Eine ver&ouml;ffentlichte Bewertung hat sich ge&auml;ndert.</p>
+        <p class="news-intro">Monatliche Recherche-Runde (2026-09): Alle zw&ouml;lf Tools gegen den aktuellen Stand gepr&uuml;ft. Die Release-Reife wurde gegen das 90-Tage-Fenster 2026-06-04 bis 2026-09-02 neu hergeleitet. Zwei ver&ouml;ffentlichte Bewertungen haben sich ge&auml;ndert.</p>
         <ul class="news-list">
           <li><strong>n8n &mdash; MCP-Support in GA:</strong> Die Release Notes 2.34 (4. August 2026) halten fest, dass die instanzweiten MCP-Einstellungen allgemein verf&uuml;gbar sind und das &bdquo;Preview&ldquo;-Label entfernt wurde; die Doku-Seiten zu MCP-Client-Node und MCP-Server-Trigger tragen kein Status-Label mehr. Matrix-Zelle von &bdquo;Beta&ldquo; (teilweise) auf &bdquo;GA&ldquo; (vollst&auml;ndig), Dimension Integration von 5/6 auf 6/6, Score von 83 auf 86.<span class="news-tag-inline">Score +3</span></li>
+              <li><strong>Claude Squad &mdash; nicht Claude-only:</strong> Die README des Anbieters h&auml;lt fest, dass das Tool &bdquo;multiple Claude Code, Codex, Gemini (and other local agents including Aider)&ldquo; verwaltet, und dokumentiert die Programmauswahl je Session (<code>cs -p &quot;codex&quot;</code>, <code>cs -p &quot;gemini&quot;</code>, <code>-p &quot;aider --model ollama_chat/gemma3:1b&quot;</code>). Das ver&ouml;ffentlichte Label &bdquo;Claude-only&ldquo; war damit unzutreffend. Matrix-Zelle auf &bdquo;Beliebige Agent-CLI&ldquo; (vollst&auml;ndig), Dimension Integration von 2/6 auf 4/6, Score von 51 auf 56.<span class="news-tag-inline">Score +5</span></li>
           <li><strong>Databricks &mdash; zwei Kriterien verschoben, Score unver&auml;ndert:</strong> GA-Status von 2 auf 1, da zentrale Agent-Bricks-Oberfl&auml;chen in den datierten Vendor-Docs als Beta bzw. Public Preview gekennzeichnet sind (Multi-Agent Supervisor, Stand 3. August 2026; Custom LLM, 28. Juli 2026; Managed MCP, 17. August 2026). Release-Kadenz von 1 auf 2, gez&auml;hlt nach den datierten Eintr&auml;gen der Platform Release Notes statt nach Monatsseiten. Release-Reife bleibt 5/6, Score bleibt 73.</li>
           <li><strong>CrewAI &mdash; Preisstufe &bdquo;Cloud Pro&ldquo; entfernt:</strong> Die Vendor-Preisseite f&uuml;hrt nur noch zwei Stufen: Basic (kostenlos, 50 Workflow-Ausf&uuml;hrungen/Monat) und Enterprise (auf Anfrage). Die bislang unbelegte Zeile &bdquo;~&euro;25/Mo.&ldquo; wurde gestrichen statt neu bepreist; die Enterprise-Zeile ist jetzt belegt.</li>
           <li><strong>Google ADK &mdash; f&uuml;nfte Sprache:</strong> Kotlin ist in der Installationsdoku als installierbare ADK-Sprache dokumentiert; die Zelle CLI / CI/CD lautet nun &bdquo;Py/TS/Go/Java/Kotlin&ldquo;. Label-Korrektur ohne Score-Wirkung (87).</li>
           <li><strong>Strands Agents &mdash; Zitate umgestellt:</strong> Das Repository <code>strands-agents/sdk-python</code> hei&szlig;t jetzt <code>strands-agents/harness-sdk</code>. Vier Quellenangaben verweisen nun auf die neue Adresse; die Tag-Historie l&auml;uft &uuml;ber die Umbenennung hinweg durch, kein Kriterium betroffen.</li>
-          <li><strong>Nur Belege und Pr&uuml;fdaten:</strong> Bei Maestro, LangGraph, MS Agent Framework, Claude Agent SDK, OpenAI Agents SDK und Claude Squad wurden ausschlie&szlig;lich die Reife-Belege nachgezogen &mdash; das verschobene 90-Tage-Fenster &auml;ndert die Release-Z&auml;hlungen, aber keine Bewertung. Manus AI bleibt unbewertet: <code>manus.im/changelog</code> und <code>manus.im/help/release-notes</code> antworten weiterhin mit 404, eine datierte Prim&auml;rquelle zur Release-Reife fehlt.</li>
+          <li><strong>Nur Belege und Pr&uuml;fdaten:</strong> Bei Maestro, LangGraph, MS Agent Framework, Claude Agent SDK und OpenAI Agents SDK wurden ausschlie&szlig;lich die Reife-Belege nachgezogen &mdash; das verschobene 90-Tage-Fenster &auml;ndert die Release-Z&auml;hlungen, aber keine Bewertung. Manus AI bleibt unbewertet: <code>manus.im/changelog</code> und <code>manus.im/help/release-notes</code> antworten weiterhin mit 404, eine datierte Prim&auml;rquelle zur Release-Reife fehlt.</li>
         </ul>
       </div>
     </div>
