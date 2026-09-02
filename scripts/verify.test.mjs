@@ -14,6 +14,18 @@ const DATA = JSON.parse(readFileSync(new URL('data/tools.json', root), 'utf8'));
 // pass while asserting nothing.
 const LG = DATA.tools.langgraph.score.value;
 
+// Which tools are unrated, and how many dimension figures the data expects to
+// see published, are both things a refresh can move: a tool that gains tier-A
+// maturity evidence becomes rated, gains a maturity figure, and leaves this
+// set. Literals for either would fail on correct data, and since ADR-010
+// apply.yml may not patch a test to get past that, so the round would block.
+const UNRATED = Object.entries(DATA.tools)
+  .filter(([, t]) => t.score.value === null)
+  .map(([key]) => key);
+const PUBLISHED_FIGURES = Object.values(DATA.tools)
+  .flatMap((t) => Object.values(t.score.rubric))
+  .filter((dim) => dim.raw !== null).length;
+
 // --- collectFailures ------------------------------------------------------
 
 test('the unmodified site verifies clean', () => {
@@ -278,19 +290,36 @@ test('the dimension attributes and figures are byte-identical in both files', ()
     .map((row) => `${key}/${row.key}=${row.points}`));
   const points = (html) => [...html.matchAll(/<span class="dim-points">([^<]*)<\/span>/g)]
     .map((m) => m[1]).filter((text) => /^\d/.test(text));
-  assert.equal(points(DE).length, 71, 'expected 71 published figures in the DE file');
+  assert.ok(PUBLISHED_FIGURES > 0, 'tools.json declares no published figures — this would assert nothing');
+  assert.equal(points(DE).length, PUBLISHED_FIGURES,
+    `DE publishes ${points(DE).length} figures, tools.json declares ${PUBLISHED_FIGURES}`);
   assert.deepEqual(points(DE), points(EN), 'the two files disagree on a figure string');
   assert.deepEqual(figures(DE), figures(EN));
   assert.ok(!points(DE).some((text) => text.includes(',')), 'no figure may use a decimal comma');
   assert.ok(!points(EN).some((text) => text.includes(',')), 'no figure may use a decimal comma');
 });
 
-test('the unrated card publishes no maturity figure in either language', () => {
+test('an unrated card publishes no maturity figure in either language', () => {
+  // Which tool is unrated comes from the data. Naming one here meant the test
+  // silently stopped covering the rule if a different tool became the unrated
+  // one, and broke confusingly if that tool became rated.
+  assert.ok(UNRATED.length > 0,
+    'every tool in tools.json is now rated, so this test has no subject and is '
+    + 'asserting nothing. That is a real change, not a fault: the unrated '
+    + 'presentation would be dead markup on both pages. Decide deliberately '
+    + 'whether to retire this test and that markup, rather than letting it pass '
+    + 'empty.');
   for (const html of [DE, EN]) {
-    const rows = parseDimensions(html).get('manus-ai');
-    const maturity = rows.find((r) => r.key === 'maturity');
-    assert.equal(maturity.raw, null);
-    assert.equal(maturity.points, null);
-    assert.equal(rows.filter((r) => r.raw === null).length, 1, 'exactly one unevidenced row');
+    for (const key of UNRATED) {
+      const rows = parseDimensions(html).get(key);
+      assert.ok(rows, `${key}: no dimension rows on the published card`);
+      const maturity = rows.find((r) => r.key === 'maturity');
+      assert.equal(maturity.raw, null, `${key}: maturity must publish no figure`);
+      assert.equal(maturity.points, null, `${key}: maturity must publish no points`);
+      // Maturity is the only dimension a tier-A absence can unevidence, so an
+      // unrated card carries exactly one such row however many tools move.
+      assert.equal(rows.filter((r) => r.raw === null).length, 1,
+        `${key}: expected exactly one unevidenced row`);
+    }
   }
 });
