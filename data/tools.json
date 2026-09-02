@@ -165,8 +165,8 @@
       "scores": [
         "google-adk",
         "strands",
-        "ms-agent",
         "n8n",
+        "ms-agent",
         "maestro",
         "langgraph",
         "claude-sdk",
@@ -212,7 +212,7 @@
       "score": {
         "value": 83,
         "source": "https://github.com/RunMaestro/Maestro/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 82.5,
         "rubric": {
@@ -251,26 +251,26 @@
             "weight": 15,
             "raw": 3,
             "max": 6,
-            "evidence": "v0.17.3 stable 2026-07-04 (v0.18.4-RC prerelease); pre-1.0; 2 stable releases in trailing 90 days",
+            "evidence": "v0.17.3 stable 2026-07-04 (latest; v0.18.4-RC prerelease, same date); pre-1.0; 4 stable releases in trailing 90 days (v0.17.0 2026-06-15, v0.17.1 2026-06-20, v0.17.2 2026-06-27, v0.17.3 2026-07-04)",
             "criteria": {
               "ga-status": {
                 "score": 1,
                 "source": "https://github.com/RunMaestro/Maestro/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 1,
                 "source": "https://github.com/RunMaestro/Maestro/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 1,
                 "source": "https://github.com/RunMaestro/Maestro/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -488,7 +488,7 @@
       "score": {
         "value": 81,
         "source": "https://github.com/langchain-ai/langgraph/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 81.25,
         "rubric": {
@@ -527,26 +527,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "1.2.11 2026-08-11; major >= 1; 8 stable releases in trailing 90 days",
+            "evidence": "1.2.11 2026-08-11; major >= 1; 7 stable releases in trailing 90 days (1.2.5 2026-06-12, 1.2.6 2026-06-18, 1.2.7 2026-06-30, 1.2.8 2026-07-06, 1.2.9 2026-07-10, 1.2.10 2026-07-28, 1.2.11 2026-08-11)",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/langchain-ai/langgraph/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/langchain-ai/langgraph/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/langchain-ai/langgraph/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -764,7 +764,7 @@
       "score": {
         "value": 87,
         "source": "https://github.com/google/adk-python/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 87.0833,
         "rubric": {
@@ -803,26 +803,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "v2.7.1 2026-08-17, v1.39.0 line maintained in parallel; 8 stable releases in trailing 90 days",
+            "evidence": "v2.8.0 2026-08-26 (latest v2.x), v1.39.1 2026-08-27 (v1.x maintenance line); major >= 1, v2.0.0 GA 2026-05-19; 10 stable releases in trailing 90 days",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/google/adk-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/google/adk-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/google/adk-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -918,12 +918,12 @@
         "cli-cicd": {
           "state": "yes",
           "label": {
-            "de": "Py/TS/Go/Java",
-            "en": "Py/TS/Go/Java"
+            "de": "Py/TS/Go/Java/Kotlin",
+            "en": "Py/TS/Go/Java/Kotlin"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://github.com/google/adk-docs/blob/main/docs/get-started/installation.md",
+          "checked": "2026-09-02",
+          "provenance": "sourced"
         },
         "observability": {
           "state": "yes",
@@ -1039,8 +1039,8 @@
       "name": "Strands Agents",
       "score": {
         "value": 87,
-        "source": "https://github.com/strands-agents/sdk-python/releases",
-        "checked": "2026-08-21",
+        "source": "https://github.com/strands-agents/harness-sdk/releases",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 87.0833,
         "rubric": {
@@ -1079,26 +1079,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "python/v1.52.0 2026-08-12, typescript/v1.13.0 2026-08-12; 8 stable releases in trailing 90 days",
+            "evidence": "python/v1.54.0 2026-08-27, typescript/v1.16.0 2026-08-31; major >= 1; at least 16 stable releases in trailing 90 days (python/, typescript/ and mcp/ tag lines combined, enumerated back to 2026-07-24 — the >= 6 threshold was already cleared, so earlier tags in the window were not enumerated individually). Repo renamed strands-agents/sdk-python -> strands-agents/harness-sdk; tag history is continuous across the rename.",
             "criteria": {
               "ga-status": {
                 "score": 2,
-                "source": "https://github.com/strands-agents/sdk-python/releases",
-                "checked": "2026-08-21",
+                "source": "https://github.com/strands-agents/harness-sdk/releases",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
-                "source": "https://github.com/strands-agents/sdk-python/releases",
-                "checked": "2026-08-21",
+                "source": "https://github.com/strands-agents/harness-sdk/releases",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
-                "source": "https://github.com/strands-agents/sdk-python/releases",
-                "checked": "2026-08-21",
+                "source": "https://github.com/strands-agents/harness-sdk/releases",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1316,7 +1316,7 @@
       "score": {
         "value": 73,
         "source": "https://docs.databricks.com/aws/en/release-notes/product/",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 73.3333,
         "rubric": {
@@ -1355,26 +1355,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "GA, no preview label on Agent Bricks in vendor docs; dated platform release notes through August 2026; monthly cadence = 3 in trailing 90 days",
+            "evidence": "GA platform, but core Agent Bricks surfaces carry Beta/Public Preview labels in dated vendor docs (multi-agent supervisor, updated 2026-08-03: \"Beta\"; custom LLM, updated 2026-07-28: \"This feature is in Beta\"; managed MCP, updated 2026-08-17: \"Public Preview\") — GA with beta components. Dated platform release-note entries run through 2026-09-01, far more than 6 in the trailing 90 days.",
             "criteria": {
               "ga-status": {
-                "score": 2,
-                "source": "https://docs.databricks.com/aws/en/release-notes/product/",
-                "checked": "2026-08-21",
+                "score": 1,
+                "source": "https://docs.databricks.com/aws/en/generative-ai/agent-bricks/multi-agent-supervisor",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
-                "source": "https://docs.databricks.com/aws/en/release-notes/product/",
-                "checked": "2026-08-21",
+                "source": "https://docs.databricks.com/aws/en/release-notes/product/2026/august",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
-                "score": 1,
-                "source": "https://docs.databricks.com/aws/en/release-notes/product/",
-                "checked": "2026-08-21",
+                "score": 2,
+                "source": "https://docs.databricks.com/aws/en/release-notes/product/2026/august",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1606,7 +1606,7 @@
       "score": {
         "value": 76,
         "source": "https://github.com/crewAIInc/crewAI/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 75.625,
         "rubric": {
@@ -1645,26 +1645,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "1.15.17 2026-08-20; major >= 1; 8 stable releases in trailing 90 days",
+            "evidence": "1.15.18 2026-08-27; major >= 1; 10 stable releases counted from 1.15.9 2026-07-30 through 1.15.18 2026-08-27 (the >= 6 threshold was cleared without enumerating the earlier part of the 2026-06-04 window)",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/crewAIInc/crewAI/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/crewAIInc/crewAI/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/crewAIInc/crewAI/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1862,20 +1862,6 @@
           },
           {
             "label": {
-              "de": "Cloud Pro",
-              "en": "Cloud Pro"
-            },
-            "value": {
-              "de": "~€25/Mo.",
-              "en": "~€25/mo."
-            },
-            "tone": "default",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
-          },
-          {
-            "label": {
               "de": "Enterprise",
               "en": "Enterprise"
             },
@@ -1884,9 +1870,9 @@
               "en": "Custom"
             },
             "tone": "muted",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://www.crewai.com/pricing",
+            "checked": "2026-09-02",
+            "provenance": "sourced"
           }
         ]
       }
@@ -1896,7 +1882,7 @@
       "score": {
         "value": 83,
         "source": "https://github.com/microsoft/agent-framework/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 83.3333,
         "rubric": {
@@ -1935,26 +1921,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "dotnet-1.18.0 2026-08-18, python-1.14.0 2026-08-14; 7 stable releases in trailing 90 days",
+            "evidence": "dotnet-1.20.0 2026-08-31, python-1.16.0 2026-08-28; major >= 1 and GA in vendor docs for the scored .NET and Python lines (the separate Go SDK is marked public preview); 19 stable releases in trailing 90 days (10 .NET, 9 Python)",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/microsoft/agent-framework/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/microsoft/agent-framework/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/microsoft/agent-framework/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -2184,11 +2170,11 @@
     "n8n": {
       "name": "n8n",
       "score": {
-        "value": 83,
+        "value": 86,
         "source": "https://github.com/n8n-io/n8n/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
-        "exact": 83.3333,
+        "exact": 85.8333,
         "rubric": {
           "orchestration": {
             "points": 12.5,
@@ -2203,9 +2189,9 @@
             "max": 4
           },
           "integration": {
-            "points": 12.5,
+            "points": 15.0,
             "weight": 15,
-            "raw": 5,
+            "raw": 6,
             "max": 6
           },
           "sovereignty": {
@@ -2225,26 +2211,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "n8n@2.35.7 stable 2026-08-21; major >= 1; stable line released near-daily in trailing 90 days",
+            "evidence": "n8n@2.37.7 stable 2026-09-02; major >= 1; stable line released near-daily in trailing 90 days (n8n@2.36.8 and 2.37.4 2026-08-28, 2.36.9 and 2.37.6 2026-08-31, 2.38.1 2026-09-01, 2.38.2 and 2.37.7 2026-09-02)",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/n8n-io/n8n/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/n8n-io/n8n/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/n8n-io/n8n/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -2318,14 +2304,14 @@
           "provenance": "legacy-unsourced"
         },
         "mcp-support": {
-          "state": "partial",
+          "state": "yes",
           "label": {
-            "de": "Beta",
-            "en": "Beta"
+            "de": "GA",
+            "en": "GA"
           },
-          "source": null,
-          "checked": null,
-          "provenance": "legacy-unsourced"
+          "source": "https://docs.n8n.io/changelog/release-notes",
+          "checked": "2026-09-02",
+          "provenance": "sourced"
         },
         "open-source": {
           "state": "yes",
@@ -2490,7 +2476,7 @@
       "score": {
         "value": 76,
         "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 76.4583,
         "rubric": {
@@ -2529,26 +2515,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "v0.2.143 2026-08-20; pre-1.0; 8 stable releases in trailing 90 days",
+            "evidence": "v0.2.151 2026-09-01 (Python), v0.3.258 2026-09-01 (TypeScript); pre-1.0; well above 6 stable releases in trailing 90 days (10 Python releases between 2026-08-20 and 2026-09-01 alone; the full 90-day list was not paginated)",
             "criteria": {
               "ga-status": {
                 "score": 1,
                 "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -2780,7 +2766,7 @@
       "score": {
         "value": 66,
         "source": "https://github.com/openai/openai-agents-python/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 65.8333,
         "rubric": {
@@ -2819,26 +2805,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "v0.22.0 2026-08-19; pre-1.0; 8 stable releases in trailing 90 days",
+            "evidence": "v0.22.0 2026-08-19 (still the latest tag on 2026-09-02); pre-1.0; 15 stable releases in trailing 90 days (v0.17.7 through v0.22.0, window 2026-06-04 to 2026-09-02)",
             "criteria": {
               "ga-status": {
                 "score": 1,
                 "source": "https://github.com/openai/openai-agents-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/openai/openai-agents-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/openai/openai-agents-python/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -3070,7 +3056,7 @@
       "score": {
         "value": 51,
         "source": "https://github.com/smtg-ai/claude-squad/releases",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "computed-rubric",
         "exact": 51.4583,
         "rubric": {
@@ -3109,26 +3095,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "v1.0.20 2026-08-20; major >= 1; 3 stable releases in trailing 90 days (v1.0.18 2026-05-23, v1.0.19 2026-06-17)",
+            "evidence": "v1.0.20 2026-08-20; major >= 1; 2 stable releases in the trailing 90-day window 2026-06-04 to 2026-09-02 (v1.0.19 2026-06-17, v1.0.20 2026-08-20) — v1.0.18 2026-05-23 has fallen out of the window, but 2 is still in the 2-5 band",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/smtg-ai/claude-squad/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/smtg-ai/claude-squad/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 1,
                 "source": "https://github.com/smtg-ai/claude-squad/releases",
-                "checked": "2026-08-21",
+                "checked": "2026-09-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -3332,7 +3318,7 @@
       "score": {
         "value": null,
         "source": "https://manus.im/updates",
-        "checked": "2026-08-21",
+        "checked": "2026-09-02",
         "provenance": "unrated-no-tier-a-maturity",
         "exact": null,
         "rubric": {
@@ -3371,7 +3357,7 @@
             "weight": 15,
             "raw": null,
             "max": 6,
-            "evidence": "No tier-A source found: manus.im/changelog and manus.im/help/release-notes both 404; manus.im/updates carries no dated version entries. Vendor blog posts are not evidence under ADR-005.",
+            "evidence": "No tier-A source found. Re-checked 2026-09-02: manus.im/changelog and manus.im/help/release-notes still return 404; the help-centre root lists no release-notes or changelog category; manus.im/updates returns 200 but only its navigation shell rendered across three fetch attempts, so it could not be read either way. The only version-numbered material located (manus.im/blog/manus-max-release, manus.im/blog/manus-1.5-release) is vendor blog copy, which is not evidence under ADR-005.",
             "criteria": null
           }
         }
