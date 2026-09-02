@@ -412,8 +412,57 @@ jobs:
           BRANCH="refresh/${ROUND}"
           git config user.name  "claude[bot]"
           git config user.email "41898282+claude[bot]@users.noreply.github.com"
-          git checkout -b "$BRANCH"
+
+          # Cut the proposal branch from CURRENT main, not from the commit
+          # this job checked out ~20 minutes ago, and carry only the two
+          # paths the round is allowed to change.
+          #
+          # A round takes about twenty minutes. Anything merged to main in
+          # that window — a workflow edit above all — is absent from this
+          # runner's checkout, so a branch cut from it differs from main on
+          # files the round never touched. Two things go wrong:
+          #
+          #   1. The push is rejected outright when one of those files is a
+          #      workflow: "refusing to allow a Personal Access Token to
+          #      create or update workflow .github/workflows/refresh.yml
+          #      without `workflow` scope". Run 12 died exactly here, having
+          #      completed its research — a full round's findings lost at the
+          #      last step. Granting the PAT `workflow` scope would silence
+          #      it by letting the refresh line rewrite its own workflow,
+          #      which is the wrong trade for a line built on human gates.
+          #   2. Worse when it succeeds: the proposal's diff silently reverts
+          #      whatever landed on main mid-round. A data PR must contain
+          #      the data change and nothing else.
+          #
+          # Re-cutting from a freshly fetched origin/main and restoring only
+          # data/tools.json and docs/refresh removes both. There is no
+          # workflow delta to reject, and the diff is honestly scoped.
+          STAGING="$(mktemp -d)"
+          cp data/tools.json "$STAGING/tools.json"
+          cp -R docs/refresh "$STAGING/refresh"
+
+          # reset --hard, not `checkout -B origin/main`: the tree still has
+          # the round's edit to data/tools.json, and checkout refuses to
+          # carry a modified tracked file across a base change. The edit is
+          # already saved in $STAGING and is restored immediately below.
+          git fetch origin main
+          git reset --hard FETCH_HEAD
+          git checkout -B "$BRANCH"
+
+          cp "$STAGING/tools.json" data/tools.json
+          mkdir -p docs/refresh
+          cp -R "$STAGING/refresh/." docs/refresh/
+          rm -rf "$STAGING"
+
           git add data/tools.json docs/refresh
+
+          # main may have moved tools.json under us (a hotfix, an earlier
+          # applied round). Rare, but it would make this round's file a
+          # silent revert of that work, so stop and let a human look.
+          if [ "$DATA_CHANGED" = "true" ] && git diff --cached --quiet -- data/tools.json; then
+            echo "::error::The round changed data/tools.json, but against current main that change is empty. main moved during the round. Refusing to open a misleading proposal — the report is archived as an artifact; re-run the round against current main."
+            exit 1
+          fi
 
           if [ "$DATA_CHANGED" = "true" ]; then
             LABEL="refresh:proposed"
