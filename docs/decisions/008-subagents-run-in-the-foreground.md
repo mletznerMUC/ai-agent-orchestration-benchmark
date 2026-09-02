@@ -87,6 +87,13 @@ did not run rather than shipping a proposal built on one researcher.
   per tool from a matrix job and consolidate in a separate step — at the
   cost of losing the shared triage context that makes cross-tool
   disagreements visible.
+- A narrowed round — a `tools` subset or `scout: false` — now reports but
+  never proposes. The round id is the calendar month whatever the scope,
+  so a one-tool test round that opened a PR would take `refresh/<yyyy-mm>`
+  and `docs/refresh/<yyyy-mm>-report.md` from the month's real round and
+  break its `git checkout -b`. It would also file a report claiming a
+  refresh that checked one tool of twelve. Debugging the line must not be
+  able to corrupt the record the line exists to produce.
 - Cost control: rounds 9 and 10 spent roughly $6 each for no artifact.
   They are CI spend and belong in `data/cost-ci-runs.json`, which is
   still empty; until it is filled, `COST_CONTROL.md` understates the
