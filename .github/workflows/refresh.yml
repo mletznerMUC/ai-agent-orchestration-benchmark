@@ -24,6 +24,12 @@ name: refresh-research
 #   neither               -> no PR; report goes to the run summary and
 #                            an artifact
 #
+# A DEBUG round — any dispatch that narrows the scope, i.e. a `tools`
+# subset or `scout: false` — never opens a PR whatever it finds. It still
+# researches, still writes its report, and still publishes it to the run
+# summary and the artifact; it just does not commit, branch, or propose.
+# See the "Compute round id" step for why that matters.
+#
 # Scouted tools are never added to data/tools.json here. Adding a tool
 # means scoring it against every published criterion (CLAUDE.md rule 2),
 # which is /feature work, not a data refresh.
@@ -46,11 +52,11 @@ on:
   workflow_dispatch:
     inputs:
       tools:
-        description: 'Tool keys to research (space-separated). Empty = ALL tools, which is what the schedule does. Subsets are for debugging only.'
+        description: 'Tool keys to research (space-separated). Empty = ALL tools, which is what the schedule does. Naming a subset makes this a debug round: it reports but never opens a PR.'
         required: false
         default: ''
       scout:
-        description: 'Also search the market for tools not yet in the benchmark.'
+        description: 'Also search the market for tools not yet in the benchmark. Turning this off makes it a debug round: it reports but never opens a PR.'
         required: false
         default: 'true'
         type: choice
@@ -93,9 +99,39 @@ jobs:
           fi
           echo "Anthropic API key is present."
 
-      - name: Compute round id
+      - name: Compute round id and classify the round
         id: round
-        run: echo "id=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+        env:
+          TOOLS: ${{ github.event.inputs.tools }}
+          SCOUT: ${{ github.event.inputs.scout }}
+        run: |
+          set -euo pipefail
+          echo "id=$(date -u +%Y-%m)" >> "$GITHUB_OUTPUT"
+
+          # A round is the real thing only when it researches EVERY tool and
+          # also scouts the market — that is what CLAUDE.md defines a round as,
+          # and what the schedule always does (empty `tools`, `scout` true).
+          # Anything narrower is a debug round.
+          #
+          # Debug rounds must not open a PR, because the round id is the
+          # calendar month regardless of scope. A langgraph-only round that
+          # proposed would claim `refresh/<yyyy-mm>` and
+          # `docs/refresh/<yyyy-mm>-report.md` — the branch and filename the
+          # month's real round needs — and the real round's `git checkout -b`
+          # would then fail on a branch that already exists. It would also
+          # leave a PR titled "proposed benchmark refresh" carrying a report
+          # that checked one tool of twelve, which is precisely the "silence
+          # is indistinguishable from a round that never ran" problem in
+          # reverse: evidence that overstates what was checked.
+          #
+          # The report is still written, still summarised, still archived. The
+          # debug round loses nothing except the ability to propose.
+          if [ -n "${TOOLS:-}" ] || [ "${SCOUT:-true}" = "false" ]; then
+            echo "debug=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::Debug round (tools='${TOOLS:-}', scout='${SCOUT:-true}'). The report will be published to the run summary and archived as an artifact, but no branch, commit or pull request will be created."
+          else
+            echo "debug=false" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Compose the research prompt (one source, both attempts share it)
         run: |
@@ -331,7 +367,7 @@ jobs:
         if: always() && steps.report.outputs.report != ''
         uses: actions/upload-artifact@v4
         with:
-          name: refresh-report-${{ steps.round.outputs.id }}
+          name: refresh-report-${{ steps.round.outputs.id }}${{ steps.round.outputs.debug == 'true' && '-debug' || '' }}
           path: ${{ steps.report.outputs.report }}
           if-no-files-found: warn
 
@@ -341,8 +377,21 @@ jobs:
           ROUND: ${{ steps.round.outputs.id }}
           DATA_CHANGED: ${{ steps.report.outputs.data_changed }}
           CANDIDATES: ${{ steps.report.outputs.candidates }}
+          DEBUG: ${{ steps.round.outputs.debug }}
         run: |
           set -euo pipefail
+
+          # A narrowed round never proposes, whatever it found. See "Compute
+          # round id" for why: the branch and report names belong to the
+          # month's full round, and a partial round must not take them.
+          if [ "$DEBUG" = "true" ]; then
+            echo "Debug round — no branch, commit or pull request."
+            echo "The report is on the run summary above and archived as an artifact."
+            if [ "$DATA_CHANGED" = "true" ]; then
+              echo "::notice::This debug round found sourced data changes. They were NOT proposed and the working tree is discarded with the runner. Re-run as a full round (empty 'tools', scout 'true') to propose them."
+            fi
+            exit 0
+          fi
 
           # Nothing moved and nothing was spotted: the report is already on
           # the run page and archived. Do not open a PR nobody needs to act on.
