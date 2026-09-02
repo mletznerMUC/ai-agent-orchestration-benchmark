@@ -46,7 +46,10 @@ test('a matrix chip state changed in the EN file only is caught', () => {
 });
 
 test('an as-of stamp out of step with the changelog is caught', () => {
-  const broken = DE.replace('Stand: August 2026', 'Stand: Juli 2026');
+  // The stamp moves every refresh round, so it is read from the data rather
+  // than hardcoded — a stale literal here would make this test assert nothing.
+  const broken = DE.replace(`Stand: ${DATA.meta.asOf.de}`, 'Stand: Juli 2026');
+  assert.notEqual(broken, DE, 'fixture did not match — test would assert nothing');
   const failures = collectFailures(broken, EN, DATA);
   assert.ok(failures.some((f) => f.toLowerCase().includes('as-of')),
     `expected an as-of failure, got: ${failures.join(' | ')}`);

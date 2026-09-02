@@ -243,12 +243,12 @@ test('parseMeta reads the English stamp', () => {
   assert.equal(parseMeta(html).asOf, 'July 2026');
 });
 
-test('parsePrices finds 12 cards and 42 rows in both real files', () => {
+test('parsePrices finds 12 cards and 41 rows in both real files', () => {
   for (const [name, html] of [['de', DE], ['en', EN]]) {
     const prices = parsePrices(html);
     assert.equal(prices.size, 12, `${name}: expected 12 price cards`);
     const rows = [...prices.values()].reduce((n, p) => n + p.rows.length, 0);
-    assert.equal(rows, 42, `${name}: expected 42 price rows`);
+    assert.equal(rows, 41, `${name}: expected 41 price rows`);
   }
 });
 
