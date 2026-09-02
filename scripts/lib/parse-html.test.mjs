@@ -9,6 +9,21 @@ import {
 const root = new URL('../../', import.meta.url);
 const DE = readFileSync(new URL('index.html', root), 'utf8');
 const EN = readFileSync(new URL('index.en.html', root), 'utf8');
+const DATA = JSON.parse(readFileSync(new URL('data/tools.json', root), 'utf8'));
+
+// Derived from the data, not hardcoded — the same lesson verify.test.mjs
+// records a few lines into its own header. An approved refresh can add or
+// remove a price row (2026-09 removed crewai's Cloud Pro tier), and a literal
+// total here then fails on data that is perfectly correct. Since ADR-010 the
+// cost of that is higher than a red suite: apply.yml may no longer commit a
+// test edit, so a stale literal blocks the whole round rather than being
+// quietly patched inside it.
+//
+// The tool count stays a literal on purpose. A refresh cannot change it —
+// adding a tool means scoring it against every published criterion, which is
+// gated /feature work that revisits this file anyway (CLAUDE.md rule 2).
+const PRICE_ROWS = Object.values(DATA.tools)
+  .reduce((n, t) => n + (t.price?.rows?.length ?? 0), 0);
 
 const TOOL_KEYS = [
   'maestro', 'langgraph', 'google-adk', 'strands', 'databricks', 'crewai',
@@ -243,12 +258,17 @@ test('parseMeta reads the English stamp', () => {
   assert.equal(parseMeta(html).asOf, 'July 2026');
 });
 
-test('parsePrices finds 12 cards and 41 rows in both real files', () => {
+test('parsePrices finds 12 cards and every price row the data declares', () => {
+  // Without this the assertion below could pass by comparing zero to zero if
+  // tools.json ever failed to load — the exact way a fixture stops testing
+  // anything while still reporting green.
+  assert.ok(PRICE_ROWS > 0, 'derived price-row total is 0 — data/tools.json did not load');
   for (const [name, html] of [['de', DE], ['en', EN]]) {
     const prices = parsePrices(html);
     assert.equal(prices.size, 12, `${name}: expected 12 price cards`);
     const rows = [...prices.values()].reduce((n, p) => n + p.rows.length, 0);
-    assert.equal(rows, 41, `${name}: expected 41 price rows`);
+    assert.equal(rows, PRICE_ROWS,
+      `${name}: pages publish ${rows} price rows, tools.json declares ${PRICE_ROWS}`);
   }
 });
 
