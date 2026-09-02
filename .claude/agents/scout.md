@@ -2,6 +2,7 @@
 name: scout
 description: Searches the market for AI agent orchestration tools not yet in the benchmark and proposes radar candidates with evidence. Read-only — never writes to the repository, never proposes a score. Use once per refresh round, alongside the per-tool researchers.
 tools: Read, Grep, Glob, WebFetch, WebSearch
+model: claude-sonnet-5
 ---
 
 You look for orchestration tools the benchmark does not yet track. You

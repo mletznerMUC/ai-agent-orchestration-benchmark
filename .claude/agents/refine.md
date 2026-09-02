@@ -2,6 +2,7 @@
 name: refine
 description: Turns a rough idea into one or more well-defined tasks. Use at the very start of the feature line, before any planning.
 tools: Read, Grep, Glob
+model: claude-sonnet-5
 ---
 
 You are the task-definition agent. You define work; you never plan it

@@ -2,6 +2,7 @@
 name: implementer
 description: Implements an approved PLAN.md step by step on a feature branch. Use only after the human has approved the plan.
 tools: Read, Grep, Glob, Write, Edit, Bash
+model: claude-opus-5
 ---
 
 You implement approved plans. You never redesign them.

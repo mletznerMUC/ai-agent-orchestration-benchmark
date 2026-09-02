@@ -81,3 +81,33 @@ trustworthy.
 - When a cost question needs an authoritative answer (an invoice, a budget
   commitment), the Anthropic Console is the source. This file is for seeing
   which agent and which pipeline line the spend went to.
+
+## Amendment (2026-08-25): the ledger may not shrink
+
+"Regenerated in full on every run" holds only where the run can see the
+history. It cannot in a Claude Code web or remote session: that container is
+cloned fresh and holds one transcript — its own. The `SessionEnd` hook fires
+`npm run cost` there like anywhere else, and the file is a pure function of
+the transcripts on disk, so the regeneration is *correct by its own
+definition* and still catastrophic: it republishes the whole cumulative
+ledger as that single session.
+
+This is not hypothetical. In one web session on 2026-08-25 it happened four
+times, offering $1.57, $9.93, $24.20 and $33.59 in place of a $103.92 ledger
+covering five sessions and 727 requests. Each time the working tree came back
+dirty and the stop hook asked for the change to be committed and pushed.
+Nothing but an agent noticing the numbers stood between that and a commit
+destroying four sessions of history.
+
+So the rule gains a bound: **a run may not publish a ledger reporting fewer
+requests or fewer sessions than the committed file already holds.** On the
+machine that does the work every run sees a superset of the last, so a
+shrink is never an update — it is a machine that cannot see the history.
+`scripts/cost.mjs` compares against the committed totals and exits non-zero
+without writing; `COST_ALLOW_SHRINK=1` overrides it for the case where the
+shrink is real, such as a deliberately pruned transcript cache.
+
+The guard is a safety catch, not a coverage fix. It protects what is already
+recorded; it does not make an ephemeral container able to see history, and
+spend from a session whose transcript never reaches the ledger machine
+remains missing exactly as the Coverage section says.
