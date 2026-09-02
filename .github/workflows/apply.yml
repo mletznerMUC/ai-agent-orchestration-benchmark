@@ -101,6 +101,16 @@ jobs:
             Treat it as settled: do not re-research it, do not second-guess
             the values, do not add values it does not contain.
 
+            This is a headless run: there is no human here to resume
+            you, and it ends the moment you stop. If you use subagents
+            for the independent per-file work, dispatch them in the
+            FOREGROUND — set the Task tool's background option to false
+            if it has one — and never end your turn while one is still
+            running. A subagent that has not reported back when you stop
+            is discarded, and its edits are lost. You are finished only
+            once the edits are on disk and `npm test && npm run verify`
+            have both passed.
+
             Work through this in order, using subagents for the
             independent per-file work where that helps:
 
@@ -156,7 +166,7 @@ jobs:
         run: |
           set -euo pipefail
           if git diff --quiet; then
-            echo "::error::Nothing was applied. Expected page edits after approval."
+            echo "::error::Nothing was applied. Expected page edits after approval. If the Claude step above reported success, check its 'subagent_stats': 'completed' below 'started_in_background' means it ended its turn while subagents were still running, so their edits never landed."
             exit 1
           fi
           git config user.name  "claude[bot]"

@@ -126,6 +126,23 @@ jobs:
           Both subagent types are read-only by design — do not work
           around that.
 
+          WAIT FOR THEM — THIS IS A HEADLESS RUN
+          Dispatch all of them in ONE message and run them in the
+          FOREGROUND. If the Task tool exposes a background option,
+          set it to false explicitly on every call: their reports must
+          come back into the turn that dispatched them.
+
+          There is no human here to resume you. The run ends the moment
+          you stop, and every subagent still in flight is discarded with
+          its work unrecorded — that is exactly how rounds 9 and 10
+          failed, dispatching thirteen subagents and collecting none of
+          them. Do not end your turn to "wait for the reports": there is
+          nothing that will wake you up.
+
+          You are finished only when every researcher and the scout has
+          reported AND docs/refresh/${{ steps.round.outputs.id }}-report.md
+          exists on disk. Nothing else counts as a completed round.
+
           PHASE 2 — TRIAGE
           Consolidate the reports. Drop every claim that has no
           resolvable source URL, and list what you dropped. For score
@@ -205,13 +222,40 @@ jobs:
             --allowedTools "Read,Grep,Glob,WebFetch,WebSearch,Write,Edit,Task"
           prompt: ${{ env.RESEARCH_PROMPT }}
 
+      # The action's exit code is not evidence that the round ran. Rounds 9
+      # and 10 both exited `is_error: false, subtype: success` having written
+      # nothing: the orchestrator dispatched its subagents, ended its turn to
+      # wait for them, and the headless session closed with `completed: 0`.
+      # A green step that produced no report is a failed attempt, so decide
+      # whether to retry from the artifact on disk, not from the outcome.
+      # No `always()` here: `continue-on-error` on the step above keeps the
+      # job green, so the default `success()` still runs this — while an
+      # earlier failure (preflight, checkout) correctly stops the job before
+      # it can pay for a second research attempt.
+      - name: Did attempt 1 actually produce a report?
+        id: attempt1
+        env:
+          ROUND: ${{ steps.round.outputs.id }}
+          OUTCOME: ${{ steps.research.outcome }}
+        run: |
+          set -euo pipefail
+          if [ "$OUTCOME" = "failure" ]; then
+            echo "::warning::Research attempt 1 failed outright — see the full Claude output above."
+            echo "retry=true" >> "$GITHUB_OUTPUT"
+          elif [ ! -f "docs/refresh/${ROUND}-report.md" ]; then
+            echo "::warning::Research attempt 1 reported success but wrote no report. Check subagent_stats in the output above: 'started_in_background' greater than 'completed' means the orchestrator ended its turn while subagents were still running."
+            echo "retry=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "retry=false" >> "$GITHUB_OUTPUT"
+          fi
+
       - name: Reset the tree before retrying
-        if: steps.research.outcome == 'failure'
+        if: steps.attempt1.outputs.retry == 'true'
         env:
           ROUND: ${{ steps.round.outputs.id }}
         run: |
           set -euo pipefail
-          echo "::warning::Research attempt 1 failed — see the full Claude output above. Discarding any partial writes and retrying once."
+          echo "::warning::Discarding any partial writes and retrying once."
           # Start attempt 2 from a clean slate so a half-written report or a
           # partially edited tools.json from attempt 1 cannot compound.
           git checkout -- .
@@ -219,7 +263,7 @@ jobs:
 
       - name: Research tools and write proposal (retry)
         id: research_retry
-        if: steps.research.outcome == 'failure'
+        if: steps.attempt1.outputs.retry == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
@@ -257,7 +301,7 @@ jobs:
 
           # A round that wrote no report did not demonstrably run.
           if [ ! -f "$REPORT" ]; then
-            echo "::error::No report at $REPORT. The research phase must write one every round, even when nothing changed."
+            echo "::error::No report at $REPORT after both attempts. The research phase must write one every round, even when nothing changed. Most likely cause: the orchestrator dispatched its subagents and ended its turn instead of waiting for them — check 'subagent_stats' in the Claude output above, where 'completed: 0' alongside a non-zero 'started_in_background' confirms it."
             exit 1
           fi
 

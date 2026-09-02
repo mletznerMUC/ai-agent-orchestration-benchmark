@@ -41,6 +41,10 @@ must be sourced and reproducible. When in doubt, understate.
   (`PLAN.md`) is the only shared state between phases. The expert
   panel is the one exception: three lens subagents in parallel,
   merged by the orchestrator.
+- Subagents run in the **foreground**, and an orchestrator never ends
+  its turn with one still running. A subagent that has not reported
+  back when the orchestrator stops is discarded — in CI that silently
+  ends the whole round, green and empty. See ADR-008.
 - Every agent pins its own model in frontmatter, by full model ID —
   see ADR-007 for the tier per agent and the rule behind it. Changing
   what the factory runs on is a commit, never a session setting.
