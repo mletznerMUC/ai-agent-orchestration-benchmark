@@ -142,7 +142,13 @@ function readLedgerStore(dir) {
   if (!existsSync(dir)) return store;
   for (const name of readdirSync(dir).sort()) {
     if (!name.endsWith('.json')) continue;
-    store.set(name, parseSessionFile(readFileSync(join(dir, name), 'utf8')));
+    // Name the file. A bare parse error here reads as a crash in the hook and
+    // says nothing about which of the committed records is unreadable.
+    try {
+      store.set(name, parseSessionFile(readFileSync(join(dir, name), 'utf8')));
+    } catch (cause) {
+      throw new Error(`cost: cannot read committed records in ${join(dir, name)} — ${cause.message}`, { cause });
+    }
   }
   return store;
 }
