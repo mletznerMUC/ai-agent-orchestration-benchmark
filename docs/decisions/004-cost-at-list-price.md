@@ -111,3 +111,58 @@ The guard is a safety catch, not a coverage fix. It protects what is already
 recorded; it does not make an ephemeral container able to see history, and
 spend from a session whose transcript never reaches the ledger machine
 remains missing exactly as the Coverage section says.
+
+## Amendment (2026-09-03): the priced records are committed, per session
+
+The shrink guard held, and that exposed the next problem. On 2026-09-02 the
+six September CI runs were recorded in `data/cost-ci-runs.json` — committed
+data, in the repository, $41.13 of genuine API spend — and `COST_CONTROL.md`
+kept saying no CI spend was included. It could not be regenerated from the
+session that added the data, because that container could not see the 727
+August requests and the guard correctly refused. It could only be
+regenerated on the one machine holding the August transcripts, and nothing
+had run there since. A ledger that is "a pure function of the transcripts on
+disk" is a function of *one disk*, and the factory no longer runs on one
+disk: every interactive session since 2026-08-24 has been a Claude Code web
+session, whose transcript dies with its container and never reaches that
+machine at all. Those sessions were not late to the ledger; they were
+structurally unreachable by it.
+
+So the records themselves are committed. `npm run cost` now does two things:
+it reads every transcript the current machine can see and merges the priced
+requests into `data/cost-ledger/<session>.json`, one file per session, and
+then it renders `COST_CONTROL.md` from that store plus `data/cost-ci-runs.json`.
+The merge is a union keyed by request: a machine adds what it can see and
+never removes what another machine committed, so a pruned cache or a partial
+transcript cannot shrink a session. A session's records are written by the
+machine that ran it — a laptop, a web container, wherever — and any checkout,
+including one with no transcripts at all, regenerates the same file from
+them. The rendered ledger is a function of the repository.
+
+What the store holds is what the transcripts' `usage` blocks said: request
+id, timestamp, model, agent, branch, session and token counts. No prompt or
+response text. One record per line, sorted, so a diff reads as the requests
+that were added.
+
+The shrink guard stays, unchanged, and now has a second job: it refuses the
+run that would seed an empty store from a machine that cannot see the
+history — exactly the September situation — until the machine that does has
+run `npm run cost` once. After that seeding, a web session's `SessionEnd`
+hook adds that session's records and the regenerated ledger to the working
+tree, and committing them is the right thing, not the catastrophe the first
+amendment describes.
+
+Consequences:
+- The store and the ledger move together. A run that is refused writes
+  neither; a run that succeeds writes both. A ledger ahead of or behind its
+  store is a defect.
+- `data/cost-ledger/` is generated data, regenerated in place, never edited
+  by hand, and — like the ledger — never served, scored, or cited.
+- Two sessions ending at once produce two independent session files and a
+  conflicting `COST_CONTROL.md`. Resolve by taking either side and running
+  `npm run cost` on any checkout; the store is the record, the markdown is a
+  render of it.
+- The Coverage gap narrows to what it actually is: runs that leave no
+  transcript anywhere, which is the two GitHub Actions workflows. Sessions
+  are missing only until the machine that ran them has run `npm run cost`
+  once and committed.
