@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1760" width="1200" height="1760" role="img" aria-label="Agentic refresh pipeline diagram">
-<rect width="1200" height="1760" fill="#ffffff"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 1858" width="1200" height="1858" role="img" aria-label="Agentic refresh pipeline diagram">
+<rect width="1200" height="1858" fill="#ffffff"/>
 <defs>
   <marker id="arw" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#71717a"/></marker>
   <marker id="arwg" viewBox="0 0 10 10" refX="8.5" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0 L10 5 L0 10 z" fill="#16a34a"/></marker>
@@ -25,7 +25,7 @@
 <rect x="140" y="304" width="520" height="50" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
 <rect x="140" y="304" width="5" height="50" rx="2.5" fill="#7c3aed"/>
 <text x="400" y="328" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">Research orchestrator</text>
-<text x="400" y="349" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">claude-opus-5 · dispatches every sub-agent in parallel</text>
+<text x="400" y="349" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">claude-opus-5 · dispatches all sub-agents in parallel · waits for every one</text>
 <rect x="572.6" y="313" width="77.4" height="19" rx="9.5" fill="#7c3aed"/>
 <text x="611.3" y="326" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">read-only</text>
 <rect x="140" y="394" width="230" height="66" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
@@ -41,7 +41,7 @@
 <path d="M400 354 L400 374 L255 374 L255 394" stroke="#7c3aed" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
 <path d="M400 354 L400 374 L545 374 L545 394" stroke="#7c3aed" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
 <rect x="140" y="470" width="520" height="30" rx="8" fill="#fef2f2" stroke="#dc2626" stroke-width="1.2" stroke-dasharray="5 4"/>
-<text x="400" y="489" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#b91c1c" text-anchor="middle">↻  transient is_error → reset &amp; retry once (attempt 1 → reset → attempt 2)</text>
+<text x="400" y="489" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12" font-weight="600" fill="#b91c1c" text-anchor="middle">↻  attempt 1 failed or wrote no report → reset &amp; retry once (ADR-008)</text>
 <path d="M400 500 L400 526" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
 <rect x="140" y="526" width="520" height="50" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
 <rect x="140" y="526" width="5" height="50" rx="2.5" fill="#7c3aed"/>
@@ -58,130 +58,137 @@
 <text x="400" y="704" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#92400e" text-anchor="middle">Guard: the served HTML pages must stay untouched</text>
 <text x="84" y="208" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="800" fill="#a1a1aa" text-anchor="start">PHASE 1–2 · refresh.yml · read-only research (scheduled)</text>
 <rect x="70" y="186" width="660" height="546" rx="16" fill="none" stroke="#e4e4e7" stroke-width="1.4"/>
-<path d="M400 732 L400 756" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<polygon points="400,756 492,796 400,836 308,796" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
-<text x="400" y="792" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400e" text-anchor="middle">What</text>
-<text x="400" y="808" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400e" text-anchor="middle">changed?</text>
-<rect x="74" y="858" width="216" height="46" rx="12" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
-<rect x="74" y="858" width="5" height="46" rx="2.5" fill="#c7c7cc"/>
-<text x="182" y="882" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3f3f46" text-anchor="middle">no PR</text>
-<text x="182" y="903" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">nothing moved · report to summary</text>
-<rect x="512" y="858" width="216" height="46" rx="12" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
-<rect x="512" y="858" width="5" height="46" rx="2.5" fill="#c7c7cc"/>
-<text x="620" y="882" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3f3f46" text-anchor="middle">PR  refresh:radar</text>
-<text x="620" y="903" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">findings only · nothing to apply</text>
-<path d="M308 796 L308 827 L182 827 L182 858" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<path d="M492 796 L492 827 L620 827 L620 858" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<rect x="140" y="926" width="520" height="52" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-<rect x="140" y="926" width="5" height="52" rx="2.5" fill="#2563eb"/>
-<text x="400" y="950" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">PR labelled  refresh:proposed</text>
-<text x="400" y="971" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">data changed · verify is RED here (expected — pages not updated yet)</text>
-<path d="M400 836 L400 926" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<path d="M400 978 L400 1002" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="140" y="1002" width="520" height="50" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
-<rect x="140" y="1002" width="5" height="50" rx="2.5" fill="#16a34a"/>
-<text x="400" y="1026" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★  HUMAN GATE 1 — Markus</text>
-<text x="400" y="1047" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">reviews → adds label  refresh:approved  (data changes only)</text>
-<path d="M400 1052 L400 1078" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="408" y="1055" width="146.29999999999998" height="20" rx="10" fill="#fff" stroke="#e4e4e7"/>
-<text x="481.15" y="1069" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#52525b" text-anchor="middle">label fires apply.yml</text>
-<rect x="140" y="1118" width="520" height="44" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-<rect x="140" y="1118" width="5" height="44" rx="2.5" fill="#2563eb"/>
-<text x="400" y="1142" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">apply.yml · guards</text>
-<text x="400" y="1163" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">data-only diff · pages not pre-edited · tools.json changed</text>
-<path d="M400 1162 L400 1188" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<rect x="140" y="1188" width="520" height="68" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
-<rect x="140" y="1188" width="5" height="68" rx="2.5" fill="#7c3aed"/>
-<text x="400" y="1212" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">Apply agent  —  the coding agent</text>
-<text x="400" y="1233" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">claude-opus-5 (+ per-file sub-agents) writes:</text>
-<text x="400" y="1249" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">index.html (DE) · index.en.html (EN) · changelog · as-of stamp</text>
-<rect x="559.4" y="1197" width="90.6" height="19" rx="9.5" fill="#7c3aed"/>
-<text x="604.7" y="1210" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">writes code</text>
-<path d="M400 1256 L400 1282" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<rect x="140" y="1282" width="520" height="46" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-<rect x="140" y="1282" width="5" height="46" rx="2.5" fill="#2563eb"/>
-<text x="400" y="1306" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">Verify before push  ✓</text>
-<text x="400" y="1327" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">npm test  +  npm run verify  —  must pass (data ⇄ pages, ADR-001)</text>
-<path d="M400 1328 L400 1354" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<rect x="140" y="1354" width="520" height="44" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-<rect x="140" y="1354" width="5" height="44" rx="2.5" fill="#2563eb"/>
-<text x="400" y="1378" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">Push applied update to the PR branch</text>
-<text x="400" y="1399" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">does NOT merge · verify now turns GREEN</text>
-<text x="84" y="1100" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="800" fill="#a1a1aa" text-anchor="start">PHASE 3–5 · apply.yml · fires on refresh:approved</text>
-<rect x="70" y="1078" width="660" height="342" rx="16" fill="none" stroke="#e4e4e7" stroke-width="1.4"/>
-<path d="M400 1420 L400 1444" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="140" y="1444" width="520" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
-<rect x="140" y="1444" width="5" height="46" rx="2.5" fill="#16a34a"/>
-<text x="400" y="1468" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★  HUMAN GATE 2 — Markus</text>
-<text x="400" y="1489" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">reviews → merges the PR to  main  (agents never merge)</text>
-<path d="M400 1490 L400 1514" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="140" y="1514" width="520" height="44" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-<rect x="140" y="1514" width="5" height="44" rx="2.5" fill="#2563eb"/>
-<text x="400" y="1538" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">verify.yml on push to main</text>
-<text x="400" y="1559" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">npm test + npm run verify → GREEN</text>
-<path d="M400 1558 L400 1582" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="140" y="1582" width="520" height="54" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/>
-<rect x="140" y="1582" width="5" height="54" rx="2.5" fill="#16a34a"/>
-<text x="400" y="1606" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#166534" text-anchor="middle">GitHub Pages — site updated</text>
-<text x="400" y="1627" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">index.html / index.en.html served live</text>
-<text x="800" y="806" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="800" fill="#a1a1aa" text-anchor="start">CODING-AGENT LINES · /feature · /hotfix</text>
-<path d="M728 881 L800 881" stroke="#7c3aed" stroke-width="1.8" fill="none" stroke-dasharray="5 4" marker-end="url(#arwp)"/>
-<text x="764" y="875" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#7c3aed" text-anchor="middle">radar candidate</text>
-<rect x="825" y="858" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
-<rect x="825" y="858" width="5" height="46" rx="2.5" fill="#7c3aed"/>
-<text x="990" y="882" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">refine</text>
-<text x="990" y="903" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">rough idea → defined task</text>
+<path d="M400 732 L400 750" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="140" y="750" width="520" height="44" rx="12" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+<rect x="140" y="750" width="5" height="44" rx="2.5" fill="#b45309"/>
+<text x="400" y="771" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400e" text-anchor="middle">Only a full round proposes</text>
+<text x="400" y="787" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="400" fill="#92400e" text-anchor="middle">a narrowed round (tools filter or scout off) reports and archives — no branch, commit or PR</text>
+<path d="M400 794 L400 818" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<polygon points="400,818 492,858 400,898 308,858" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+<text x="400" y="854" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400e" text-anchor="middle">What</text>
+<text x="400" y="870" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="13" font-weight="700" fill="#92400e" text-anchor="middle">changed?</text>
+<rect x="74" y="920" width="216" height="46" rx="12" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
+<rect x="74" y="920" width="5" height="46" rx="2.5" fill="#c7c7cc"/>
+<text x="182" y="944" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3f3f46" text-anchor="middle">no PR</text>
+<text x="182" y="965" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">nothing moved · report to summary</text>
+<rect x="512" y="920" width="216" height="46" rx="12" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
+<rect x="512" y="920" width="5" height="46" rx="2.5" fill="#c7c7cc"/>
+<text x="620" y="944" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3f3f46" text-anchor="middle">PR  refresh:radar</text>
+<text x="620" y="965" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">findings only · nothing to apply</text>
+<path d="M308 858 L308 889 L182 889 L182 920" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<path d="M492 858 L492 889 L620 889 L620 920" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="140" y="988" width="520" height="66" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+<rect x="140" y="988" width="5" height="66" rx="2.5" fill="#2563eb"/>
+<text x="400" y="1012" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">PR labelled  refresh:proposed</text>
+<text x="400" y="1033" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">data changed · verify is RED here (expected — pages not updated yet)</text>
+<text x="400" y="1049" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">branch cut from freshly fetched origin/main (ADR-009)</text>
+<path d="M400 898 L400 988" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<path d="M400 1054 L400 1078" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="140" y="1078" width="520" height="50" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+<rect x="140" y="1078" width="5" height="50" rx="2.5" fill="#16a34a"/>
+<text x="400" y="1102" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★  HUMAN GATE 1 — Markus</text>
+<text x="400" y="1123" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">reviews → adds label  refresh:approved  (data changes only)</text>
+<path d="M400 1128 L400 1154" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="408" y="1131" width="146.29999999999998" height="20" rx="10" fill="#fff" stroke="#e4e4e7"/>
+<text x="481.15" y="1145" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" font-weight="600" fill="#52525b" text-anchor="middle">label fires apply.yml</text>
+<rect x="140" y="1194" width="520" height="44" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+<rect x="140" y="1194" width="5" height="44" rx="2.5" fill="#2563eb"/>
+<text x="400" y="1218" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">apply.yml · guards</text>
+<text x="400" y="1239" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">data-only diff · pages not pre-edited · tools.json changed</text>
+<path d="M400 1238 L400 1264" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="140" y="1264" width="520" height="68" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+<rect x="140" y="1264" width="5" height="68" rx="2.5" fill="#7c3aed"/>
+<text x="400" y="1288" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">Apply agent  —  the coding agent</text>
+<text x="400" y="1309" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">claude-opus-5 (+ per-file sub-agents) writes:</text>
+<text x="400" y="1325" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">index.html (DE) · index.en.html (EN) · changelog · as-of stamp</text>
+<rect x="559.4" y="1273" width="90.6" height="19" rx="9.5" fill="#7c3aed"/>
+<text x="604.7" y="1286" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#fff" text-anchor="middle">writes code</text>
+<path d="M400 1332 L400 1358" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="140" y="1358" width="520" height="46" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+<rect x="140" y="1358" width="5" height="46" rx="2.5" fill="#2563eb"/>
+<text x="400" y="1382" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">Verify before push  ✓</text>
+<text x="400" y="1403" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">npm test  +  npm run verify  —  must pass (data ⇄ pages, ADR-001)</text>
+<path d="M400 1404 L400 1430" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="140" y="1430" width="520" height="66" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+<rect x="140" y="1430" width="5" height="66" rx="2.5" fill="#2563eb"/>
+<text x="400" y="1454" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">Push applied update to the PR branch</text>
+<text x="400" y="1475" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">does NOT merge · verify now turns GREEN</text>
+<text x="400" y="1491" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">stages the two pages by name · any other tracked file fails the run (ADR-010)</text>
+<text x="84" y="1176" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="800" fill="#a1a1aa" text-anchor="start">PHASE 3–5 · apply.yml · fires on refresh:approved</text>
+<rect x="70" y="1154" width="660" height="364" rx="16" fill="none" stroke="#e4e4e7" stroke-width="1.4"/>
+<path d="M400 1518 L400 1542" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="140" y="1542" width="520" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+<rect x="140" y="1542" width="5" height="46" rx="2.5" fill="#16a34a"/>
+<text x="400" y="1566" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★  HUMAN GATE 2 — Markus</text>
+<text x="400" y="1587" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">reviews → merges the PR to  main  (agents never merge)</text>
+<path d="M400 1588 L400 1612" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="140" y="1612" width="520" height="44" rx="12" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+<rect x="140" y="1612" width="5" height="44" rx="2.5" fill="#2563eb"/>
+<text x="400" y="1636" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#1e40af" text-anchor="middle">verify.yml on push to main</text>
+<text x="400" y="1657" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">npm test + npm run verify → GREEN</text>
+<path d="M400 1656 L400 1680" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="140" y="1680" width="520" height="54" rx="12" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/>
+<rect x="140" y="1680" width="5" height="54" rx="2.5" fill="#16a34a"/>
+<text x="400" y="1704" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#166534" text-anchor="middle">GitHub Pages — site updated</text>
+<text x="400" y="1725" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">index.html / index.en.html served live</text>
+<text x="800" y="868" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="800" fill="#a1a1aa" text-anchor="start">CODING-AGENT LINES · /feature · /hotfix</text>
+<path d="M728 943 L800 943" stroke="#7c3aed" stroke-width="1.8" fill="none" stroke-dasharray="5 4" marker-end="url(#arwp)"/>
+<text x="764" y="937" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" font-weight="700" fill="#7c3aed" text-anchor="middle">radar candidate</text>
 <rect x="825" y="920" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
 <rect x="825" y="920" width="5" height="46" rx="2.5" fill="#7c3aed"/>
-<text x="990" y="944" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">planner</text>
-<text x="990" y="965" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">writes PLAN.md</text>
-<path d="M990 904 L990 920" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<text x="990" y="944" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">refine</text>
+<text x="990" y="965" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">rough idea → defined task</text>
 <rect x="825" y="982" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
 <rect x="825" y="982" width="5" height="46" rx="2.5" fill="#7c3aed"/>
-<text x="990" y="1006" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">expert panel — 3 lenses</text>
-<text x="990" y="1027" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">architecture · security · compliance</text>
+<text x="990" y="1006" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">planner</text>
+<text x="990" y="1027" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">writes PLAN.md</text>
 <path d="M990 966 L990 982" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<rect x="825" y="1044" width="330" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
-<rect x="825" y="1044" width="5" height="46" rx="2.5" fill="#16a34a"/>
-<text x="990" y="1068" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★ GATE — Markus</text>
-<text x="990" y="1089" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">plan approval</text>
-<path d="M990 1028 L990 1044" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="825" y="1106" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
-<rect x="825" y="1106" width="5" height="46" rx="2.5" fill="#7c3aed"/>
-<text x="990" y="1130" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">implementer</text>
-<text x="990" y="1151" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">builds it on a feature branch</text>
-<path d="M990 1090 L990 1106" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="825" y="1168" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
-<rect x="825" y="1168" width="5" height="46" rx="2.5" fill="#7c3aed"/>
-<text x="990" y="1192" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">reviewer</text>
-<text x="990" y="1213" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">checks vs plan · runs verify · drafts PR</text>
-<path d="M990 1152 L990 1168" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
-<rect x="825" y="1230" width="330" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
-<rect x="825" y="1230" width="5" height="46" rx="2.5" fill="#16a34a"/>
-<text x="990" y="1254" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★ GATE — Markus</text>
-<text x="990" y="1275" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">merge to main</text>
-<path d="M990 1214 L990 1230" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<rect x="825" y="1292" width="330" height="48" rx="12" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
-<rect x="825" y="1292" width="5" height="48" rx="2.5" fill="#c7c7cc"/>
-<text x="990" y="1316" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3f3f46" text-anchor="middle">new tool → data/tools.json</text>
-<text x="990" y="1337" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">scored vs every published criterion</text>
-<path d="M990 1276 L990 1292" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
-<text x="816" y="1358" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#71717a" text-anchor="start">/hotfix line: investigate → fix → reviewer → one gate (merge).</text>
-<text x="816" y="1376" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#71717a" text-anchor="start">Each phase = one sub-agent, clean context; PLAN.md is the</text>
-<text x="816" y="1394" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#71717a" text-anchor="start">only shared state between phases.</text>
-<rect x="800" y="818" width="380" height="592" rx="16" fill="none" stroke="#e4e4e7" stroke-width="1.4"/>
-<rect x="70" y="1664" width="1060" height="72" rx="12" fill="#fbfbfc" stroke="#e4e4e7"/>
-<rect x="92" y="1686" width="18" height="18" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
-<text x="118" y="1699" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Automatic / CI step</text>
-<rect x="285" y="1686" width="18" height="18" rx="4" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
-<text x="311" y="1699" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">AI agent</text>
-<rect x="401" y="1686" width="18" height="18" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
-<text x="427" y="1699" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Human gate (Markus)</text>
-<rect x="594" y="1686" width="18" height="18" rx="4" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
-<text x="620" y="1699" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Artifact / data</text>
-<rect x="759" y="1686" width="18" height="18" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
-<text x="785" y="1699" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Guard / caution</text>
-<rect x="924" y="1686" width="18" height="18" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/>
-<text x="950" y="1699" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Published site</text>
-<text x="82" y="1724" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" fill="#a1a1aa" text-anchor="start">Data integrity: no score changes without a verifiable source (CLAUDE.md rule 1, ADR-002). The verifier proves data/tools.json and both HTML files agree (ADR-001).</text>
+<rect x="825" y="1058" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+<rect x="825" y="1058" width="5" height="46" rx="2.5" fill="#7c3aed"/>
+<text x="990" y="1082" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">expert panel — 3 lenses</text>
+<text x="990" y="1103" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">architecture · security · compliance</text>
+<path d="M990 1028 L990 1058" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="825" y="1120" width="330" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+<rect x="825" y="1120" width="5" height="46" rx="2.5" fill="#16a34a"/>
+<text x="990" y="1144" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★ GATE — Markus</text>
+<text x="990" y="1165" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">plan approval</text>
+<path d="M990 1104 L990 1120" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="825" y="1182" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+<rect x="825" y="1182" width="5" height="46" rx="2.5" fill="#7c3aed"/>
+<text x="990" y="1206" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">implementer</text>
+<text x="990" y="1227" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">builds it on a feature branch</text>
+<path d="M990 1166 L990 1182" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="825" y="1244" width="330" height="46" rx="12" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+<rect x="825" y="1244" width="5" height="46" rx="2.5" fill="#7c3aed"/>
+<text x="990" y="1268" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#6d28d9" text-anchor="middle">reviewer</text>
+<text x="990" y="1289" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">checks vs plan · runs verify · drafts PR</text>
+<path d="M990 1228 L990 1244" stroke="#71717a" stroke-width="1.8" fill="none" marker-end="url(#arw)"/>
+<rect x="825" y="1306" width="330" height="46" rx="12" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+<rect x="825" y="1306" width="5" height="46" rx="2.5" fill="#16a34a"/>
+<text x="990" y="1330" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#15803d" text-anchor="middle">★ GATE — Markus</text>
+<text x="990" y="1351" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">merge to main</text>
+<path d="M990 1290 L990 1306" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<rect x="825" y="1368" width="330" height="48" rx="12" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
+<rect x="825" y="1368" width="5" height="48" rx="2.5" fill="#c7c7cc"/>
+<text x="990" y="1392" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="15" font-weight="700" fill="#3f3f46" text-anchor="middle">new tool → data/tools.json</text>
+<text x="990" y="1413" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" font-weight="400" fill="#52525b" text-anchor="middle">scored vs every published criterion</text>
+<path d="M990 1352 L990 1368" stroke="#16a34a" stroke-width="1.8" fill="none" marker-end="url(#arwg)"/>
+<text x="816" y="1434" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#71717a" text-anchor="start">/hotfix line: investigate → fix → reviewer → one gate (merge).</text>
+<text x="816" y="1452" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#71717a" text-anchor="start">Each phase = one sub-agent, clean context; PLAN.md is the</text>
+<text x="816" y="1470" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11.5" fill="#71717a" text-anchor="start">only shared state between phases.</text>
+<rect x="800" y="880" width="380" height="592" rx="16" fill="none" stroke="#e4e4e7" stroke-width="1.4"/>
+<rect x="70" y="1762" width="1060" height="72" rx="12" fill="#fbfbfc" stroke="#e4e4e7"/>
+<rect x="92" y="1784" width="18" height="18" rx="4" fill="#eff6ff" stroke="#2563eb" stroke-width="1.6"/>
+<text x="118" y="1797" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Automatic / CI step</text>
+<rect x="285" y="1784" width="18" height="18" rx="4" fill="#f5f3ff" stroke="#7c3aed" stroke-width="1.6"/>
+<text x="311" y="1797" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">AI agent</text>
+<rect x="401" y="1784" width="18" height="18" rx="4" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.6"/>
+<text x="427" y="1797" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Human gate (Markus)</text>
+<rect x="594" y="1784" width="18" height="18" rx="4" fill="#f7f7f8" stroke="#c7c7cc" stroke-width="1.6"/>
+<text x="620" y="1797" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Artifact / data</text>
+<rect x="759" y="1784" width="18" height="18" rx="4" fill="#fffbeb" stroke="#b45309" stroke-width="1.6"/>
+<text x="785" y="1797" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Guard / caution</text>
+<rect x="924" y="1784" width="18" height="18" rx="4" fill="#dcfce7" stroke="#16a34a" stroke-width="1.6"/>
+<text x="950" y="1797" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="12.5" fill="#3f3f46" text-anchor="start">Published site</text>
+<text x="82" y="1822" font-family="-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif" font-size="11" fill="#a1a1aa" text-anchor="start">Data integrity: no score changes without a verifiable source (CLAUDE.md rule 1, ADR-002). The verifier proves data/tools.json and both HTML files agree (ADR-001).</text>
 </svg>
