@@ -54,7 +54,10 @@ that overstates what was checked.
 
 For a full round: `data changed` → a PR labelled `refresh:proposed` (`verify`
 is expected to be **red** here — the data no longer matches the pages);
-`radar only` → `refresh:radar`; `neither` → no PR, report to the run summary.
+`radar only` → `refresh:radar`; `neither` → no PR. The report reaches the run
+summary and is archived as an artifact on every round either way, so a round
+that proposes nothing still leaves evidence that it ran.
+
 The proposal branch `refresh/<round>` is cut from a **freshly fetched**
 `origin/main` at the moment it proposes, not from the commit the job checked
 out when it started, with only `data/tools.json` and `docs/refresh/` restored
