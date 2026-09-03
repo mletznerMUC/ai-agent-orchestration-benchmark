@@ -15,6 +15,12 @@ import {
   recordsFromManual,
   recordedTotals,
   shrinkRefusal,
+  sortRecords,
+  groupBySession,
+  mergeSessionRecords,
+  sessionFileName,
+  serializeSessionFile,
+  parseSessionFile,
 } from './cost.mjs';
 
 const PRICING = JSON.parse(
@@ -353,4 +359,82 @@ test('shrinkRefusal catches a session-count drop even when requests grow', () =>
   const refusal = shrinkRefusal({ requests: 727, sessions: 5 }, { requests: 900, sessions: 1 });
   assert.match(refusal, /sessions 5 -> 1/);
   assert.doesNotMatch(refusal, /requests/);
+});
+
+// --- the committed record store ------------------------------------------
+
+const stored = (id, outputTokens, timestamp = '2026-08-11T15:46:12.237Z') => ({
+  id, outputTokens, timestamp, agent: 'orchestrator (main session)', sessionId: 'sess-1', inputTokens: 8,
+});
+
+test('mergeSessionRecords keeps every committed request and adds the new ones', () => {
+  const merged = mergeSessionRecords(
+    [stored('msg_1', 10), stored('msg_2', 20)],
+    [stored('msg_2', 20), stored('msg_3', 30, '2026-08-11T15:47:00.000Z')],
+  );
+  assert.deepEqual(merged.map((r) => r.id), ['msg_1', 'msg_2', 'msg_3']);
+});
+
+test('mergeSessionRecords upgrades a streaming partial to its completed count', () => {
+  const merged = mergeSessionRecords([stored('msg_1', 2)], [stored('msg_1', 267)]);
+  assert.equal(merged.length, 1);
+  assert.equal(merged[0].outputTokens, 267);
+});
+
+test('mergeSessionRecords does not lose a request this machine can no longer see', () => {
+  // A pruned local cache shows one request; the repository holds three.
+  const merged = mergeSessionRecords(
+    [stored('msg_1', 1), stored('msg_2', 2), stored('msg_3', 3)],
+    [stored('msg_2', 2)],
+  );
+  assert.equal(merged.length, 3);
+});
+
+test('sortRecords orders by time, then agent, then id, so a rewrite is stable', () => {
+  const records = [
+    { id: 'b', timestamp: '2026-08-11T15:46:12.237Z', agent: 'reviewer' },
+    { id: 'a', timestamp: '2026-08-11T15:46:12.237Z', agent: 'reviewer' },
+    { id: 'c', timestamp: '2026-08-11T15:46:12.237Z', agent: 'implementer' },
+    { id: 'd', timestamp: '2026-08-11T15:40:00.000Z', agent: 'reviewer' },
+  ];
+  assert.deepEqual(sortRecords(records).map((r) => r.id), ['d', 'c', 'a', 'b']);
+  assert.deepEqual(sortRecords(sortRecords(records)), sortRecords(records));
+});
+
+test('groupBySession buckets records by session and never drops an untagged one', () => {
+  const groups = groupBySession([
+    { id: 1, sessionId: 'sess-1' },
+    { id: 2, sessionId: 'sess-2' },
+    { id: 3, sessionId: 'sess-1' },
+    { id: 4, sessionId: null },
+  ]);
+  assert.deepEqual([...groups.keys()].sort(), ['sess-1', 'sess-2', 'unknown']);
+  assert.equal(groups.get('sess-1').length, 2);
+});
+
+test('sessionFileName only ever produces a plain file name', () => {
+  assert.equal(sessionFileName('07021cfd-0000-4000-8000-000000000000'), '07021cfd-0000-4000-8000-000000000000.json');
+  assert.equal(sessionFileName('../etc/passwd'), '.._etc_passwd.json');
+  assert.equal(sessionFileName(null), 'unknown.json');
+});
+
+test('a session file round-trips its commands and records', () => {
+  const records = [stored('msg_2', 20, '2026-08-11T15:47:00.000Z'), stored('msg_1', 10)];
+  const text = serializeSessionFile({ session: 'sess-1', commands: ['/feature', '/feature'], records });
+  const parsed = parseSessionFile(text);
+  assert.equal(parsed.session, 'sess-1');
+  assert.deepEqual(parsed.commands, ['/feature']);
+  assert.deepEqual(parsed.records.map((r) => r.id), ['msg_1', 'msg_2']);
+  assert.equal(serializeSessionFile(parsed), text);
+});
+
+test('a session file keeps one record per line, so a diff reads as added requests', () => {
+  const text = serializeSessionFile({ session: 's', records: [stored('a', 1), stored('b', 2)] });
+  const recordLines = text.split('\n').filter((l) => l.includes('"id":'));
+  assert.equal(recordLines.length, 2);
+});
+
+test('parseSessionFile rejects a file that is not a session file', () => {
+  assert.throws(() => parseSessionFile('[]'));
+  assert.throws(() => parseSessionFile('{"session":"s"}'));
 });

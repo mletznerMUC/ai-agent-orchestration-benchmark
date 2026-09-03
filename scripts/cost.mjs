@@ -1,16 +1,27 @@
 /**
- * Writes COST_CONTROL.md from this project's Claude Code session transcripts.
+ * Writes COST_CONTROL.md from this project's priced request records.
  *
  * Run it after every run: `npm run cost` (a SessionEnd hook does this
- * automatically — see .claude/settings.json). The file is regenerated whole
- * every time, so it is always a function of the transcripts on disk, never an
- * append-only log that can drift.
+ * automatically — see .claude/settings.json). Two steps, every time:
+ *
+ *   1. Every Claude Code transcript this machine can see is read, and its
+ *      requests are merged into the committed record store, one file per
+ *      session under data/cost-ledger/. The merge is a union: a machine adds
+ *      what it can see and never removes what another machine committed.
+ *   2. COST_CONTROL.md is regenerated whole from the store plus the manually
+ *      recorded CI runs, so it is a function of the repository, never an
+ *      append-only log that can drift — and any checkout can regenerate it.
  *
  * Reads:
  *   ~/.claude/projects/<encoded-cwd>/*.jsonl                 main sessions
  *   ~/.claude/projects/<encoded-cwd>/<id>/subagents/*.jsonl   subagent runs
+ *   data/cost-ledger/<session>.json                           committed records
  *   data/model-pricing.json                                   published rates
  *   data/cost-ci-runs.json                                    optional, manual
+ *
+ * Writes:
+ *   data/cost-ledger/<session>.json   for each session seen in a transcript
+ *   COST_CONTROL.md
  *
  * Env:
  *   CLAUDE_PROJECTS_DIR   override the transcript directory
@@ -18,7 +29,7 @@
  *   COST_ALLOW_SHRINK     set to 1 to publish a ledger smaller than the
  *                         committed one (see the shrink guard in main)
  */
-import { readFileSync, readdirSync, existsSync, writeFileSync, statSync } from 'node:fs';
+import { readFileSync, readdirSync, existsSync, writeFileSync, statSync, mkdirSync } from 'node:fs';
 import { join, basename } from 'node:path';
 import { homedir } from 'node:os';
 import { fileURLToPath } from 'node:url';
@@ -31,6 +42,11 @@ import {
   classifyWorkflow,
   recordedTotals,
   shrinkRefusal,
+  groupBySession,
+  mergeSessionRecords,
+  sessionFileName,
+  serializeSessionFile,
+  parseSessionFile,
 } from './lib/cost.mjs';
 
 const ROOT = new URL('../', import.meta.url);
@@ -116,6 +132,39 @@ function readProject(dir) {
   }
 
   return { records, commandsBySession, sessionCount: main.length, subagentTasks };
+}
+
+// --- the committed record store ------------------------------------------
+
+/** Every session file in the store, keyed by file name. */
+function readLedgerStore(dir) {
+  const store = new Map();
+  if (!existsSync(dir)) return store;
+  for (const name of readdirSync(dir).sort()) {
+    if (!name.endsWith('.json')) continue;
+    store.set(name, parseSessionFile(readFileSync(join(dir, name), 'utf8')));
+  }
+  return store;
+}
+
+/**
+ * Folds the requests this machine can see into the store. Returns the file
+ * names whose content changed, so only those are written.
+ */
+function mergeIntoStore(store, records, commandsBySession) {
+  const changed = new Set();
+  for (const [sessionId, fresh] of groupBySession(records)) {
+    const name = sessionFileName(sessionId);
+    const previous = store.get(name) ?? { session: sessionId, commands: [], records: [] };
+    const next = {
+      session: previous.session,
+      commands: [...new Set([...previous.commands, ...(commandsBySession.get(sessionId) ?? [])])].sort(),
+      records: mergeSessionRecords(previous.records, fresh),
+    };
+    if (serializeSessionFile(next) !== serializeSessionFile(previous)) changed.add(name);
+    store.set(name, next);
+  }
+  return changed;
 }
 
 // --- formatting -----------------------------------------------------------
@@ -273,15 +322,19 @@ function render(agg, meta) {
   p();
   p('What this ledger sees, and what it does not:');
   p();
-  p('- **Covered:** every local Claude Code session for this project, including each');
-  p('  subagent run (`researcher`, `scout`, `planner`, `implementer`, `reviewer`, …),');
-  p('  because subagents write their own transcripts.');
-  p('- **Not covered automatically:** runs with no transcript on this machine — the');
+  p('- **Covered:** every Claude Code session for this project whose transcript has');
+  p('  been read by `npm run cost` on the machine that ran it, including each subagent');
+  p('  run (`researcher`, `scout`, `planner`, `implementer`, `reviewer`, …), because');
+  p('  subagents write their own transcripts. Each session\'s priced requests are');
+  p('  committed under [`data/cost-ledger/`](data/cost-ledger/), so this file can be');
+  p('  regenerated from any checkout — a session is missing only until the machine');
+  p('  that ran it has run `npm run cost` once and committed the result.');
+  p('- **Not covered automatically:** runs that leave no transcript anywhere — the');
   p('  scheduled `refresh-research` and `apply` GitHub Actions runs, which call');
-  p('  `anthropics/claude-code-action` with a real API key, and any session run on');
-  p('  another machine. These are genuine API spend and are the largest known gap.');
+  p('  `anthropics/claude-code-action` with a real API key. These are genuine API');
+  p('  spend and are the largest known gap.');
   p('- **How to close it:** record them in `data/cost-ci-runs.json` as an array of');
-  p('  entries; the next `npm run cost` prices them alongside the transcripts.');
+  p('  entries; the next `npm run cost`, on any machine, prices them alongside.');
   p();
   p('```json');
   p('[');
@@ -301,7 +354,8 @@ function render(agg, meta) {
   p('```');
   p();
   if (meta.manualCount) {
-    p(`${meta.manualCount} manually recorded run(s) from \`data/cost-ci-runs.json\` are included above.`);
+    p(`${meta.manualCount} manually recorded run(s) from \`data/cost-ci-runs.json\` are included above,`);
+    p(`alongside ${num(meta.storedSessions)} session(s) from \`data/cost-ledger/\`.`);
   } else {
     p('`data/cost-ci-runs.json` is currently absent or empty, so no CI spend is included.');
   }
@@ -325,14 +379,27 @@ function render(agg, meta) {
 function main() {
   const repoRoot = fileURLToPath(ROOT).replace(/\/$/, '');
   const dir = projectsDir(repoRoot);
-  if (!existsSync(dir)) {
-    console.error(`cost: no transcript directory at ${dir}`);
-    console.error('cost: set CLAUDE_PROJECTS_DIR if transcripts live elsewhere.');
-    process.exit(1);
-  }
+  const storeDir = fileURLToPath(new URL('data/cost-ledger/', ROOT));
 
   const pricing = JSON.parse(readFileSync(new URL('data/model-pricing.json', ROOT), 'utf8'));
-  const { records, commandsBySession, subagentTasks } = readProject(dir);
+
+  // What this machine can see. A checkout with no transcripts at all — CI, a
+  // fresh clone — still regenerates from the committed store; it just has
+  // nothing to add to it.
+  let seen = { records: [], commandsBySession: new Map(), subagentTasks: [] };
+  if (existsSync(dir)) {
+    seen = readProject(dir);
+  } else {
+    console.warn(`cost: no transcript directory at ${dir}; nothing new to record.`);
+    console.warn('cost: set CLAUDE_PROJECTS_DIR if transcripts live elsewhere.');
+  }
+
+  const store = readLedgerStore(storeDir);
+  const changed = mergeIntoStore(store, dedupe(seen.records), seen.commandsBySession);
+  const committed = [...store.values()].flatMap((s) => s.records);
+  const commandsBySession = new Map(
+    [...store.values()].filter((s) => s.commands.length).map((s) => [s.session, s.commands]),
+  );
 
   const manualPath = new URL('data/cost-ci-runs.json', ROOT);
   let manual = [];
@@ -341,9 +408,9 @@ function main() {
     manual = recordsFromManual(Array.isArray(parsed) ? parsed : (parsed.runs ?? []));
   }
 
-  const all = [...dedupe(records), ...manual];
+  const all = [...committed, ...manual];
   if (!all.length) {
-    console.error(`cost: no priced requests found in ${dir}`);
+    console.error(`cost: no priced requests found in ${dir} or ${storeDir}`);
     process.exit(1);
   }
 
@@ -354,16 +421,19 @@ function main() {
     pricing,
     commandsBySession,
     manualCount: manual.length,
+    storedSessions: store.size,
     usedModels,
   });
 
   const outPath = new URL('COST_CONTROL.md', ROOT);
   const outFile = fileURLToPath(outPath);
 
-  // The ledger only ever grows on the machine that does the work, so a run
-  // reporting less than the committed file is a machine that cannot see the
-  // history — an ephemeral cloud container, a fresh clone, a pruned cache.
-  // Refuse rather than publish a total that is an order of magnitude too low.
+  // The store only ever grows, so a run reporting less than the committed file
+  // is a checkout whose store has not yet been seeded with the history the
+  // file already reports — an ephemeral cloud container, a fresh clone, before
+  // the machine holding the transcripts has run this once. Refuse rather than
+  // publish a total that is an order of magnitude too low, and write nothing:
+  // the store and the ledger move together or not at all.
   const previous = existsSync(outFile) ? recordedTotals(readFileSync(outFile, 'utf8')) : null;
   const refusal = shrinkRefusal(previous, {
     requests: agg.totals.requests,
@@ -371,18 +441,23 @@ function main() {
   });
   if (refusal && process.env.COST_ALLOW_SHRINK !== '1') {
     console.error(`cost: refusing to overwrite COST_CONTROL.md — it would shrink (${refusal}).`);
-    console.error(`cost: only ${agg.totals.requests} request(s) are visible in ${dir},`);
-    console.error('cost: which is fewer than the committed ledger records. This machine');
-    console.error('cost: cannot see the full transcript history, so the file is left as is.');
-    console.error('cost: if the shrink is intended, rerun with COST_ALLOW_SHRINK=1.');
+    console.error(`cost: only ${agg.totals.requests} request(s) are visible from ${dir}`);
+    console.error(`cost: plus ${storeDir}, which is fewer than the committed ledger records.`);
+    console.error('cost: this checkout cannot see the full history, so nothing is written.');
+    console.error('cost: run this once on the machine that holds the transcripts to seed');
+    console.error('cost: data/cost-ledger/; if the shrink is intended, rerun with COST_ALLOW_SHRINK=1.');
     process.exit(1);
   }
 
+  mkdirSync(storeDir, { recursive: true });
+  for (const name of changed) {
+    writeFileSync(join(storeDir, name), serializeSessionFile(store.get(name)));
+  }
   writeFileSync(outPath, markdown.endsWith('\n') ? markdown : `${markdown}\n`);
   console.log(
     `cost: COST_CONTROL.md updated — ${agg.totals.requests} requests, ` +
-      `${agg.sessions.size} sessions, ${subagentTasks.length} subagent runs, ` +
-      `${usd(agg.totals.usd)} at list price.`,
+      `${agg.sessions.size} sessions, ${seen.subagentTasks.length} subagent runs seen locally, ` +
+      `${changed.size} session file(s) written, ${usd(agg.totals.usd)} at list price.`,
   );
   if (agg.unpricedModels.size) {
     console.warn(`cost: unpriced models present: ${[...agg.unpricedModels].join(', ')}`);
