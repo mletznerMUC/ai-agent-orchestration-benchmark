@@ -117,16 +117,21 @@ jobs:
       # keeps the later two from paying for a round that already happened.
       #
       # It runs before the Anthropic key is even checked, so a no-op
-      # fallback costs a checkout and one API call.
+      # fallback costs a checkout and at most one API call.
+      #
+      # Two independent checks, cheapest and most robust first:
+      #   1. the month's proposal branch exists on the remote — free, uses
+      #      the credential checkout already has, and needs no API at all;
+      #   2. a run titled `refresh full` succeeded this month.
       #
       # Scheduled events only. A manual dispatch is a human asking for a
       # round on purpose — re-running one deliberately is a legitimate thing
       # to want, and this must never block it.
       #
-      # Fails OPEN: if the runs API call itself errors we run the round. A
-      # dropped round loses a month of evidence; a duplicate attempt costs
-      # one round and is still caught by the branch check below and by the
-      # `refresh-research` concurrency group.
+      # Check 2 fails OPEN: if the runs API itself errors we run the round.
+      # A dropped round loses a month of evidence; a duplicate attempt costs
+      # one round, and check 1 has already run plus the `refresh-research`
+      # concurrency group still stands between a duplicate and a duplicate PR.
       - name: Guard — has this month's round already run?
         id: guard
         if: github.event_name == 'schedule'
@@ -138,13 +143,24 @@ jobs:
           set -uo pipefail
           MONTH="$(date -u +%Y-%m)"
 
-          # `created=>=<month>-01` restricts to this UTC month; the round id
-          # is that same month, so "already ran" and "same round" coincide.
-          # >= is percent-encoded because it travels in a query string.
+          # Check 1, free and API-independent: the month's proposal branch
+          # exists, so a round got far enough to push it. Re-running would
+          # collide with it at `git checkout -B refresh/<month>` anyway.
+          if git ls-remote --exit-code --heads origin "refresh/${MONTH}" >/dev/null 2>&1; then
+            echo "::notice::Branch refresh/${MONTH} already exists — this month's round already pushed a proposal branch. Skipping before any paid step."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Check 2. `created=>=<month>-01` restricts to this UTC month; the
+          # round id is that same month, so "already ran" and "same round"
+          # coincide. >= is percent-encoded because it travels in a query
+          # string. stderr is kept out of the JSON and only quoted on failure.
+          ERR_LOG="$(mktemp)"
           if ! RUNS=$(gh api --paginate \
                 "repos/${REPO}/actions/workflows/refresh.yml/runs?created=%3E%3D${MONTH}-01&status=success&per_page=100" \
-                2>&1); then
-            echo "::warning::Could not list previous runs (${RUNS}). Failing open and running the round — a duplicate attempt is cheaper than a missed month."
+                2>"$ERR_LOG"); then
+            echo "::warning::Could not list previous runs ($(tr '\n' ' ' < "$ERR_LOG")). Failing open and running the round — a duplicate attempt is cheaper than a missed month."
             echo "skip=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
@@ -153,11 +169,16 @@ jobs:
           # never proposes, so it does not discharge the month's obligation.
           # Runs that predate the run-name change carry no such title and are
           # simply not counted — they are all older than the current month.
-          PREVIOUS=$(printf '%s' "$RUNS" | jq -r --argjson me "$RUN_ID" '
-            .workflow_runs[]
-            | select(.id != $me)
-            | select(.display_title | startswith("refresh full"))
-            | .html_url' | head -1)
+          # --slurp, because `gh api --paginate` concatenates one JSON
+          # object per page: slurping makes them a single array so `first`
+          # sees the whole result set and emits exactly one line.
+          PREVIOUS=$(printf '%s' "$RUNS" | jq -r -s --argjson me "$RUN_ID" '
+            first(
+              .[].workflow_runs[]
+              | select(.id != $me)
+              | select((.display_title // "") | startswith("refresh full"))
+              | .html_url
+            ) // ""')
 
           if [ -n "$PREVIOUS" ]; then
             echo "::notice::A full refresh round already succeeded this month (${MONTH}): ${PREVIOUS}. This scheduled fallback has nothing to do; skipping before any paid step."
@@ -165,16 +186,7 @@ jobs:
             exit 0
           fi
 
-          # Second check, independent of the API: the month's proposal branch
-          # exists, so a round got far enough to propose. Re-running would
-          # collide with it at `git checkout -B refresh/<month>` anyway.
-          if git ls-remote --exit-code --heads origin "refresh/${MONTH}" >/dev/null 2>&1; then
-            echo "::notice::Branch refresh/${MONTH} already exists — this month's proposal has been made. Skipping before any paid step."
-            echo "skip=true" >> "$GITHUB_OUTPUT"
-            exit 0
-          fi
-
-          echo "No successful full round for ${MONTH} yet. Proceeding."
+          echo "No proposal branch and no successful full round for ${MONTH} yet. Proceeding."
           echo "skip=false" >> "$GITHUB_OUTPUT"
 
       - uses: actions/setup-node@v4
