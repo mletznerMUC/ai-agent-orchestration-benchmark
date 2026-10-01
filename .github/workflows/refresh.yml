@@ -46,9 +46,21 @@ name: refresh-research
 
 on:
   schedule:
-    # 06:00 UTC on the 1st of each month. Cadence matches the historical
-    # rhythm of the changelog (Mai 2026, Juli 2026, ...).
-    - cron: '0 6 1 * *'
+    # Monthly, on the 1st — cadence matches the historical rhythm of the
+    # changelog (Mai 2026, Juli 2026, ...). Three slots, not one, because
+    # GitHub's scheduled triggers are explicitly best-effort: they are
+    # delayed or dropped outright under load, and minute 0 of any hour is
+    # the most congested slot there is. Hence the off minutes below, and
+    # hence the 2nd and the 3rd as fallbacks.
+    #
+    # The round id is the calendar month (`date -u +%Y-%m`), so a fallback
+    # run is the *same* round, not a second one. The guard step right after
+    # checkout makes the fallbacks no-ops when the month's full round has
+    # already succeeded, and lets them run — before anything paid — when
+    # the earlier attempt failed or was never delivered.
+    - cron: '17 6 1 * *'
+    - cron: '41 7 2 * *'
+    - cron: '23 8 3 * *'
   workflow_dispatch:
     inputs:
       tools:
