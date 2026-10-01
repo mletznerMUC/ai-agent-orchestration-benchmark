@@ -6,9 +6,10 @@ Status: accepted
 ## Decision
 `refresh.yml` is scheduled three times a month — `17 6 1 * *`, `41 7 2 * *`
 and `23 8 3 * *` — instead of once. A guard step immediately after checkout
-makes a *scheduled* run exit before any paid step when the month's full
-round has already succeeded, or when `refresh/<yyyy-mm>` already exists on
-the remote. Manual dispatch is never blocked.
+makes a *scheduled* run exit before any paid step when `refresh/<yyyy-mm>`
+already exists on the remote, or when a run titled `refresh full` has
+already succeeded this month. The branch check runs first: it is free and
+needs no API. Manual dispatch is never blocked.
 
 ## Context
 The single trigger was `0 6 1 * *`. In its lifetime it fired from the
@@ -26,13 +27,14 @@ round leaves a record even when nothing changed.
 
 Redundant slots alone would reintroduce a different problem: three paid
 rounds a month, three branches contending for `refresh/<yyyy-mm>`. Hence
-the guard. It uses the runs API, which exposes a run's `display_title` but
-not its inputs, so the workflow now sets `run-name` to classify itself
-(`refresh full …` / `refresh debug …`) using the same test the "Compute
-round id" step uses. The guard fails *open*: if the API call errors the
-round runs, because a missed month is worse than a duplicate attempt, and
-the branch check plus the `refresh-research` concurrency group still stand
-between a duplicate and a duplicate PR.
+the guard. Its second check uses the runs API, which exposes a run's
+`display_title` but not its inputs, so the workflow now sets `run-name` to
+classify itself (`refresh full …` / `refresh debug …`) using the same test
+the "Compute round id" step uses. That check fails *open*: if the API call
+errors the round runs, because a missed month is worse than a duplicate
+attempt — and by then the free branch check has already run, with the
+`refresh-research` concurrency group still standing between a duplicate
+and a duplicate PR.
 
 ## Consequences
 - Up to three scheduled attempts per month, but at most one paid round:
@@ -47,6 +49,14 @@ between a duplicate and a duplicate PR.
   it counts as a prior full round for the next slot. That only ever happens
   downstream of a real round or a real proposal branch, so the chain cannot
   start from nothing.
+- The branch check is deliberately coarser than "a proposal exists". A round
+  that pushed `refresh/<yyyy-mm>` and then failed before `gh pr create` —
+  or whose PR was opened and later deleted — leaves the branch behind, and
+  every later slot skips on it. The month then has a branch and no
+  proposal. That is the intended trade: the failed run is red and is the
+  signal, and re-running is one `workflow_dispatch` away (manual dispatch
+  bypasses the guard entirely). An automatic retry would instead collide
+  with the existing branch at `git checkout -B`.
 - Successful runs created before this change carry no `run-name`, so they
   are not counted. They all predate the current month, which is the only
   window the guard looks at.
