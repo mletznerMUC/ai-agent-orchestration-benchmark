@@ -20,7 +20,11 @@ human gate → apply agent → verify → human gate → GitHub Pages, plus the
 ## The refresh line (the recurring data update)
 
 **1 — Trigger.** [`refresh.yml`](../../.github/workflows/refresh.yml) fires on
-a monthly cron (`0 6 1 * *`) or manually via `workflow_dispatch`.
+three monthly cron slots (`17 6 1 * *`, `41 7 2 * *`, `23 8 3 * *`) or manually
+via `workflow_dispatch`. GitHub's scheduled triggers are best-effort and get
+delayed or dropped, so the 2nd and 3rd are fallbacks: a guard right after
+checkout ends a scheduled run before any paid step if the month's proposal
+branch exists or a full round already succeeded (ADR-011).
 
 **2 — Research (Phase 1–2, read-only).** After a preflight (API key, round
 id) the **research orchestrator** (`claude-opus-5`) dispatches every sub-agent
