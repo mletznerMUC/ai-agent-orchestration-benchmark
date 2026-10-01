@@ -83,8 +83,8 @@ on:
 # scheduled run is therefore always "refresh full", which is correct.
 run-name: >-
   ${{ (github.event.inputs.tools == '' || github.event.inputs.tools == null)
-      && github.event.inputs.scout != 'false'
-      && 'refresh full' || 'refresh debug' }} ${{ github.event_name }}
+  && github.event.inputs.scout != 'false'
+  && 'refresh full' || 'refresh debug' }} ${{ github.event_name }}
 
 permissions:
   contents: write
