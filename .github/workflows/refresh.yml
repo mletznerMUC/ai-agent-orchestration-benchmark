@@ -74,9 +74,24 @@ on:
         type: choice
         options: ['true', 'false']
 
+# The run title is the only part of a round visible in the runs API without
+# reading its logs, and the fallback guard below needs to tell a full round
+# from a debug one. Same classification as the "Compute round id" step: a
+# round is full when it researches EVERY tool and also scouts. A schedule
+# event carries no inputs at all, so both operands are null — null casts to
+# '' for the first test and never equals 'false' in the second — and a
+# scheduled run is therefore always "refresh full", which is correct.
+run-name: >-
+  ${{ (github.event.inputs.tools == '' || github.event.inputs.tools == null)
+      && github.event.inputs.scout != 'false'
+      && 'refresh full' || 'refresh debug' }} ${{ github.event_name }}
+
 permissions:
   contents: write
   pull-requests: write
+  # Reading this workflow's own past runs, for the "already ran this month"
+  # check in the guard step below.
+  actions: read
 
 concurrency:
   group: refresh-research
