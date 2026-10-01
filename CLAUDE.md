@@ -35,6 +35,9 @@ must be sourced and reproducible. When in doubt, understate.
   in the benchmark. Scouted tools become radar candidates only: adding
   one to the benchmark means scoring it against every published
   criterion, which is `/feature` work, not a data refresh.
+- A scheduled trigger is best-effort, not a guarantee. Any monthly job
+  carries fallback slots plus an idempotency guard that runs before the
+  first paid step and fails **open** — see ADR-011.
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases.
 - Each phase = one subagent with a clean context. The plan file
