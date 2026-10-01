@@ -112,11 +112,78 @@ jobs:
           # Falls back cleanly when the secret is absent.
           token: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
 
+      # Three scheduled slots per month (1st, 2nd, 3rd) exist so a dropped
+      # or delayed trigger does not cost the month its round. This is what
+      # keeps the later two from paying for a round that already happened.
+      #
+      # It runs before the Anthropic key is even checked, so a no-op
+      # fallback costs a checkout and one API call.
+      #
+      # Scheduled events only. A manual dispatch is a human asking for a
+      # round on purpose — re-running one deliberately is a legitimate thing
+      # to want, and this must never block it.
+      #
+      # Fails OPEN: if the runs API call itself errors we run the round. A
+      # dropped round loses a month of evidence; a duplicate attempt costs
+      # one round and is still caught by the branch check below and by the
+      # `refresh-research` concurrency group.
+      - name: Guard — has this month's round already run?
+        id: guard
+        if: github.event_name == 'schedule'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        run: |
+          set -uo pipefail
+          MONTH="$(date -u +%Y-%m)"
+
+          # `created=>=<month>-01` restricts to this UTC month; the round id
+          # is that same month, so "already ran" and "same round" coincide.
+          # >= is percent-encoded because it travels in a query string.
+          if ! RUNS=$(gh api --paginate \
+                "repos/${REPO}/actions/workflows/refresh.yml/runs?created=%3E%3D${MONTH}-01&status=success&per_page=100" \
+                2>&1); then
+            echo "::warning::Could not list previous runs (${RUNS}). Failing open and running the round — a duplicate attempt is cheaper than a missed month."
+            echo "skip=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Only full rounds count. A debug round researches a subset and
+          # never proposes, so it does not discharge the month's obligation.
+          # Runs that predate the run-name change carry no such title and are
+          # simply not counted — they are all older than the current month.
+          PREVIOUS=$(printf '%s' "$RUNS" | jq -r --argjson me "$RUN_ID" '
+            .workflow_runs[]
+            | select(.id != $me)
+            | select(.display_title | startswith("refresh full"))
+            | .html_url' | head -1)
+
+          if [ -n "$PREVIOUS" ]; then
+            echo "::notice::A full refresh round already succeeded this month (${MONTH}): ${PREVIOUS}. This scheduled fallback has nothing to do; skipping before any paid step."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Second check, independent of the API: the month's proposal branch
+          # exists, so a round got far enough to propose. Re-running would
+          # collide with it at `git checkout -B refresh/<month>` anyway.
+          if git ls-remote --exit-code --heads origin "refresh/${MONTH}" >/dev/null 2>&1; then
+            echo "::notice::Branch refresh/${MONTH} already exists — this month's proposal has been made. Skipping before any paid step."
+            echo "skip=true" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "No successful full round for ${MONTH} yet. Proceeding."
+          echo "skip=false" >> "$GITHUB_OUTPUT"
+
       - uses: actions/setup-node@v4
+        if: steps.guard.outputs.skip != 'true'
         with:
           node-version: '22'
 
       - name: Preflight — required secrets
+        if: steps.guard.outputs.skip != 'true'
         env:
           KEY: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
         run: |
@@ -128,6 +195,7 @@ jobs:
 
       - name: Compute round id and classify the round
         id: round
+        if: steps.guard.outputs.skip != 'true'
         env:
           TOOLS: ${{ github.event.inputs.tools }}
           SCOUT: ${{ github.event.inputs.scout }}
@@ -161,6 +229,7 @@ jobs:
           fi
 
       - name: Compose the research prompt (one source, both attempts share it)
+        if: steps.guard.outputs.skip != 'true'
         run: |
           {
             echo 'RESEARCH_PROMPT<<REFRESH_PROMPT_EOF'
@@ -261,6 +330,7 @@ jobs:
 
       - name: Research tools and write proposal
         id: research
+        if: steps.guard.outputs.skip != 'true'
         # Attempt 1. A transient API error can abort a run mid-flight
         # (run 6 died with is_error:true after 23 turns). continue-on-error
         # lets the reset+retry below take one more swing before the job fails.
@@ -297,6 +367,7 @@ jobs:
       # it can pay for a second research attempt.
       - name: Did attempt 1 actually produce a report?
         id: attempt1
+        if: steps.guard.outputs.skip != 'true'
         env:
           ROUND: ${{ steps.round.outputs.id }}
           OUTCOME: ${{ steps.research.outcome }}
@@ -313,7 +384,7 @@ jobs:
           fi
 
       - name: Reset the tree before retrying
-        if: steps.attempt1.outputs.retry == 'true'
+        if: steps.guard.outputs.skip != 'true' && steps.attempt1.outputs.retry == 'true'
         env:
           ROUND: ${{ steps.round.outputs.id }}
         run: |
@@ -326,7 +397,7 @@ jobs:
 
       - name: Research tools and write proposal (retry)
         id: research_retry
-        if: steps.attempt1.outputs.retry == 'true'
+        if: steps.guard.outputs.skip != 'true' && steps.attempt1.outputs.retry == 'true'
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.Git_AI_Benchmarks || secrets.ANTHROPIC_API_KEY }}
@@ -349,6 +420,7 @@ jobs:
 
       - name: Publish the report
         id: report
+        if: steps.guard.outputs.skip != 'true'
         env:
           ROUND: ${{ steps.round.outputs.id }}
         run: |
@@ -391,7 +463,7 @@ jobs:
           echo "Data changed: $DATA_CHANGED — radar candidates: $CANDIDATES"
 
       - name: Archive the report
-        if: always() && steps.report.outputs.report != ''
+        if: always() && steps.guard.outputs.skip != 'true' && steps.report.outputs.report != ''
         uses: actions/upload-artifact@v4
         with:
           name: refresh-report-${{ steps.round.outputs.id }}${{ steps.round.outputs.debug == 'true' && '-debug' || '' }}
@@ -399,6 +471,7 @@ jobs:
           if-no-files-found: warn
 
       - name: Open pull request
+        if: steps.guard.outputs.skip != 'true'
         env:
           GH_TOKEN: ${{ secrets.REFRESH_PAT || secrets.GITHUB_TOKEN }}
           ROUND: ${{ steps.round.outputs.id }}
