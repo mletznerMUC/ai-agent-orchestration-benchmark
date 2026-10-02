@@ -40,3 +40,48 @@ What this verdict does *not* say: it does not say the AI SDK orchestrates
 agents as well as, or in the same way as, any tool already in the benchmark.
 The bar is a category test, not a quality test. How far the documented
 capability goes is what the matrix and the rubric below measure.
+
+## Version baseline
+
+| Item | Value |
+| --- | --- |
+| Scored artefact | the npm package `ai` |
+| Version pinned | `7.0.127` |
+| Published | 2026-10-01T19:20:23.718Z |
+| Authoritative source for the pin | https://registry.npmjs.org/ai — the `dist-tags.latest` field, cross-read with the `time` map for the publication date |
+| Corroborating source | https://github.com/vercel/ai/releases — carries the matching tagged release `ai@7.0.127`, dated 2026-10-01 |
+| Licence | Apache-2.0 (`license` field of version `7.0.127` in the registry document; `LICENSE` at https://github.com/vercel/ai/blob/main/LICENSE) |
+| Runtime requirement | `engines.node: ">=22"` for `ai@7.0.127` (registry document) |
+| Evaluation date | 2026-10-02 |
+
+**The npm registry is authoritative for the pin.** The repository publishes one
+tagged release per package in a monorepo, so the releases page carries tags for
+`@ai-sdk/react`, `@ai-sdk/workflow` and others alongside `ai@…`. The registry's
+`dist-tags.latest` for the `ai` package is the unambiguous statement of which
+version an installer gets, which is the artefact decision D1 scopes this
+evaluation to. The releases page is read as corroboration and is the tier-A
+source for the maturity criteria.
+
+**2026-10-02 is the `checked` value for every citation added by this feature** —
+every matrix cell, every price row, the score and each maturity criterion. No
+existing tool's `checked` date is touched.
+
+### Scope of this evaluation — decided at Gate 1, 2026-10-02 (D1)
+
+**EN:** For the Vercel AI SDK the scored artefact is the `ai` package only.
+Provider packages, the AI Gateway and the Vercel hosted platform are not
+scored.
+
+**DE:** Für das Vercel AI SDK ist ausschließlich das Paket `ai` bewertet.
+Provider-Pakete, das AI Gateway und die gehostete Vercel-Plattform sind nicht
+bewertet.
+
+Two consequences of D1 that the scoring below applies consistently:
+
+- A capability the `ai` package provides itself scores on its own merits.
+- A capability that requires installing a further package alongside `ai` is
+  scored `partial`, not `yes`, and the chip label names the package so a reader
+  can see which one. This is how `mcp-support` (`@ai-sdk/mcp`) and
+  `observability` (`@ai-sdk/otel`) are treated. Both of those packages are
+  first-party and live in the same repository; `partial` records that they are
+  outside the scored artefact, not that the capability is incomplete.

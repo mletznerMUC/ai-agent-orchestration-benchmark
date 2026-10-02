@@ -106,7 +106,7 @@ Facts established while planning, which the steps rely on:
      checked date each, and an explicit overall verdict sentence; on fail, no
      other file in the repo has been touched.
 
-2. [ ] **Pin the version baseline, the scored artefact and the as-of date.**
+2. [x] **Pin the version baseline, the scored artefact and the as-of date.**
    Record the latest stable release tag on the day of evaluation (from the
    GitHub releases page and/or the npm registry version for the `ai` package —
    name which one is authoritative for the pin) and the `checked` date used
