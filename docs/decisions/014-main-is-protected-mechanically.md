@@ -6,9 +6,15 @@ Status: accepted
 ## Decision
 Three layers keep agent work off `main`:
 
-1. **A GitHub ruleset on `main`** that requires a pull request and blocks
+1. **A GitHub ruleset on `main`** that requires a pull request, requires
+   the `verify` status check to pass before a PR can be merged, and blocks
    force pushes and branch deletion, with no bypass for anyone. Markus
-   configures it in the repository settings; agents cannot and do not.
+   configures it in the repository settings; agents cannot and do not. He
+   added the required `verify` check on 2026-10-02, after PR #65 was merged
+   with `verify` red. It is compatible with ADR-003 rather than in tension
+   with it: an approved proposal turns green through `apply.yml` before it
+   is merged, so the check blocks exactly the case ADR-003 calls a process
+   error — merging a proposal whose data has not been applied to the pages.
 2. **A versioned `.githooks/pre-push`** that refuses `refs/heads/main`,
    `refs/heads/master` and `refs/tags/*`. Enabled per clone with
    `git config core.hooksPath .githooks`.
