@@ -336,7 +336,7 @@ Facts established while planning, which the steps rely on:
       `git diff main -- data/tools.json` shows no `checked` date changed on any
       existing tool.
 
-11. [ ] **Commit and self-check against the acceptance criteria.** One or two
+11. [x] **Commit and self-check against the acceptance criteria.** One or two
     conventional commits: a `data:` commit for `data/tools.json` + both pages
     + the evaluation record, with every source URL referenced in the body, and
     (if steps 4–6 ran) a `docs:` commit for the hands-on script, the hands-on
