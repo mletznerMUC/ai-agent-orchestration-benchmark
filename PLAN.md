@@ -140,7 +140,7 @@ Facts established while planning, which the steps rely on:
      the `pending hands-on` list is written down as a list even if it is
      empty; every price row has a value, a source URL and a checked date.
 
-4. [ ] **Hands-on reproducer script (only if step 3 left a criterion
+4. [x] **Hands-on reproducer script (only if step 3 left a criterion
    `pending hands-on` / heading for tier-C; otherwise mark done and record
    "no tier-C evidence needed").** A standalone Node script that exercises the
    specific capability in question and prints what it observed.
