@@ -31,12 +31,18 @@ nothing enforced it. Markus kept the commits.
 - Regex guards can be evaded, by an agent or by a shell construct the
   splitter does not model. Layer 1 is the authority; layers 2 and 3 exist
   to catch the mistake early and loudly, at the keyboard rather than in the
-  branch history.
+  branch history. Known and accepted limits of layer 3, deliberately not
+  chased: `sh -c "…"` and `bash -c "…"`, `eval`, command substitution
+  `$(…)`, `xargs`, and `gh api …` calls that merge. Each hides the real
+  command inside a string the splitter does not open.
+- The guard fails open, visibly, on input it cannot parse — layers 1 and 2
+  are what make the rule hold.
 - No workflow pushes to `main`. `apply.yml` checks out the proposal PR's
   head ref and pushes back to that branch; `refresh.yml` pushes
   `refresh/<month>` with `-u`. Both open or comment on PRs and neither
   merges, so the ruleset breaks no CI.
-- The orchestrator's own push after the merge gate is limited to the
+- The orchestrator's own push happens after the review phase, when it
+  offers to open the PR, and is limited to the
   allow-listed form, `git push -u origin <branch>`. Implementer and
   reviewer do not push at all; branches are created with
   `git switch --no-track -c <branch> origin/main`, so they have no

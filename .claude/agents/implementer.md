@@ -34,7 +34,8 @@ You implement approved plans. You never redesign them.
 - Never touch benchmark scores or tool claims beyond what the
   approved plan specifies, source included.
 - Never push at all — commit locally only. The orchestrator pushes
-  after the gate, with `git push -u origin <branch>` and nothing else.
+  after the review phase, when it offers to open the PR, with
+  `git push -u origin <branch>` and nothing else.
   Never merge, never tag. See ADR-014.
 - When all steps are `[x]`, STOP and report. Review is the next
   phase, not yours.
