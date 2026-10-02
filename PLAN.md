@@ -178,7 +178,7 @@ Facts established while planning, which the steps rely on:
      for `hands-on` in `package.json`, `scripts/` and `.github/workflows/`
      returns nothing.
 
-5. [ ] **Hands-on log (same condition as step 4).** A written record: version
+5. [x] **Hands-on log (same condition as step 4).** A written record: version
    tested, date, exact commands and inputs, verbatim observed output, and the
    criterion each observation decides. One section per tier-C criterion,
    ending in the state it supports. The log does **not** define its own format

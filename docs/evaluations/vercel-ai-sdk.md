@@ -94,7 +94,7 @@ nowhere else (D2) — `data/tools.json` matrix cells carry no `tier` field.
 
 | # | Criterion | State | Label DE | Label EN | Tier | Source | Justification |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| 1 | `multi-agent-parallel` | **`pending hands-on`** | — | — | — | — | The docs describe parallel work as a caller-written `Promise.all` over several generations and as spawning "multiple subagents to research different areas simultaneously", which is a pattern rather than a documented execution feature; the docs alone do not settle whether several agent loops really interleave in one process. Marked `pending hands-on`; the observation that settles it is step 4/5 work and is recorded below once it exists. |
+| 1 | `multi-agent-parallel` | `yes` | Subagents | Subagents | C | `docs/hands-on/vercel-ai-sdk/2026-10-02-log.md` | The docs describe parallel work as a caller-written `Promise.all` over several generations and as spawning "multiple subagents to research different areas simultaneously", which is a pattern rather than a documented execution feature; the docs alone did not settle whether several agent loops really interleave in one process. The hands-on run settles it: two `ToolLoopAgent` instances ran concurrently in one process with their steps interleaved, and a parent agent delegated to a subagent through a tool. |
 | 2 | `desktop-gui` | `partial` | DevTools (lokal) | DevTools (local) | B | https://ai-sdk.dev/docs/ai-sdk-core/devtools | A web-based inspection UI exists, but the docs state it "is intended for local development only. Do not use in production environments", and it ships in the separate `@ai-sdk/devtools` package. There is no native desktop application. |
 | 3 | `playbooks` | `yes` | Agent Loop | Agent Loop | B | https://ai-sdk.dev/docs/agents/loop-control | The `ai` package runs an autonomous tool loop with documented stopping conditions: `stopWhen` with the built-ins `isStepCount(count)`, `hasToolCall(...)` and `isLoopFinished()`, plus `prepareStep` to change model, tools or messages between steps. `ToolLoopAgent` defaults to `isStepCount(20)`. |
 | 4 | `mobile-remote` | `no` | Nein | No | B | https://ai-sdk.dev/docs/getting-started/expo | The only mobile documentation covers building an app *with* the SDK. Nothing in the documentation offers remote control of a running agent from a phone. |
@@ -115,7 +115,16 @@ The list the step-4 hands-on work took as its input:
 
 - `multi-agent-parallel`
 
-Every other criterion was settled from the documentation.
+Every other criterion was settled from the documentation. The list is now
+empty: criterion 1 is settled by the tier-C log cited in its row.
+
+Per D3, the tier-C `source` value in `data/tools.json` is the repo-relative
+path `docs/hands-on/vercel-ai-sdk/2026-10-02-log.md`. The published pages link
+the same artefacts as GitHub blob URLs, because a repo-relative `.md` path is
+not a served page:
+
+- log — https://github.com/mletznerMUC/ai-agent-orchestration-benchmark/blob/main/docs/hands-on/vercel-ai-sdk/2026-10-02-log.md
+- script — https://github.com/mletznerMUC/ai-agent-orchestration-benchmark/blob/main/docs/hands-on/vercel-ai-sdk/run.mjs
 
 ### Caveats recorded rather than scored around
 
