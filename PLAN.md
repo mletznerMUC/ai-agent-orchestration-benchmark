@@ -237,7 +237,7 @@ Facts established while planning, which the steps rely on:
      and the rounded value (or an explicit unrated verdict with its reason),
      and the arithmetic checks by hand.
 
-8. [ ] **Add the tool to `data/tools.json`.** Append a `vercel-ai-sdk` entry
+8. [x] **Add the tool to `data/tools.json`.** Append a `vercel-ai-sdk` entry
    after `manus-ai` with `name`, `score` (value/source/checked/provenance/
    exact/rubric, `maturity.criteria` tiered as in step 7), `descriptor`
    (de/en), all 14 `matrix` cells and the `price` block — every data point
