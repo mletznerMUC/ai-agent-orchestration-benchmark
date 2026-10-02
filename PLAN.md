@@ -192,7 +192,7 @@ Facts established while planning, which the steps rely on:
      points at this file as its source; the log's header links the ADR instead
      of restating format rules.
 
-6. [ ] **Record the hands-on evidence precedent as an ADR.** Write
+6. [x] **Record the hands-on evidence precedent as an ADR.** Write
    `docs/decisions/012-hands-on-evidence.md` (confirm 012 is still the next
    free number in `docs/decisions/` before writing). It records the Gate 1
    decisions, not new ones. Each is written as **decided at Gate 1,
