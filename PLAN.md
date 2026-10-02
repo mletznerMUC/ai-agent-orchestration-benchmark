@@ -1,602 +1,468 @@
-# Plan: Publish the per-dimension rubric breakdown and let visitors reweight it
-Branch: feature/dimension-weighting
+# Plan: Add Vercel AI SDK as benchmark tool #13
+Branch: feature/vercel-ai-sdk
 
-All paths are repo-relative to
-`/Users/mletzner/Library/CloudStorage/OneDrive-StroeerGlobalDirectory/Documents/GitHub/OpenRTB/ai-agent-orchestration-benchmark`.
-Line numbers are as of `main` @ `3b00cd2` and shift as steps land; every step
-also names a unique anchor string to search for.
+Tool key (used everywhere, do not vary): `vercel-ai-sdk`.
+Evaluation record: `docs/evaluations/vercel-ai-sdk.md` (new).
+Hands-on evidence: `docs/hands-on/vercel-ai-sdk/` (new).
 
-Revised after the expert panel returned APPROVE WITH CHANGES. All 17
-consolidated changes are folded in, plus the two owner's calls Markus decided
-(A: `<details>` disclosure; B: 2-decimal display).
+**Gate 1 decisions — decided at Gate 1, 2026-10-02** (Markus: "go default and
+make it transparent for the user"). All of them are the planner's defaults.
+They are settled; no step reopens them:
 
-## Non-goals
+- **D1 — Scored artefact:** the `ai` package only. Provider packages, AI
+  Gateway and the Vercel hosted platform are **not** scored.
+- **D2 — Evidence tiers for matrix cells** live in
+  `docs/evaluations/vercel-ai-sdk.md` only. **No `tier` field** is added to
+  matrix cells in `data/tools.json`.
+- **D3 — Tier-C `source` form:** the repo-relative path to the hands-on log
+  (e.g. `docs/hands-on/vercel-ai-sdk/2026-10-<dd>-log.md`) — the form this plan
+  recommended. The *published pages* link the same artefacts as GitHub blob
+  URLs, because a repo-relative `.md` path is not a served page (step 9e).
+- **D4 — Directory layout:** `docs/evaluations/` and `docs/hands-on/` stay two
+  separate trees, as planned.
+- **D5 — As-of stamp** moves to October 2026 / Oktober 2026 in both pages and
+  in `meta.asOf`.
+- **D6 — Transparency for site visitors** (new requirement set at the gate):
+  the published pages must themselves state the scope of what was scored, which
+  matrix cells rest on hands-on (tier-C) evidence, and what the October 2026
+  stamp does and does not mean. Folded into steps 9 and 10.
 
-- **No changelog entry and no `meta.asOf` change.** This is a site feature, not
-  a data round. `scripts/verify.mjs:106` requires `asOf === newsDates[0]`, so
-  adding a news entry would force a `data/tools.json` edit, which Verification 4
-  forbids.
-- **No change to any score, weight, `raw`, `max`, `exact`, matrix cell, price,
-  descriptor or badge.** `data/tools.json` is not edited at all.
-- **No build step, framework or dependency.**
+All of the above is conditional on step 1: if the category-fit gate stops the
+pipeline, none of it applies.
 
-## Acceptance criteria amended by the owner's calls
+Facts established while planning, which the steps rely on:
 
-Two criteria from the task cards no longer describe what is being built, and
-are replaced here so the reviewer measures the right thing:
-
-- Card 1, "All six dimensions visible per tool on both pages" → **all six
-  dimensions reachable per tool on both pages behind a one-click
-  `<details>` disclosure that works with JavaScript disabled**, labels matching
-  the Methodology table.
-- Card 1, "Displayed dimension points sum to the published `score.exact`" →
-  **each displayed dimension figure equals `weight*raw/max` rounded half-up to
-  2 decimals, and the exact `raw` / `max` / `weight` the figure is derived from
-  are published beside it and checked against `data/tools.json`.** The exact
-  arithmetic claim moves to `raw`/`max`/`weight`; the 2-dp display figures are
-  not claimed to sum to `score.exact`, and nothing checks them against it. The
-  page says the figures are rounded.
-
-## Key design decisions this plan makes
-
-**D1 — Dimension figures are static HTML, crosschecked by `verify`.** Not a
-runtime `fetch` of `data/tools.json`. Three reasons. (a) ADR-001 makes
-`tools.json` an *assertion about* the served pages, not a runtime input; making
-the page fetch it turns the assertion into a dependency and removes the thing
-`verify` proves. (b) A runtime fetch fails under `file://` (CORS), and the whole
-test suite plus the compare modal are built on reading values out of the served
-HTML. (c) ADR-005's warning is against an *uncrosschecked* second copy — this
-copy is checked figure-by-figure by `verify` and `npm test`, exactly as the 24
-published score numbers already are. Consequence: the plan owes a real parser
-and real verifier checks (steps 2–3), and pays it before the figures land.
-
-**D2 — No new copy of the published weights.** `points` is displayed but
-`weight` is not repeated per card. The six published weights already exist once
-per page in the Methodology table (`index.html` lines 1849–1854). Step 1 keys
-those rows with `data-dim`, step 3 checks them against `tools.json`, and the
-weighting engine and the verifier both read them from there. Each weight exists
-once per page and is verified.
-
-**D3 — Dimension labels are checked against the Methodology table, not
-duplicated in `tools.json`.** `verify` compares each card's `.dim-name` text to
-the matching Methodology row's first cell, byte-for-byte, and pins the six
-labels per language in the parser tests (step 2). That makes card 1's "labels
-matching the Methodology table" a machine check, and adds no data to
-`tools.json`.
-
-**D4 (owner's call B) — Displayed points are rounded half-up to 2 decimals.**
-Display value = `Math.floor(weight * raw / max * 100 + 0.5) / 100`, written as
-its shortest exact decimal (`25`, `7.5`, `3.33`, `15.63`). `verify` recomputes
-that expression and compares to `Number(displayText)` with `===` — no tolerance
-window. Exact equality is safe: both sides are the correctly-rounded double of
-the same 2-decimal decimal. The panel confirmed the only non-terminating point
-values in the rubric come from the accessibility dimension (weight 10 over max
-6) — in the current data `3.3333` and `8.3333`, displaying as `3.33` and
-`8.33` — and that no rounded sum crosses a half-up boundary that full precision
-does not. **No check depends on that**: the recomputed-total-equals-published
-check runs on full precision (step 3), and the display rounding must not enter
-the engine (step 8).
-
-**D5 — Reserved class-name rule.** The weighting panel sits between the score
-grid and `<!-- Feature Matrix -->`, which means it lands inside the slice
-`parseScores` reads (the slice ends at the matrix comment, so everything after
-the grid is appended to the *last* score card's chunk — `manus-ai`, the unrated
-one). Therefore every **new** id and class in the panel is prefixed `wt-`, and
-no panel markup may contain the strings `score-number`, `score-bar-fill`,
-`score-descriptor`, `<div class="score-card` or `<div class="dim`. The panel
-does reuse the existing `section` / `section-header` / `section-title` classes —
-inventing `wt-` twins of those would fork the page's styling for no gain. Step 9
-enforces the rule with occurrence *counts* over the whole slice, not a negative
-match over the panel alone.
-
-**D6 — Display order follows the Methodology table, not JSON key order.** The
-table order is orchestration, operability, integration, sovereignty,
-**maturity, accessibility** (weights 25/20/15/15/15/10). `tools.json` stores
-accessibility *before* maturity. Do not copy JSON key order — and note that
-`integration` and `maturity` share both weight (15) and max (6), so a swap
-between those two is invisible to the weight check and the max check. Only the
-pinned labels (step 2) and the label-vs-table check (step 3) catch it.
-
-**D7 — Decimal separator is a dot in both languages.** The DE page does use
-decimal commas in prose (`$0,08/Session-h`, `index.html:1890`), so `3,33` would
-be the German convention. The plan uses `3.33` on both pages: it keeps one
-string set, matches the mono/technical presentation of `data-raw`, `data-max`
-and the Methodology table, and lets `verify` assert the DE and EN figure strings
-are byte-identical. Flagged in Risks as an owner-visible choice.
+- `data/tools.json` → `meta.features` holds exactly **14** criteria:
+  `multi-agent-parallel`, `desktop-gui`, `playbooks`, `mobile-remote`,
+  `git-worktrees`, `group-chat`, `mcp-support`, `open-source`, `cli-cicd`,
+  `observability`, `hitl`, `eu-onprem`, `model-agnostic`, `learning-curve`.
+- `scripts/verify.mjs` → `changedWithoutSource` treats *every* field of a new
+  tool as changed (`before === undefined`). So for `vercel-ai-sdk` **every**
+  data point — all 14 matrix cells, every price row, `score`, and each
+  maturity criterion — needs a non-null `source` **and** `checked`.
+  `provenance: "legacy-unsourced"` is not available to a new tool.
+- Only the `maturity` dimension carries a `criteria` block in the JSON. For
+  dimensions 1–4 and 6 the matrix cell **is** the input (ADR-005 rule 2); the
+  cell's own `source`/`checked` is its citation. There is no `tier` field on
+  matrix cells today, and per **D2** none is added.
+- Matrix chips are **positional** inside each `<tr>`; `parseMatrix` throws
+  unless chip count equals the number of `<th data-tool>` headers. A 13th
+  column means a 13th `<th>` plus one new `<td>` in each of 14 rows, in the
+  same ordinal position, in **both** HTML files.
+- `meta.toolOrder` is **not** checked by `scripts/verify.mjs`. It drives the
+  published order, so it has to be reconciled against the markup by reading
+  the files, not by running a script.
+- Hardcoded counts that will break `npm test`:
+  `scripts/lib/parse-html.test.mjs` (`TOOL_KEYS` list, `12`, `14`, `168`,
+  `72`), `scripts/panel.test.mjs` (`score-number` 11, `score-bar-fill` 11,
+  `score-descriptor` 12, `<div class="score-card` 12,
+  `<details class="score-dims">` 12, `<div class="dim` 72, `scores.size` 12),
+  `scripts/verify.test.mjs` (`72` dimension rows).
+  The 11/11 pair in `panel.test.mjs` is 12 cards minus the one unrated card.
+- **Where transparency prose can safely go** (it must not disturb the
+  parsers/count tests): the parsers slice the score grid between
+  `<div class="score-grid">` and `<!-- Feature Matrix -->`, the matrix between
+  `<!-- Feature Matrix -->` and `<!-- Pricing -->`, pricing between
+  `<!-- Pricing -->` and `<!-- Verdict -->`. Any added prose must therefore
+  contain **none** of the substrings `<div class="score-card`,
+  `<div class="dim`, `<div class="score-number">`, `<th data-tool=`,
+  `<span class="chip chip-`, `<span class="price-row-label">` — those are what
+  the regexes and the hardcoded counts key on. A `<p class="method-note">`
+  (style already defined at `index.html:630`, used at `index.html:2227`) placed
+  *after* `</table></div>` of a section is safe. External links already exist
+  in the page body with the `target="_blank" rel="noopener"` pattern, incl. a
+  `github.com` link (`index.html:1560`), so linking out adds no new origin
+  as a subresource and no dependency.
+- `verify` requires `meta.asOf === newest <span class="news-date">` in both
+  files. Today is 2026-10-02 and the page says "September 2026" / "Stand:
+  September 2026", so a new changelog entry forces the as-of stamp to move
+  (**D5**).
+- The hero `<div class="stat-num">12</div>` (index.html:1391 and its EN twin)
+  is not verified mechanically but is published and must move to 13.
+- Root `package.json` has **no** dependencies and CI installs nothing
+  (`.github/workflows/verify.yml` says "No dependencies by design"). That
+  must stay true. The root test glob is `scripts/**/*.test.mjs`.
+- There is no `.gitignore` in the repo.
+- `docs/decisions/` runs 000–011, so **012** is the next free ADR number.
+  Confirm it is still free when step 6 runs.
 
 ## Steps
 
-Ordering note: the parser and verifier land **before** the figures, so no
-unchecked figure ever sits in the repo under a green `verify`.
-**`npm run verify`, the `verify.test.mjs:19` "unmodified site verifies clean"
-test, and step 2's tests that read the real HTML files are expected to fail from
-step 2 until step 5 lands. Do not weaken any assertion to make them pass.**
-Intermediate red on a feature branch costs nothing — nothing merges without the
-gate — while 144 unchecked figures sitting under a green `verify` is precisely
-the state this project's standards are hostile to. (ADR-003 is about not merging
-a `refresh:proposed` PR while `verify` is red; it says nothing about
-intermediate commits on a feature branch.)
+1. [ ] **Category-fit gate (STOP condition).** Check Vercel AI SDK against the
+   four scout bars (`.claude/agents/scout.md`): in category / real and usable
+   / alive / non-trivial signal, each with a URL actually read. Record the
+   verdict and the sources. If the **in-category** bar fails, write that
+   finding, stop the pipeline, change no data and report the outcome — steps
+   2–11 do not run, and the Gate 1 decisions D1–D6 fall with them. Be explicit
+   about the question that makes this a gate: the AI SDK is a
+   provider-abstraction + tool-calling + agent SDK, and the bar asks for
+   planning, delegation, multi-step tool use, or multi-agent coordination.
+   Cite the specific documented capability that clears it, or record that none
+   does.
+   - Files: `docs/evaluations/vercel-ai-sdk.md` (new, section "Category fit")
+   - Done when: the file states pass/fail per bar with one source URL and a
+     checked date each, and an explicit overall verdict sentence; on fail, no
+     other file in the repo has been touched.
 
-1. [x] Key the Methodology table rows with their rubric dimension slug, in both files
-   - Files: `index.html` (lines 1849–1854), `index.en.html` (lines 1810–1815)
-   - Change only the opening tag of each of the six `<tr>`: `<tr>` →
-     `<tr data-dim="orchestration">`, then `operability`, `integration`,
-     `sovereignty`, `maturity`, `accessibility` — in the order the rows already
-     appear. The label, weight and criteria cells stay byte-identical.
-   - Done when: `grep -c 'tr data-dim=' index.html index.en.html` prints `6` for
-     both files, `git diff` shows twelve changed lines and nothing else, and
-     `npm run verify` and `npm test` are still green.
+2. [ ] **Pin the version baseline, the scored artefact and the as-of date.**
+   Record the latest stable release tag on the day of evaluation (from the
+   GitHub releases page and/or the npm registry version for the `ai` package —
+   name which one is authoritative for the pin) and the `checked` date used
+   throughout. This single date is reused as `checked` on every data point
+   added later. Restate **D1** verbatim as the scope of this evaluation: the
+   `ai` package only, with provider packages, AI Gateway and the Vercel hosted
+   platform explicitly out of scope — this is the wording the pages reuse in
+   step 9e, so write it once here in both DE and EN.
+   - Files: `docs/evaluations/vercel-ai-sdk.md` (section "Version baseline")
+   - Done when: the file names the exact tag/version string, the URL it was
+     read from, the evaluation date, states that this date is the `checked`
+     value for every citation in this feature, and carries the D1 scope
+     sentence in DE and EN marked as "decided at Gate 1, 2026-10-02".
 
-2. [x] Teach the parser to read dimensions and published weights
-   - Files: `scripts/lib/parse-html.mjs`, `scripts/lib/parse-html.test.mjs`
-   - Add `parseDimensions(html)`: reuse the existing slice
-     (`'<div class="score-grid">'` → `'<!-- Feature Matrix -->'`) and the
-     existing `split('<div class="score-card')` chunking, then split each chunk
-     on `<div class="dim` and read each row's attributes *individually* (never
-     by attribute order): `data-dim`, `data-max`, optional `data-raw`, plus the
-     `dim-name` / `dim-raw` / `dim-points` span texts. The `dim-name` regex must
-     tolerate attributes on the span (`<span class="dim-name"[^>]*>`) because
-     that span carries a `title` (step 4); return the `title` value too. Return
-     `Map<toolKey, Array<{key, name, title, raw, max, points, rawLabel}>>` with
-     row order preserved, `raw: null` when `data-raw` is absent, `points: null`
-     when the `dim-points` text is not a number. Throw on: a card with no rows,
-     a row with no `data-dim`, a row with no `data-max`, a row that has
-     `data-raw` but a non-numeric `dim-points` or vice versa.
-   - Add `parseWeights(html)`: slice `'<!-- Methodology -->'` →
-     `'<!-- News / Changelog -->'` (confirm with `grep -c` that each marker
-     occurs once per file before relying on `sliceBetween`, which silently takes
-     the first), read the `<tr data-dim>` rows, return `Map<dim, {label, weight}>`
-     in document order. Throw if fewer than six rows.
-   - Do not touch `parseScores`, `parseMatrix`, `parsePrices`, `parseMeta`, or
-     `parseScores`'s markers.
-   - Tests, in the existing fixture-plus-real-file style:
-     - a fixture with rows in *scrambled* order proves keying is by `data-dim`,
-       not position;
-     - a fixture proves the `dim-name` regex survives a `title` attribute;
-     - `parseWeights` returns slugs
-       `['orchestration','operability','integration','sovereignty','maturity','accessibility']`
-       with weights `[25,20,15,15,15,10]` in both real files, **and** the six
-       labels pinned verbatim per language — DE `Orchestrierung`,
-       `Betreibbarkeit`, `Integration`, `Deployment-Souveränität`,
-       `Release-Reife`, `Zugänglichkeit`; EN `Orchestration`, `Operability`,
-       `Integration`, `Deployment sovereignty`, `Release maturity`,
-       `Accessibility`. This is what closes the `integration`/`maturity` swap
-       (D6);
-     - `parseDimensions` finds 12 cards × 6 rows = 72 rows in both real files,
-       and `manus-ai`'s maturity row parses as `raw: null, points: null` — these
-       two are **expected red until step 5**.
-   - Done when: `npm test` shows exactly the expected failures above and no
-     others; the existing `parseScores` / `parseMatrix` / `parsePrices` /
-     `parseMeta` tests are untouched in the diff.
+3. [ ] **Score the 14 matrix criteria from official docs.** One row per
+   criterion in a table: state (`yes`/`partial`/`no`), the DE and EN chip
+   label, source URL, checked date, evidence tier (A/B/C), and one sentence of
+   justification. Tiers live here and nowhere else (**D2**). Apply the
+   published tier tests where they exist — `model-agnostic` uses the ADR-005
+   2026-09-02 amendment table (what the operator can choose, not how the tool
+   reaches the model). Judge every criterion against the D1 artefact only.
+   Vendor blog, marketing and roadmap pages are not evidence; a roadmap may
+   only justify `partial` with a "Planned"-style label in words. Mark any
+   criterion that cannot be settled from docs as **`pending hands-on`** — that
+   list is the input to step 4. Also collect the pricing facts for the price
+   card (type, main, note, rows) with a source and checked date per row.
+   - Files: `docs/evaluations/vercel-ai-sdk.md` (sections "Matrix" and
+     "Pricing")
+   - Done when: each of the 14 criteria either has a state with a source URL,
+     a checked date and a tier, or is explicitly marked `pending hands-on`;
+     the `pending hands-on` list is written down as a list even if it is
+     empty; every price row has a value, a source URL and a checked date.
 
-3. [x] Make `verify` fail on any hand-altered dimension figure
-   - Files: `scripts/verify.mjs`, `scripts/verify.test.mjs`
-   - Inside `collectFailures`'s per-file loop (parse block lines 20–30, per-tool
-     block lines 42–101), parse dimensions and weights in the same `try` and
-     add, per file and `lang`:
-     - the six `data-dim` keys per card equal the six `score.rubric` keys as a
-       *set*, and their document order equals `parseWeights` order (D6);
-     - per dimension: `max` === `rubric[dim].max`; `raw` === `rubric[dim].raw`
-       (null-aware — `data-raw` present where JSON says `null`, or absent where
-       JSON has a number, is a failure);
-     - per dimension, the displayed figure: `Number(points)` ===
-       `Math.floor(weight * raw / max * 100 + 0.5) / 100` using the weight from
-       `parseWeights`, compared with `===`, no tolerance (D4); null-aware for
-       the unevidenced row;
-     - `rawLabel` === `` `${raw}/${max}` `` for evidenced rows;
-     - `name` === `parseWeights(html).get(dim).label` (D3), and
-       `title` === `name` (the ellipsis title is not allowed to drift from the
-       text it abbreviates);
-     - per rated tool, on **full precision**, not on the displayed figures:
-       `Σ (weight * raw / max)` equals `score.exact` within 0.005 and
-       `Math.floor(Σ + 0.5)` === `score.value`;
-     - per unrated tool: at least one parsed row has `raw === null`;
-     - `parseWeights` weight per dimension === `rubric[dim].weight` for every
-       tool (they are per-tool in JSON and identical across tools; report a
-       failure if they are not).
-   - Tests in `scripts/verify.test.mjs`, deriving fixtures from `DATA` like the
-     existing ones (never hardcoded numbers — see the comment at line 12), each
-     keeping the `assert.notEqual(broken, DE, 'fixture did not match')` guard:
-     a hand-altered `dim-points` in DE only is caught; a hand-altered `data-raw`
-     is caught; a `dim-name` drifted from the Methodology table is caught; a
-     `title` drifted from its own `dim-name` is caught; a Methodology weight
-     changed to disagree with `tools.json` is caught; removing `data-raw` from a
-     rated row is caught; DE and EN carry byte-identical `data-raw`, `data-max`,
-     `dim-raw` and `dim-points` strings for every tool (labels and titles may
-     differ, D7); `manus-ai` still parses unrated in both files.
-   - Done when: `npm test` shows only the expected step-2/step-3 real-file
-     failures (they now include `collectFailures` reporting missing dimension
-     rows) and no unexpected ones; every new tamper test fails the suite when
-     its own assertion is inverted; `npm run verify` fails naming missing
-     dimension rows rather than crashing.
+4. [ ] **Hands-on reproducer script (only if step 3 left a criterion
+   `pending hands-on` / heading for tier-C; otherwise mark done and record
+   "no tier-C evidence needed").** A standalone Node script that exercises the
+   specific capability in question and prints what it observed.
+   - It lives in `docs/hands-on/vercel-ai-sdk/` (**D4**: separate from
+     `docs/evaluations/`) with its **own** `package.json` + committed
+     `package-lock.json` pinning the exact `ai` version from step 2 (exact
+     version, no `^`). The root `package.json` stays dependency-free and
+     unchanged.
+   - **Non-goal, stated explicitly:** nothing under `docs/hands-on/` is ever
+     referenced by the root `package.json`, by any file in `scripts/`, or by
+     any workflow. It is reproduction evidence, not part of the site or its
+     checks. As defence-in-depth on top of that boundary, no file in it is
+     named `*.test.mjs` — the root test glob is `scripts/**/*.test.mjs` and
+     cannot reach `docs/` anyway, so the naming rule is a second line, not the
+     mechanism.
+   - **Default run is against a mock/local model**, so it needs no provider
+     account and no network. First choice: the AI SDK's own test/mock model
+     utilities if the pinned version documents them (verify in the docs — do
+     not assume the import path). Fallback: a tiny local HTTP stub serving an
+     OpenAI-compatible chat-completions endpoint from Node's built-in `http`,
+     with `baseURL` pointed at `http://127.0.0.1:<port>` and a dummy key.
+   - **No secrets anywhere.** Any real-provider mode is opt-in via an
+     environment variable read with `process.env`, never a flag value, never a
+     committed file. The script must not print environment variables or
+     request headers, and the log must contain no key material. Add a
+     `.gitignore` (new file) ignoring `node_modules/` so an install cannot be
+     committed.
+   - Files: `docs/hands-on/vercel-ai-sdk/run.mjs`,
+     `docs/hands-on/vercel-ai-sdk/package.json`,
+     `docs/hands-on/vercel-ai-sdk/package-lock.json`, `.gitignore` (new)
+   - Done when: `cd docs/hands-on/vercel-ai-sdk && npm ci && node run.mjs`
+     completes offline with no credentials set and prints an observation that
+     answers the criterion; `npm test` and `npm run verify` at the repo root
+     still behave exactly as before (nothing installed at the root); `grep -r`
+     for `hands-on` in `package.json`, `scripts/` and `.github/workflows/`
+     returns nothing.
 
-4. [x] DE: add the per-dimension breakdown to all twelve score cards in `index.html`
-   - Files: `index.html`
-   - CSS: insert a `/* Rubric breakdown */` block immediately after the
-     `.score-card.is-unrated` rule (line 400) and before `.method-table`
-     (line 401). Classes: `.score-dims` (the `<details>`), `.score-dims-sum`
-     (the `<summary>`), `.dim`, `.dim-name`, `.dim-raw`, `.dim-points`,
-     `.dim.is-unevidenced`. Compact mono ~10px, one line per dimension, a
-     hairline top border between the descriptor and the disclosure, the default
-     `<summary>` marker replaced with something that reads as a control, and a
-     visible `:focus-visible` outline on the summary. `.dim-name` needs an
-     explicit overflow rule — the grid card is `minmax(200px, 1fr)` and
-     `Deployment-Souveränität` is 23 characters: `min-width: 0; overflow: hidden;
-     text-overflow: ellipsis; white-space: nowrap;` on a `1fr` column, with the
-     full label in the span's `title`. It must introduce no class name starting
-     with `score-number`, `score-bar-fill` or `score-descriptor`.
-   - Markup: in each of the **twelve `<div class="score-card…" data-tool=`
-     opening tags' cards** (four of which carry a modifier class — `is-adk`,
-     `is-mcp`, `is-databricks`, `is-unrated` — so match on `data-tool`, not on
-     `class="score-card"`), **after** the existing
-     `<div class="score-descriptor">…</div>` line, insert:
-     `<details class="score-dims"><summary class="score-dims-sum">Aufschlüsselung der Bewertung</summary>`
-     + six `.dim` rows, one per line + `</details>`. Collapsed by default; no JS
-     involved (owner's call A). One summary string per language, identical open
-     and closed.
-     Row shape (example: `maestro` / orchestration):
-     `<div class="dim" data-dim="orchestration" data-max="8" data-raw="8"><span class="dim-name" title="Orchestrierung">Orchestrierung</span><span class="dim-raw">8/8</span><span class="dim-points">25</span></div>`
-     - Rows in Methodology-table order (D6).
-     - `data-raw` = `raw`, `data-max` = `max`, `dim-raw` text = `raw/max`, all
-       from `data.tools[key].score.rubric[dim]`; `dim-points` text =
-       `String(Math.floor(weight * raw / max * 100 + 0.5) / 100)` with the
-       weight from the Methodology table (D4).
-     - `dim-name` text **and** its `title` must be a byte-for-byte copy of the
-       matching Methodology row's first cell, including literal umlauts
-       (`Deployment-Souveränität`, `Zugänglichkeit`, `Release-Reife`).
-     - `manus-ai`'s maturity row only: no `data-raw`, class
-       `dim is-unevidenced`, `dim-raw` text `—`, `dim-points` text
-       `nicht belegt`, and `data-reason="Release-Reife nicht aus datierter
-       Primärquelle belegbar"` on the row (the engine reads this in step 8;
-       also mirror it into the row's `title` for hover). Its other five rows are
-       normal. The card keeps `is-unrated` and
-       `<div class="score-unrated">Nicht bewertet</div>` and gains no number.
-   - Method note: append one sentence to the existing `.method-note` paragraph
-     (line 1858): the per-dimension figures on the score cards are rounded to
-     two decimals, and the exact inputs (`raw`/`max`) are shown beside them.
-   - Generate the 72 rows with a throwaway Node one-liner reading
-     `data/tools.json` and paste the output — do not hand-type them, and do not
-     commit the generator (no build step).
-   - Done when: `grep -c 'class="dim"' index.html` prints `71`,
-     `grep -c 'class="dim is-unevidenced"' index.html` prints `1`, and
-     `grep -c '<details class="score-dims">' index.html` prints `12`;
-     `npm run verify` now reports failures for `index.en.html` only; the DE page
-     in a browser shows a closed disclosure on every card that opens to six
-     labelled rows, with the compare checkboxes and modal still working.
+5. [ ] **Hands-on log (same condition as step 4).** A written record: version
+   tested, date, exact commands and inputs, verbatim observed output, and the
+   criterion each observation decides. One section per tier-C criterion,
+   ending in the state it supports. The log does **not** define its own format
+   rules in its header; it cites `docs/decisions/012-hands-on-evidence.md`
+   (written in step 6) as the source of the format. Per **D3**, this file's
+   repo-relative path is the `source` value every tier-C data point carries;
+   note its GitHub blob URL too — step 9e links it from the pages.
+   - Files: `docs/hands-on/vercel-ai-sdk/2026-10-<dd>-log.md`
+   - Done when: a second person could reproduce every observation from the log
+     alone; each tier-C matrix row in `docs/evaluations/vercel-ai-sdk.md`
+     points at this file as its source; the log's header links the ADR instead
+     of restating format rules.
 
-5. [x] EN: the same breakdown in `index.en.html`
-   - Files: `index.en.html`
-   - Byte-identical CSS block in the same position. Identical markup and
-     identical `data-raw` / `data-max` / `dim-raw` / `dim-points` values.
-     English strings: summary `Rating breakdown`; `dim-name` and `title` copied
-     byte-for-byte from the EN Methodology table (`Orchestration`,
-     `Operability`, `Integration`, `Deployment sovereignty`, `Release maturity`,
-     `Accessibility`); `manus-ai` maturity row `dim-points` text
-     `not evidenced`, `data-reason="release maturity cannot be evidenced from a
-     dated primary source"`. Append the equivalent rounding sentence to the EN
-     `.method-note` (line 1819).
-   - Done when: the three counts from step 4 hold for `index.en.html`;
-     `diff <(grep -o 'data-dim="[a-z]*" data-max="[0-9]*"\( data-raw="[0-9]*"\)\?' index.html) <(grep -o 'data-dim="[a-z]*" data-max="[0-9]*"\( data-raw="[0-9]*"\)\?' index.en.html)`
-     prints nothing; **`npm run verify` prints `OK` and `npm test` is fully
-     green for the first time since step 2.**
+6. [ ] **Record the hands-on evidence precedent as an ADR.** Write
+   `docs/decisions/012-hands-on-evidence.md` (confirm 012 is still the next
+   free number in `docs/decisions/` before writing). It records the Gate 1
+   decisions, not new ones. Each is written as **decided at Gate 1,
+   2026-10-02**, with these values:
+   - **D1** the scored artefact is the `ai` package only — providers, AI
+     Gateway and the Vercel platform are out of scope;
+   - **D4** hands-on artefacts live in `docs/hands-on/<tool>/`, kept as a tree
+     separate from `docs/evaluations/<tool>.md`, plus the log format;
+   - **D3** the form `source` takes for a tier-C data point: the repo-relative
+     path to the log file (published pages link the GitHub blob URL instead,
+     because a `.md` path is not a served page);
+   - **D2** matrix cells carry **no** `tier` field — tiers live in the
+     evaluation doc, per ADR-005 Consequences;
+   - **D6** the published-page transparency requirement (scope, tier-C cells,
+     as-of meaning) as a standing expectation for future additions;
+   - the non-goal from step 4: nothing under `docs/hands-on/` is wired into the
+     root package, `scripts/` or any workflow.
+   Follow `docs/decisions/000-template.md`.
+   - Files: `docs/decisions/012-hands-on-evidence.md` (new)
+   - Done when: the file exists with Date/Status/Decision/Context/Consequences
+     sections, states each of D1–D4 and D6 as decided at Gate 1 on 2026-10-02,
+     and step 5's log links to it; no other ADR is edited.
 
-6. [x] DE: add the weighting panel markup and CSS to `index.html`
-   - Files: `index.html`
-   - Insert a new `<!-- Weighting Panel -->` section between the closing `</div>`
-     of the Score Overview section (line 1243) and `<!-- Feature Matrix -->`
-     (line 1245). CSS goes in an `/* Own weighting */` block after the rubric
-     breakdown block from step 4, and must include
-     `.section[hidden] { display: none; }` — `.section` declares no `display`
-     today, so the UA rule for `[hidden]` currently wins only by luck.
-   - Reuse `section` / `section-header` / `section-title`; every **new** class
-     and every id is prefixed `wt-`; no reserved strings (D5). The section
-     carries `hidden` — the engine removes it on init, so a no-JS visitor sees
-     the published rating and the disclosures only, never a half-built control.
-   - First line inside the section, an HTML comment: this panel sits inside the
-     slice `parseScores` reads, every new class here is prefixed `wt-`, and the
-     reserved class names are listed in `docs/decisions/006-*.md`. **The comment
-     must not spell the reserved strings**, or it would trip step 9's own
-     negative-match check.
-   - Contents, in order: section title
-     `Eigene Gewichtung — nicht die veröffentlichte Bewertung`; a persistent
-     note `<p class="wt-note">Diese Reihenfolge entsteht aus Ihren Gewichten und
-     gilt nur in diesem Browser. Die veröffentlichte Bewertung darüber bleibt
-     unverändert. Gewichte werden auf 100 normalisiert.</p>`; **two** preset
-     buttons `<button type="button" class="wt-preset" data-preset="published"
-     aria-pressed="false">Veröffentlichte Gewichte</button>` and
-     `data-preset="equal"` → `Gleich gewichtet`; six slider rows, each
-     `<label for="wt-s-<dim>">` + `<input type="range" id="wt-s-<dim>"
-     data-dim="<dim>" min="0" max="50" step="1">` + a
-     `<span class="wt-pct" aria-hidden="true">` — **no `value` attribute** (the
-     engine sets it from the Methodology table, so the published weights are not
-     copied here, D2); a `<p class="wt-sum">` with **no `aria-live`** (it would
-     fire on every `input` frame and be unusable with a screen reader; the range
-     inputs announce their own values natively); a
-     `<button type="button" id="wt-reset">Auf veröffentlichte Gewichte
-     zurücksetzen</button>`; an empty `<div id="wt-ranking">` preceded by a
-     `<div class="wt-head"><span>Ihre Gewichtung</span><span>Veröffentlicht</span></div>`
-     column header; an empty `<div id="wt-unrated">`.
-   - Slider labels use the same six strings as the Methodology table.
-   - Done when: `npm run verify` and `npm test` are green (the panel is inert and
-     contains no figures); the panel is invisible in the browser; the existing
-     `verify.test.mjs:151` test still reports `manus-ai` as
-     `score: null, barWidth: null`.
+7. [ ] **Derive the six rubric dimensions and the arithmetic.** Map the matrix
+   results onto the ADR-005 dimensions (orchestration 25/max 8, operability
+   20/4, integration 15/6, sovereignty 15/4, maturity 15/6, accessibility
+   10/6), scoring each criterion 0/1/2. Maturity is **tier A only**, from
+   tagged releases or a dated vendor GA statement for the D1 artefact, against
+   the ADR-005 amendment table (`ga-status`, `release-recency` ≤30/31–90/>90
+   days, `sustained-cadence` ≥6/2–5/≤1 stable releases in the trailing 90 days
+   from the step-2 date). If any maturity criterion has no tier-A source, the
+   tool is **unrated**: `score.value = null`, `score.exact = null`,
+   `maturity.points = null`, `maturity.raw = null`, `criteria: null`, with the
+   reason in `maturity.evidence` — never 0. Otherwise compute
+   `points = weight*raw/max` per dimension, `exact` as the unrounded sum, and
+   `value = floor(exact + 0.5)`.
+   - Files: `docs/evaluations/vercel-ai-sdk.md` (section "Rubric")
+   - Done when: **no criterion in the step-3 matrix table is still marked
+     `pending hands-on`** — each one has been settled either from docs or by
+     the step-5 log; and the file shows per-dimension raw/max/points, the
+     trailing 90-day release list behind `sustained-cadence`, the exact total
+     and the rounded value (or an explicit unrated verdict with its reason),
+     and the arithmetic checks by hand.
 
-7. [x] EN: the same panel in `index.en.html`
-   - Files: `index.en.html`
-   - Byte-identical CSS block and byte-identical structure (same ids, same
-     `data-dim` / `data-preset` values, same element order); only visible
-     strings change: `Your own weighting — not the published rating`; `This order
-     comes from your weights and stays in this browser. The published rating
-     above is unchanged. Weights are normalised to 100.`; `Published weights`,
-     `Equal weights`; `Your weighting` / `Published`; `Reset to published
-     weights`.
-   - Done when: `diff <(grep -o 'id="wt-[a-z-]*"' index.html) <(grep -o 'id="wt-[a-z-]*"' index.en.html)`
-     prints nothing, and the same holds for `data-preset="[a-z]*"` and for
-     `data-dim="[a-z]*"` inside the panel; `npm run verify` and `npm test` green.
+8. [ ] **Add the tool to `data/tools.json`.** Append a `vercel-ai-sdk` entry
+   after `manus-ai` with `name`, `score` (value/source/checked/provenance/
+   exact/rubric, `maturity.criteria` tiered as in step 7), `descriptor`
+   (de/en), all 14 `matrix` cells and the `price` block — every data point
+   carrying the step-2 `checked` date and a real source (a URL, or for tier-C
+   the repo-relative log path per **D3**), `provenance: "sourced"`. **No `tier`
+   field on any matrix cell** (**D2**). **Do not touch `meta.toolOrder` here** —
+   that happens in step 9, once the markup exists. Do not touch any existing
+   tool.
+   - Files: `data/tools.json`
+   - Done when: `node -e "JSON.parse(require('fs').readFileSync('data/tools.json'))"`
+     passes; `grep -c '"provenance": "legacy-unsourced"'` is unchanged from
+     `main`; no `"tier"` key appears under the new tool's `matrix`;
+     `node scripts/verify.mjs` fails *only* with "missing tools
+     vercel-ai-sdk" style messages (the pages have not been edited yet) and
+     with no `rubric:` or `sourcing:` failures.
 
-8. [x] Add the weighting engine to both files
-   - Files: `index.html` (a second IIFE after the existing one, i.e. after line
-     2134 `})();` and before `</script>`), `index.en.html` (same position),
-     `scripts/lib/rubric.mjs` (new)
-   - Sentinels, nested exactly like this so drift is testable:
-     `/* wt-engine:begin */`, then
-     `/* wt-strings:begin */ var T = {…}; /* wt-strings:end */`, then
-     `/* wt-formula:begin */ … /* wt-formula:end */`, then the rest of the code,
-     then `/* wt-engine:end */`. Everything inside `wt-engine` and outside
-     `wt-strings` is byte-identical between the two pages.
-     `scripts/lib/rubric.mjs` contains the **same bytes** between its own
-     `/* wt-formula:begin */` / `/* wt-formula:end */` markers, with its
-     `export` statement outside them — so the formula block must be plain
-     shared-syntax function declarations (`var`, no `export`, no module scope,
-     no DOM).
-   - Behaviour:
-     - `defaults()` reads `.method-table tr[data-dim]` → `{dim: Number(td.w)}`.
-     - `tools()` reads `.score-card[data-tool]` → name from `.score-tool a`,
-       `published` from `.score-number` (null when absent), `{raw, max}` per
-       `.score-dims .dim[data-dim]` (`raw = null` when the attribute is absent),
-       and the unrated reason from the `.dim.is-unevidenced` row's
-       `data-reason`. **The reason is never hardcoded per tool in `T`** — that
-       would be a fourth, unverified copy of a finding that already exists in
-       `tools.json`, in the card, and in `verify`.
-     - Formula block (`wt-formula`): `S = Σ w`; if `S === 0` return `null`; if
-       any `raw === null` return `null` (unrated wins over every weighting — see
-       ADR-006); else `Math.floor(Σ ((100 * w[d] / S) * raw[d] / max[d]) + 0.5)`.
-       One rounding, half-up, on the total only, at **full precision** — the
-       2-dp display rounding (D4) must not appear anywhere in the engine.
-     - Render: rated tools sorted by recomputed total descending; ties keep
-       score-grid DOM order and share a rank number; each row shows the name, the
-       recomputed total (`aria-label` prefixed with `T.yours`), the published
-       total (prefixed with `T.published`), and a `wt-bar-fill` width equal to
-       the recomputed total. Unrated tools render into `#wt-unrated` under
-       `T.unratedHead` with the reason read from the card, never a total.
-     - `S === 0`: `#wt-ranking` shows `T.allZero` only — no rows, no `NaN`.
-     - Presets, **two only**: `published` = the Methodology-table weights;
-       `equal` = every weight `17` (a mid-track value on the 0–50 slider that
-       normalises to 16.67% each — at `1` all six handles would park at the far
-       left while the readout said 16.7%). `aria-pressed` compares the
-       **normalised** weight vectors, not raw slider values, so `17,17,17,17,17,17`
-       and `20,20,20,20,20,20` both read as `equal`.
-     - Events: render on `input` (live), persist to `localStorage` on `change`
-       (a drag otherwise fires ~100 synchronous `setItem` calls per second).
-     - Persistence: `localStorage['aiab.dimension-weights.v1']` =
-       `{"v":1,"w":{…}}`. On load: if the key is missing, unparseable, `v !== 1`,
-       missing a dimension, or holds anything that is not an integer in
-       `[0, 50]`, ignore it silently and use the published defaults — do **not**
-       delete it (a future schema's data is not this page's to destroy). Reset
-       applies the published defaults *and* `removeItem`s the key.
-     - Last line of init: `panel.hidden = false`.
-   - Done when: `npm run verify` and `npm test` green; `git diff` shows no change
-     to any `.score-number`, `score-bar-fill` width, `.dim` figure or
-     `data/tools.json`; and in both languages with empty storage, all eleven
-     rated totals in the panel equal the published card numbers
-     (83/81/87/87/73/76/83/83/76/66/51), `manus-ai` appears only under
-     "not rated" with the reason taken from its card, one slider moves the panel
-     and nothing else, reload keeps the moved weights, and Reset restores the
-     eleven published totals and bar widths and empties the storage key.
+9. [ ] **Add the tool to both served pages with its scope and evidence
+   disclosure, then reconcile `meta.toolOrder`.** In `index.html` and
+   `index.en.html`, mirroring the existing markup exactly and keeping the two
+   files identical in content (DE/EN wording only), neutral and descriptive,
+   plain HTML/CSS, **no new dependency and no new external subresource**:
+   (a) a `<div class="score-card" data-tool="vercel-ai-sdk">` with link,
+   score-number + bar (or `is-unrated` with `score-unrated` and **no**
+   number/bar), descriptor, and six `<div class="dim">` rows in Methodology
+   order (orchestration, operability, integration, sovereignty, maturity,
+   accessibility) with `data-max`, `data-raw`, `dim-name` + identical `title`,
+   `dim-raw` `raw/max`, `dim-points` rounded to 2dp with a **dot** in both
+   languages; an unevidenced maturity row copies the `is-unevidenced` /
+   `data-reason` pattern used by `manus-ai`;
+   (b) a 13th `<th data-tool="vercel-ai-sdk">` and one new `<td><span
+   class="chip chip-…">` in **all 14** matrix rows, at the same ordinal
+   position in both files;
+   (c) a `<div class="price-card" data-tool="vercel-ai-sdk">` with
+   price-tool / price-type / price-main / price-note and the price rows and
+   tones from step 3;
+   (d) **transparency note (D6)**, one `<p class="method-note">` added directly
+   after the matrix table's closing `</table></div>`, inside the Feature-Matrix
+   section and before `<!-- Pricing -->`, reusing the existing
+   `.method-note` style (defined `index.html:630`, used at `index.html:2227`) —
+   no new CSS class, no new component. It states, in the D1 wording written in
+   step 2: that for Vercel AI SDK the scored artefact is the `ai` package only
+   and that provider packages, AI Gateway and the Vercel platform are not
+   scored; the exact version evaluated and the as-of/checked date from step 2;
+   which matrix criteria rest on hands-on (tier-C) evidence, named by their
+   published row labels, with two `target="_blank" rel="noopener"` links — one
+   to the hands-on log and one to the reproducer script, as GitHub blob URLs
+   (**D3**: `source` in the JSON stays the repo-relative path). If step 4/5 did
+   not run, the sentence instead reads that all cells rest on vendor
+   documentation and the two links are omitted.
+   **This adds no field that `verify` or the tests read**: it introduces no
+   `data-tool`, `chip`, `score-card`, `dim`, `price-row-*` or `news-date`
+   markup, and must contain none of those substrings (see the placement fact
+   above). If an implementer finds they cannot phrase it without one, stop and
+   raise it rather than changing a parser.
+   (e) only after (a)–(d) are written, add `vercel-ai-sdk` to the three
+   `meta.toolOrder` arrays in `data/tools.json` at the position the markup
+   actually uses.
+   Land this together with step 10 as one commit.
+   - Files: `index.html`, `index.en.html`, `data/tools.json`
+   - Done when: `node scripts/verify.mjs` prints
+     "OK — index.html, index.en.html and data/tools.json agree."; `npm test`
+     count assertions are unaffected by (d); the DE and EN notes say the same
+     things in the same order; both links resolve to files that exist on the
+     branch; **and** the three `meta.toolOrder` arrays match the `data-tool`
+     order actually written into `index.html` (score grid, matrix headers,
+     price cards), verified by reading the file — `scripts/verify.mjs` does not
+     check `toolOrder`.
 
-9. [x] Guard the invariants the panel could silently break, and teach the apply line about them
-   - Files: `scripts/verify.test.mjs` (or a new `scripts/panel.test.mjs` —
-     `npm test` runs the whole `scripts/` directory),
-     `.github/workflows/apply.yml`
-   - Tests:
-     - **occurrence counts over the whole `parseScores` slice**, in both files:
-       `score-number` × 11, `score-bar-fill` × 11, `score-descriptor` × 12,
-       `<div class="score-card` × 12, `<details class="score-dims">` × 12,
-       `<div class="dim` × 72. This covers anything a future editor drops
-       between the grid's close and the panel comment, which a panel-only
-       negative match would miss entirely;
-     - the panel slice (`sliceBetween(html, '<!-- Weighting Panel -->',
-       '<!-- Feature Matrix -->')`) matches none of the five reserved strings —
-       kept as a cheap, fast-failing extra check;
-     - `parseScores(html).size === 12`, `manus-ai` unrated **and its descriptor
-       still `Autonomous Web Agent`** in both files (extend the existing test at
-       `verify.test.mjs:151`), so panel bleed-through is caught;
-     - byte-identity across all three copies of the formula: the
-       `wt-formula` block in `index.html`, in `index.en.html`, and in
-       `scripts/lib/rubric.mjs`;
-     - the `wt-engine` slices of the two pages are byte-identical once each
-       file's `wt-strings` span is removed;
-     - recomputing from the *parsed HTML* (`parseDimensions` raw/max +
-       `parseWeights` weights, normalised, one half-up rounding at full
-       precision, via `scripts/lib/rubric.mjs`) reproduces `score.value` for all
-       eleven rated tools in both files — card 2's first acceptance criterion,
-       machine-checked;
-     - the same recompute with `maturity` weight 0 still yields no total for
-       `manus-ai`.
-   - `.github/workflows/apply.yml`, prompt edits:
-     - item 1 (line 107): add the dimension figures — "every changed score,
-       score-bar width, **rubric dimension figure (`data-raw`, `data-max`, the
-       `dim-raw` text and the rounded `dim-points` text)**, matrix chip state and
-       label, and price field";
-     - add an explicit rated↔unrated transition instruction: when a tool gains
-       or loses tier-A maturity evidence, the card's `is-unrated` class,
-       `score-number` + `score-bar-fill` vs `score-unrated`, and the maturity
-       row's `dim is-unevidenced` class, presence or absence of `data-raw`, the
-       `—` / `nicht belegt` | `not evidenced` text and the `data-reason` /
-       `title` all have to move together. None of that is a "changed figure", so
-       without this the apply agent lands red on the first such round;
-     - lines 117–120: extend "address every cell by its `data-tool` /
-       `data-feature` attribute — never count columns" to include `data-dim`.
-   - Done when: `npm test` green with the new tests; each new test fails when its
-     own assertion is inverted; the apply prompt names dimension figures, the
-     rated↔unrated transition and `data-dim`.
+10. [ ] **Update the published counts, the changelog entry (incl. the as-of
+    disclosure) and the as-of stamp.** Hero `stat-num` 12 → 13 in both files.
+    Add a changelog entry (`news-date` "Oktober 2026" / "October 2026")
+    describing the addition in descriptive, non-promotional language, using the
+    existing `news-card` / `news-intro` / `news-list` markup, and naming:
+    the version pinned in step 2; the D1 scope (`ai` package only — providers,
+    AI Gateway and the Vercel platform not scored); that some cells rest on
+    hands-on evidence, with the same two links as step 9d (omit if steps 4–5
+    did not run); and, per **D6**, one sentence stating that the October 2026
+    stamp reflects **this addition only** and that the other twelve tools were
+    last checked at their own `checked` dates and were **not** re-verified in
+    this change. Move `topbar-meta` to "Stand: Oktober 2026" / "As of: October
+    2026" and `meta.asOf` in `data/tools.json` to match (**D5**), since
+    `verify` requires as-of to equal the newest news date. Update the hardcoded
+    counts in `scripts/lib/parse-html.test.mjs` (add `vercel-ai-sdk` to
+    `TOOL_KEYS`; 12→13, 168→182, 72→78), `scripts/panel.test.mjs` (card counts
+    12→13, `<div class="dim` 72→78, and `score-number`/`score-bar-fill` 11→12
+    **only if** the new tool is rated — leave at 11 if it is unrated) and
+    `scripts/verify.test.mjs` (72→78). Do not change the existing changelog
+    entries or any existing tool's wording, and do not touch any other tool's
+    `checked` date.
+    - Files: `index.html`, `index.en.html`, `data/tools.json`,
+      `scripts/lib/parse-html.test.mjs`, `scripts/panel.test.mjs`,
+      `scripts/verify.test.mjs`
+    - Done when: `npm test` and `npm run verify` both pass; the new entry is
+      the only one with an October 2026 `news-date`; the as-of disclosure
+      sentence is present and identical in content in both languages;
+      `git diff main -- data/tools.json` shows no `checked` date changed on any
+      existing tool.
 
-10. [x] Record the decision as ADR-006
-   - Files: `docs/decisions/006-reweighting-is-a-view.md` (new)
-   - Follow `docs/decisions/000-template.md`. **Decision:** user reweighting is a
-     **view**; the published rubric (ADR-005) is the **rating**. The rules that
-     keep them apart: the published grid never moves, re-orders or re-renders;
-     every adjusted figure is labelled as the visitor's own weighting in both
-     languages; the weighting lives in `localStorage` only — no URL parameter,
-     no `?w=` encoding, no shareable link, so the site never transmits or encodes
-     a reweighted number and one cannot be handed to a third party wearing the
-     site's authority; the two presets are the published weights and equal
-     weights, both stated and reproducible, never named verdicts (CLAUDE.md rule
-     3); nothing outside the six rubric dimensions is weightable; badges,
-     descriptors, the Verdict section, the Methodology table and the pricing and
-     matrix sections are inert to visitor weights. **Why an unrated tool stays
-     unrated at any weighting, including maturity weight 0:** ADR-005's amendment
-     makes missing tier-A evidence a *finding*, not a zero, and redistributing
-     the weight would measure that tool on a different denominator from every
-     other tool — the evidence does not appear because the visitor stopped
-     caring about it.
-   - **Consequences** must include, beyond the above:
-     (a) the reserved-class rule — anything placed between the score grid and
-     `<!-- Feature Matrix -->` lands inside the slice `parseScores` reads and
-     must avoid `score-number`, `score-bar-fill`, `score-descriptor`,
-     `<div class="score-card` and `<div class="dim`; ADR-006 is this rule's only
-     durable home, since `PLAN.md` is transient;
-     (b) the storage contract — key `aiab.dimension-weights.v1`, schema `{v:1,w}`,
-     never transmitted, and the reason no consent artifact is needed: it is a
-     functional store holding the visitor's own slider positions, written only by
-     their own action, which falls under the ePrivacy Art. 5(3) "explicitly
-     requested by the subscriber or user" exemption. Record the reasoning, not
-     just the conclusion. Note that DE and EN share the key (same origin);
-     (c) that `verify` still does **not** check that a rubric `raw` value follows
-     the matrix cells ADR-005 names as its input — the 144 new checks prove the
-     pages match `tools.json`, not that `tools.json` matches the matrix, and must
-     not be read as proving that link;
-     (d) that the display figures are rounded to 2 decimals while every check and
-     the engine run on full precision (D4);
-     (e) that `scripts/extract.mjs` remains a bootstrap which cannot regenerate
-     rubric data, and that a weight change is still an ADR-005 amendment, not
-     something the UI can do.
-   - Do **not** write any claim about third-party data flow broader than the page
-     supports — see the Google Fonts bullet in Risks. Scope the claim to what
-     the site does with the weighting, not to what the page as a whole
-     transmits.
-   - Done when: the file exists, follows the template's four headings, covers
-     (a)–(e), and `docs/decisions/` has no gap or duplicate in its numbering.
+11. [ ] **Commit and self-check against the acceptance criteria.** One or two
+    conventional commits: a `data:` commit for `data/tools.json` + both pages
+    + the evaluation record, with every source URL referenced in the body, and
+    (if steps 4–6 ran) a `docs:` commit for the hands-on script, the hands-on
+    log and `docs/decisions/012-hands-on-evidence.md`. Then confirm with
+    `git diff main -- data/tools.json` that no existing tool's score, ranking,
+    matrix cell, label or price moved. Do not merge, do not push to `main`,
+    do not tag.
+    - Files: git history only
+    - Done when: `npm test` and `npm run verify` pass on the branch tip;
+      `git diff main -- data/tools.json` shows only additions inside
+      `meta.toolOrder`, `meta.asOf` and the new `vercel-ai-sdk` object; the
+      `docs:` commit contains the ADR; the commit bodies list the sources;
+      the D6 disclosures from steps 9d and 10 are visible on both pages.
 
 ## Risks & open questions
 
-- **The 144 figures (72 per page) are the biggest mechanical risk.** Mitigation:
-  generate them from `data/tools.json`, and land the verifier first (steps 2–3)
-  so no unchecked figure ever exists under a green `verify`. The cost is a red
-  `npm test` / `npm run verify` between steps 2 and 5, which is stated in the
-  ordering note so an implementer following CLAUDE.md's "mark each step done
-  immediately" does not try to fix it by weakening an assertion.
-- **D7, the decimal separator, is an owner-visible choice**, not a panel
-  ruling. `3.33` on the German page is not German convention; the alternative is
-  `3,33` on the DE page, which costs a per-language parse in `verify` and drops
-  the DE/EN byte-identity check on the figure strings. Flagged for Markus.
-- **The `<details>` disclosure means the breakdown is one click away**, not
-  on screen. That is owner's call A and the amended acceptance criterion above
-  reflects it. It has the side benefit that no card grows by ~90px.
-- **The formula exists in three places but is now proven identical** — the
-  `wt-formula` block is byte-compared across `index.html`, `index.en.html` and
-  `scripts/lib/rubric.mjs` (step 9). What remains untested is everything
-  *around* it: the DOM reads, the rendering, the persistence. There is no
-  browser test harness and adding one is a dependency and a build step, so those
-  are verified by hand below.
-- **`manus-ai`'s "not evidenced" reason is prose and `verify` does not check its
-  wording.** Precedent: ADR-005 says the same of the provenance note. What
-  `verify` does check is the structural fact (no `data-raw` ⇔ JSON `raw` is
-  `null`), and step 8 makes the panel read the string from the card rather than
-  keep its own copy. The long `rubric.maturity.evidence` string in `tools.json`
-  is English-only and full of URLs, so it deliberately does not go on the page.
-- **Two presets is a deliberate narrowing** from the four in the first draft.
-  An `ops` preset that doubled operability *and* maturity bundled a pairing
-  nobody published, and doubling maturity reads as pointed at the one unrated
-  tool; a set of "double dimension X" presets also privileges some dimensions
-  over others in ways that cut in opposite vendor directions, which is a framing
-  choice under CLAUDE.md rule 3. The free sliders reach every one of those
-  vectors anyway.
-- **Slider range 0–50, integer steps** is a choice, not a constraint. It leaves
-  headroom above the largest published weight (25) and keeps the normalised
-  percentages legible.
-- **Out of scope but worth Markus's attention: `index.html:7` and
-  `index.en.html:7` load Inter and JetBrains Mono from `fonts.googleapis.com`,
-  which transmits every visitor's IP address to Google with no consent layer.**
-  This branch neither causes nor worsens it, and it is not a reason to block
-  this work. It does bound what ADR-006 may claim: the ADR may say the site does
-  not transmit or encode the *weighting*, and must not say that nothing on the
-  page reaches a third party. Recommendation: a separate `/hotfix` to self-host
-  the two font files.
-- **`scripts/extract.mjs` cannot regenerate the rubric.** It is already a
-  one-time bootstrap that destroys sources when re-run; after this change it
-  would also destroy the rubric and the dimension markup. Out of scope, flagged
-  so nobody runs `npm run extract` expecting a round trip.
+- **Category fit is genuinely open.** The AI SDK is widely used as a provider
+  abstraction and UI streaming layer, which is not orchestration. Whether it
+  clears bar 1 depends on what the current docs document as agent/loop/
+  multi-step-tool-use capability. Step 1 is a real gate, not a formality, and
+  the honest outcome may be "radar candidate, not benchmark entry". No scoring
+  work should start before it resolves. If it fails, D1–D6 never take effect.
+- **Scope of the tool as evaluated — decided at Gate 1, 2026-10-02 (D1):** the
+  `ai` package only. Residual risk, not an open question: the `ai` package
+  alone answers `eu-onprem`, `observability` and pricing differently from
+  "AI SDK + Gateway + Vercel platform", and a reader who thinks of the whole
+  stack may read the scores as lower than they expect. That is exactly what the
+  step 9d and step 10 disclosures are for; if a criterion cannot be answered
+  for the package in isolation, record that in the evaluation doc rather than
+  quietly widening the scope.
+- **Matrix cells carry no `tier` field — decided at Gate 1, 2026-10-02 (D2).**
+  Residual risk: tier-C evidence is then not machine-readable in
+  `data/tools.json`; it is discoverable only via the evaluation doc and the
+  page note. Accepted for this feature, and recorded in ADR-012.
+- **Tier-C `source` is a repo path, not a URL — decided at Gate 1, 2026-10-02
+  (D3).** `verify` only checks truthiness, so the repo-relative path passes.
+  Residual risk: the path is not clickable from the served page, which is why
+  the pages link GitHub blob URLs instead; those URLs are branch/path-sensitive
+  and will need updating if the log is ever moved or renamed.
+- **`docs/evaluations/` and `docs/hands-on/` stay separate — decided at
+  Gate 1, 2026-10-02 (D4).** The merge into one per-tool tree stays a possible
+  later simplification; not acted on here.
+- **The hands-on script needs a model.** The plan defaults to a mock/local
+  model so the check runs offline with no credentials. A mock proves a
+  mechanism exists (the SDK performs a multi-step loop, calls a tool, pauses
+  for approval) but cannot evidence model-dependent behaviour. If a criterion
+  genuinely needs a real provider, say so in the log, run it with a key from
+  an environment variable, and record that the offline path reproduces only
+  the mechanism. Never commit a key; never print one.
+- **Pinning in a nested `package.json` is still a dependency in the repo.**
+  Gate 1's "go default" keeps the planner's default: a nested, pinned
+  `package.json` under `docs/hands-on/`, wired into nothing. It adds no build
+  step and nothing to the root install or to CI, but it is the first
+  `node_modules` the repo can produce. Residual risk against CLAUDE.md rule 4;
+  flagged, not re-opened.
+- **Pricing is in scope by necessity.** The task card does not mention the
+  price card, but `verify` fails without one, and every price row needs a
+  source. If Vercel publishes no list price for the artefact being scored,
+  the row must say so in words with the pricing page as its source.
+- **As-of stamp moves to October 2026 — decided at Gate 1, 2026-10-02 (D5).**
+  Residual risk: the stamp is site-wide, so moving it makes the whole page
+  claim October currency while twelve of thirteen tools were last checked
+  earlier. The step-10 changelog sentence (D6) is the mitigation; it is prose,
+  not a mechanism, and nothing enforces that it stays accurate next round.
+- **Transparency prose is unverified by machine.** The D6 notes in steps 9d and
+  10 are plain text: no test asserts their presence or their accuracy, and
+  nothing stops them going stale when the version or the evidence changes. The
+  reviewer has to read them. Deliberately so — adding a parser for them would
+  be build-step creep.
+- **A rated 13th tool reorders the published grid.** Score cards are laid out
+  in rank order. Inserting the new card in rank position changes no existing
+  tool's score or rating but does change the visual ranking around it. Step 9
+  should place it by score; if it is unrated, it goes with `manus-ai` at the
+  end. `meta.toolOrder` is not machine-checked, so that reconciliation is a
+  read-the-file check, not a script.
+- **No `.gitignore` exists today.** Adding one is a new repo-wide file; keep
+  it to `node_modules/` and say so in the commit.
+- **Eleven steps, one over the soft cap.** The ADR step is additive and small;
+  if the gate prefers ten, it folds into step 11's `docs:` commit — but then
+  the precedent is recorded after the evidence it governs, which is why it is
+  its own step here.
 
 ## Verification
 
-Machine:
-1. `npm test` — green, including the new `parseDimensions` / `parseWeights` /
-   dimension-mismatch / occurrence-count / formula-identity / recompute tests.
-2. `npm run verify` — prints `OK — index.html, index.en.html and
-   data/tools.json agree.` and a source-coverage line whose numbers are
-   unchanged from `main` (no data point was added to `tools.json`).
-3. Tamper spot-check, then revert: change one `dim-points` digit in
-   `index.html`, one `data-raw` in `index.en.html`, one `dim-name` label, and
-   one Methodology weight — each must make `npm run verify` fail naming the
-   right file, tool and dimension. `git checkout -- index.html index.en.html`
-   afterwards.
-4. `git diff main --stat` — the only files touched are `index.html`,
-   `index.en.html`, `scripts/lib/parse-html.mjs`,
-   `scripts/lib/parse-html.test.mjs`, `scripts/lib/rubric.mjs`,
-   `scripts/verify.mjs`, `scripts/verify.test.mjs`,
-   `.github/workflows/apply.yml`, `docs/decisions/006-*.md`, `PLAN.md`.
-   **`data/tools.json` must not appear.**
-5. `git diff main -- index.html index.en.html | grep -E '^[-+].*(score-number|score-bar-fill|news-date|topbar-meta)'`
-   — must print nothing: no published score, bar width, changelog date or
-   as-of stamp moved.
-
-Human, in a browser, for `index.html` **and** `index.en.html` — do both; the
-two runs are the sync check no reviewer attention can be delegated:
-6. Score overview: every card shows a closed disclosure
-   ("Aufschlüsselung der Bewertung" / "Rating breakdown"); opening it shows six
-   rows in Methodology-table order with the Methodology labels. Spot-check two
-   cards in **display** order: `google-adk` → `18.75 + 20 + 15 + 15 + 15 + 3.33`
-   (full precision `…+ 3.3333` = `87.0833`, published `87`), and `maestro` →
-   `25 + 10 + 15 + 15 + 7.5 + 10 = 82.5`, the half-up tie, published `83`. The
-   displayed figures are rounded and are not expected to reproduce `score.exact`
-   to the last digit; the method note says so.
-7. `manus-ai`: five figures plus `nicht belegt` / `not evidenced` for release
-   maturity, and the card still says "Nicht bewertet" / "Not rated" with no
-   number and no bar.
-8. Compare: select three tools, open the modal, confirm scores and matrix rows
-   render, close, reset.
-9. Weighting panel, fresh profile or `localStorage.clear()`: all eleven
-   recomputed totals equal the published card numbers; `manus-ai` sits under
-   "not rated" with its reason and no total.
-10. Drag `operability` to 50: the panel re-orders and its numbers change; the
-    score grid above does not move, re-order or change a digit; badges, the
-    Verdict section, the Methodology weights, the pricing order and the matrix
-    are unchanged.
-11. Reload: the moved weight is still there. Press Reset: the published weights,
-    the eleven published totals and the bar widths return exactly, and
-    `localStorage.getItem('aiab.dimension-weights.v1')` is `null`.
-12. Set every slider to 0: a plain sentence appears — no `NaN`, no ranking, no
-    zero-scored tools pretending to be ranked.
-13. Set `maturity` to 0: `manus-ai` is still unrated, reason shown.
-14. Keyboard only: Tab reaches both preset buttons, all six sliders, Reset and
-    every `<summary>`; arrow keys move sliders; Space/Enter fires presets, Reset
-    and the disclosures; the active preset reports `aria-pressed="true"` and
-    clears when a slider moves.
-15. Labelling: the panel title, the persistent note and the column headings all
-    say the figures are the visitor's own weighting, in the page's language, and
-    the published rating stays visible above it.
-16. With JavaScript disabled: the published grid renders, every disclosure opens
-    and shows its six figures, and the weighting panel is absent — not broken,
-    not half-drawn.
+- `npm run verify` prints "OK — index.html, index.en.html and data/tools.json
+  agree." and the source-coverage line shows the legacy-unsourced count
+  unchanged from `main` (the new tool adds only sourced points).
+- `npm test` passes, with the updated counts 13 / 182 / 78.
+- Read the three `meta.toolOrder` arrays against the `data-tool` order in
+  `index.html` (score grid, matrix headers, price cards) — they must match
+  position for position; nothing checks this mechanically.
+- Open `index.html` and `index.en.html` in a browser: 13 score cards, hero
+  stat reads 13, the matrix has 13 data columns and every one of the 14 rows
+  has 13 chips, 13 price cards, and the new changelog entry at the top with
+  the as-of stamp matching it.
+- **Transparency (D6), read as a visitor, in both languages:** below the
+  feature matrix, a note names the scored artefact as the `ai` package only,
+  says providers / AI Gateway / the Vercel platform are not scored, gives the
+  exact version and the as-of date, and names the matrix rows that rest on
+  hands-on evidence. Its two links open the hands-on log and the reproducer
+  script. The October 2026 changelog entry says the stamp reflects this
+  addition and that the other twelve tools were last checked at their own
+  `checked` dates. DE and EN say the same things; the wording is descriptive,
+  with no promotional or disparaging phrasing. View source: no new CSS class,
+  no new script, no new external subresource.
+- Expand the new card's "Aufschlüsselung der Bewertung": six dimensions in
+  Methodology order; the six figures sum to `score.exact` and round to the
+  published number — or the maturity row reads "nicht belegt" / "not
+  evidenced" and the card shows no number and no bar.
+- Open the weighting panel, move the sliders: the new tool re-ranks like the
+  others; if unrated it stays in the unrated list at every weighting,
+  including maturity at 0.
+- Cross-check each of the 14 matrix cells and each price row against the URL
+  cited in `docs/evaluations/vercel-ai-sdk.md`, and each maturity criterion
+  against the releases page, for the pinned version and date. Every claim must
+  hold for the `ai` package alone. No criterion in that doc may still read
+  `pending hands-on`.
+- Confirm no matrix cell in `data/tools.json` carries a `tier` key (D2), and
+  that every tier-C `source` is the repo-relative log path (D3).
+- Reproduce the hands-on check: `cd docs/hands-on/vercel-ai-sdk && npm ci &&
+  node run.mjs` with no credentials in the environment; the output matches
+  the log. Grep the log and the script for anything key-shaped; there must be
+  none. Confirm `docs/hands-on/` is referenced nowhere in the root
+  `package.json`, `scripts/` or `.github/workflows/`.
+- `docs/decisions/012-hands-on-evidence.md` exists, records D1–D4 and D6 as
+  decided at Gate 1 on 2026-10-02, and matches what the feature actually did:
+  scored artefact, artefact location, log format, `source` form for tier-C,
+  no `tier` field on matrix cells, and the published-page disclosure.
+- `git diff main -- data/tools.json index.html index.en.html` contains no
+  modification to any other tool's score, chip, label, price or `checked`
+  date.
