@@ -55,3 +55,51 @@ gap and nothing else.
   `tools` and `scout: true` make it `refresh full workflow_dispatch` in the
   run name and non-debug in "Compute round id", so it can both discharge
   the month's round and be counted as one by a later slot.
+
+## Amendment (2026-10-02): the backup is a push to `main`, not an external routine
+
+The external Claude cloud routine above was never set up, and will not be:
+it needs a GitHub token with Actions: write, and Markus cannot provision
+one for it. The decision stands on the part it got right — the backup must
+not depend on GitHub's scheduler — and changes the trigger to one the
+repository already produces several times a week.
+
+**Every push to `main` — in practice every pull request merge — now
+triggers `refresh.yml`**, behind the same "has this month's round already
+run?" guard as a scheduled run. `on.push.branches` is `[main]`; the guard's
+condition gains `github.event_name == 'push'`. A push carries no inputs, so
+such a run classifies exactly as a scheduled one does: `refresh full push`
+in the run name, non-debug in "Compute round id". The three cron slots of
+ADR-011 stay as they are, as the free first line.
+
+The `backup` dispatch input stays, unused. It costs nothing, and a future
+dispatcher — a routine with a token, a second repository, anything
+unattended — opts into the guard with it rather than re-deriving the
+condition.
+
+## Consequences of the amendment
+- A month whose round failed or was never delivered, and in which nothing
+  is merged afterwards, gets no automatic retry. The backup is only as
+  frequent as the repository's merges; a quiet month falls back to a manual
+  `workflow_dispatch`. This is the trade for a trigger that needs no token
+  and no external service.
+- Each merge costs a checkout and at most one API call once the month's
+  round is done: check 1 (the proposal branch exists) is free, and check 2
+  is a single runs-API query. Nothing paid runs after a skip.
+- A round that keeps failing is retried once per merge, not once per month.
+  The guard skips on a *successful* full round or an existing proposal
+  branch, so a persistently red round will be attempted again at the next
+  merge — more attempts than ADR-011's three, and each one costs a real
+  round. A repeatedly failing round should be disabled or fixed, not left
+  to retry.
+- A merged refresh proposal PR is itself a push to `main`, and it skips:
+  the round that opened it succeeded and left both `refresh/<month>` and a
+  `refresh full` run behind. The same holds for the merge of the applied
+  pages.
+- The workflow cannot trigger itself. It pushes `refresh/<month>` and opens
+  a pull request; it never pushes `main`, and nothing in the refresh or
+  apply line merges (ADR-014).
+- The `refresh-research` concurrency group, `cancel-in-progress: false`,
+  still serialises a merge-triggered run against a cron slot or a dispatch,
+  so two triggers landing together cannot produce two proposals.
+- Human `workflow_dispatch` is still unguarded, unchanged from ADR-011.

@@ -61,6 +61,14 @@ on:
     - cron: '17 6 1 * *'
     - cron: '41 7 2 * *'
     - cron: '23 8 3 * *'
+  # The backup trigger, because the crons above keep being delayed or
+  # dropped: every push to `main` — in practice every PR merge — attempts
+  # the month's round, behind the same "already ran this month" guard, so
+  # a month that already has its round pays a checkout and one API call.
+  # Nothing in this workflow pushes to `main` (it pushes `refresh/<month>`),
+  # so it cannot trigger itself. See ADR-013's amendment.
+  push:
+    branches: [main]
   workflow_dispatch:
     inputs:
       tools:
@@ -84,9 +92,9 @@ on:
 # reading its logs, and the fallback guard below needs to tell a full round
 # from a debug one. Same classification as the "Compute round id" step: a
 # round is full when it researches EVERY tool and also scouts. A schedule
-# event carries no inputs at all, so both operands are null — null casts to
-# '' for the first test and never equals 'false' in the second — and a
-# scheduled run is therefore always "refresh full", which is correct.
+# or push event carries no inputs at all, so both operands are null — null
+# casts to '' for the first test and never equals 'false' in the second —
+# and such a run is therefore always "refresh full", which is correct.
 run-name: >-
   ${{ (github.event.inputs.tools == '' || github.event.inputs.tools == null)
   && github.event.inputs.scout != 'false'
@@ -130,12 +138,13 @@ jobs:
       #      the credential checkout already has, and needs no API at all;
       #   2. a run titled `refresh full` succeeded this month.
       #
-      # Scheduled events, plus any dispatch that sets `backup: true` — the
-      # external backup dispatcher opts itself in, because it is unattended
-      # and shares the schedule's duplicate risk (ADR-013). A plain manual
-      # dispatch is a human asking for a round on purpose — re-running one
-      # deliberately is a legitimate thing to want, and this must never
-      # block it.
+      # Guarded: scheduled events; pushes to `main`, which are the backup
+      # trigger and fire far more often than once a month, so the guard is
+      # what keeps all but the month's first merge free (ADR-013
+      # amendment); and any dispatch that sets `backup: true`, kept for a
+      # future unattended dispatcher. A plain manual dispatch is a human
+      # asking for a round on purpose — re-running one deliberately is a
+      # legitimate thing to want, and this must never block it.
       #
       # Check 2 fails OPEN: if the runs API itself errors we run the round.
       # A dropped round loses a month of evidence; a duplicate attempt costs
@@ -143,7 +152,7 @@ jobs:
       # concurrency group still stands between a duplicate and a duplicate PR.
       - name: Guard — has this month's round already run?
         id: guard
-        if: github.event_name == 'schedule' || github.event.inputs.backup == 'true'
+        if: github.event_name == 'schedule' || github.event_name == 'push' || github.event.inputs.backup == 'true'
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
