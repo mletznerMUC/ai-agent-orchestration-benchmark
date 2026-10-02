@@ -69,6 +69,10 @@ const BLOCKED = [
   'git -c core.hooksPath=/dev/null push origin hotfix/x',
   'git -c "core.hooksPath=/dev/null" push origin hotfix/x',
   'sed -i s/a/b/ .claude/settings.json core.hooksPath',
+  // a redirection must not hide the real arguments
+  'git push origin main 2>&1',
+  'git push 2>&1',
+  'git push -u origin hotfix/x 2>&1 origin main',
 ];
 
 const ALLOWED = [
@@ -101,6 +105,10 @@ const ALLOWED = [
   'sed -i s/x/y/ .git/config',
   'chmod +x scripts/foo.sh',
   'chown me:me scripts/foo.sh',
+  // an allowed push keeps being allowed when its output is redirected
+  'git push -u origin hotfix/x 2>&1',
+  'git push -u origin hotfix/x 2>&1 | tail -2',
+  'git push origin feature/a >/dev/null 2>&1',
 ];
 
 for (const command of BLOCKED) {
