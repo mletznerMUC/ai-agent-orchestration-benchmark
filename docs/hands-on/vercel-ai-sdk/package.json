@@ -1,0 +1,13 @@
+{
+  "name": "vercel-ai-sdk-hands-on",
+  "private": true,
+  "type": "module",
+  "description": "Reproduction evidence for docs/evaluations/vercel-ai-sdk.md. Wired into nothing: not referenced by the root package.json, by scripts/, or by any workflow.",
+  "scripts": {
+    "observe": "node run.mjs"
+  },
+  "dependencies": {
+    "ai": "7.0.127",
+    "zod": "4.1.8"
+  }
+}

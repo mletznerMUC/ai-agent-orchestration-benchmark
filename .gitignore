@@ -1,0 +1,4 @@
+# The only thing this repository can produce that must never be committed:
+# the hands-on evidence package under docs/hands-on/ installs into node_modules.
+# The site itself has no dependencies and no build step.
+node_modules/

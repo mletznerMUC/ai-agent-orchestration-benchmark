@@ -2,8 +2,8 @@
   "meta": {
     "edition": "2026",
     "asOf": {
-      "de": "September 2026",
-      "en": "September 2026"
+      "de": "Oktober 2026",
+      "en": "October 2026"
     },
     "features": [
       {
@@ -169,6 +169,7 @@
         "ms-agent",
         "maestro",
         "langgraph",
+        "vercel-ai-sdk",
         "claude-sdk",
         "crewai",
         "databricks",
@@ -188,7 +189,8 @@
         "claude-sdk",
         "claude-squad",
         "openai-sdk",
-        "manus-ai"
+        "manus-ai",
+        "vercel-ai-sdk"
       ],
       "prices": [
         "maestro",
@@ -202,7 +204,8 @@
         "claude-sdk",
         "claude-squad",
         "manus-ai",
-        "openai-sdk"
+        "openai-sdk",
+        "vercel-ai-sdk"
       ]
     }
   },
@@ -3563,6 +3566,282 @@
             "source": null,
             "checked": null,
             "provenance": "legacy-unsourced"
+          }
+        ]
+      }
+    },
+    "vercel-ai-sdk": {
+      "name": "Vercel AI SDK",
+      "score": {
+        "value": 78,
+        "source": "https://github.com/vercel/ai/releases",
+        "checked": "2026-10-02",
+        "provenance": "computed-rubric",
+        "exact": 78.125,
+        "rubric": {
+          "orchestration": {
+            "points": 15.625,
+            "weight": 25,
+            "raw": 5,
+            "max": 8
+          },
+          "operability": {
+            "points": 15,
+            "weight": 20,
+            "raw": 3,
+            "max": 4
+          },
+          "integration": {
+            "points": 12.5,
+            "weight": 15,
+            "raw": 5,
+            "max": 6
+          },
+          "sovereignty": {
+            "points": 15,
+            "weight": 15,
+            "raw": 4,
+            "max": 4
+          },
+          "accessibility": {
+            "points": 5,
+            "weight": 10,
+            "raw": 3,
+            "max": 6
+          },
+          "maturity": {
+            "points": 15,
+            "weight": 15,
+            "raw": 6,
+            "max": 6,
+            "evidence": "ai@7.0.127 published 2026-10-01 (latest stable on 2026-10-02); major 7; 104 stable 7.x releases in the trailing 90 days (7.0.15 through 7.0.127, window 2026-07-04 to 2026-10-02)",
+            "criteria": {
+              "ga-status": {
+                "score": 2,
+                "source": "https://github.com/vercel/ai/releases",
+                "checked": "2026-10-02",
+                "provenance": "sourced",
+                "tier": "A"
+              },
+              "release-recency": {
+                "score": 2,
+                "source": "https://github.com/vercel/ai/releases",
+                "checked": "2026-10-02",
+                "provenance": "sourced",
+                "tier": "A"
+              },
+              "sustained-cadence": {
+                "score": 2,
+                "source": "https://github.com/vercel/ai/releases",
+                "checked": "2026-10-02",
+                "provenance": "sourced",
+                "tier": "A"
+              }
+            }
+          }
+        }
+      },
+      "descriptor": {
+        "de": "Tool-Loop-SDK · TypeScript",
+        "en": "Tool-Loop SDK · TypeScript"
+      },
+      "matrix": {
+        "multi-agent-parallel": {
+          "state": "yes",
+          "label": {
+            "de": "Subagents",
+            "en": "Subagents"
+          },
+          "source": "docs/hands-on/vercel-ai-sdk/2026-10-02-log.md",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "desktop-gui": {
+          "state": "partial",
+          "label": {
+            "de": "DevTools (lokal)",
+            "en": "DevTools (local)"
+          },
+          "source": "https://ai-sdk.dev/docs/ai-sdk-core/devtools",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "playbooks": {
+          "state": "yes",
+          "label": {
+            "de": "Agent Loop",
+            "en": "Agent Loop"
+          },
+          "source": "https://ai-sdk.dev/docs/agents/loop-control",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "mobile-remote": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": "https://ai-sdk.dev/docs/getting-started/expo",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "git-worktrees": {
+          "state": "no",
+          "label": {
+            "de": "Nein",
+            "en": "No"
+          },
+          "source": "https://ai-sdk.dev/llms.txt",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "group-chat": {
+          "state": "partial",
+          "label": {
+            "de": "Subagent-Delegation",
+            "en": "Subagent Delegation"
+          },
+          "source": "https://ai-sdk.dev/docs/agents/subagents",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "mcp-support": {
+          "state": "partial",
+          "label": {
+            "de": "@ai-sdk/mcp",
+            "en": "@ai-sdk/mcp"
+          },
+          "source": "https://ai-sdk.dev/docs/ai-sdk-core/mcp-tools",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "open-source": {
+          "state": "yes",
+          "label": {
+            "de": "Apache 2.0",
+            "en": "Apache 2.0"
+          },
+          "source": "https://github.com/vercel/ai/blob/main/LICENSE",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "cli-cicd": {
+          "state": "yes",
+          "label": {
+            "de": "TypeScript SDK",
+            "en": "TypeScript SDK"
+          },
+          "source": "https://ai-sdk.dev/docs/getting-started/nodejs",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "observability": {
+          "state": "partial",
+          "label": {
+            "de": "@ai-sdk/otel",
+            "en": "@ai-sdk/otel"
+          },
+          "source": "https://ai-sdk.dev/docs/ai-sdk-core/telemetry",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "hitl": {
+          "state": "yes",
+          "label": {
+            "de": "Tool Approvals",
+            "en": "Tool Approvals"
+          },
+          "source": "https://ai-sdk.dev/docs/agents/tool-approvals",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "eu-onprem": {
+          "state": "yes",
+          "label": {
+            "de": "Self-hosted",
+            "en": "Self-hosted"
+          },
+          "source": "https://ai-sdk.dev/providers/openai-compatible-providers/lmstudio",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "model-agnostic": {
+          "state": "yes",
+          "label": {
+            "de": "Provider-agnostisch",
+            "en": "Provider-agnostic"
+          },
+          "source": "https://ai-sdk.dev/docs/foundations/providers-and-models",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        },
+        "learning-curve": {
+          "state": "yes",
+          "label": {
+            "de": "Niedrig",
+            "en": "Low"
+          },
+          "source": "https://ai-sdk.dev/docs/getting-started/nodejs",
+          "checked": "2026-10-02",
+          "provenance": "sourced"
+        }
+      },
+      "price": {
+        "type": {
+          "de": "Open-Source TypeScript-SDK",
+          "en": "Open-source TypeScript SDK"
+        },
+        "main": {
+          "de": "€0",
+          "en": "€0"
+        },
+        "note": {
+          "de": "Apache 2.0 · ai 7.0.127 · Modellkosten beim Provider",
+          "en": "Apache 2.0 · ai 7.0.127 · model costs billed by the provider"
+        },
+        "rows": [
+          {
+            "label": {
+              "de": "Bibliothek",
+              "en": "Library"
+            },
+            "value": {
+              "de": "€0",
+              "en": "€0"
+            },
+            "tone": "free",
+            "source": "https://www.npmjs.com/package/ai",
+            "checked": "2026-10-02",
+            "provenance": "sourced"
+          },
+          {
+            "label": {
+              "de": "Lizenz",
+              "en": "License"
+            },
+            "value": {
+              "de": "Apache 2.0",
+              "en": "Apache 2.0"
+            },
+            "tone": "free",
+            "source": "https://github.com/vercel/ai/blob/main/LICENSE",
+            "checked": "2026-10-02",
+            "provenance": "sourced"
+          },
+          {
+            "label": {
+              "de": "Modellnutzung",
+              "en": "Model usage"
+            },
+            "value": {
+              "de": "Nach Provider-Tarif",
+              "en": "At the provider's rates"
+            },
+            "tone": "default",
+            "source": "https://ai-sdk.dev/docs/foundations/providers-and-models",
+            "checked": "2026-10-02",
+            "provenance": "sourced"
           }
         ]
       }
