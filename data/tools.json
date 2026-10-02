@@ -166,8 +166,8 @@
         "google-adk",
         "strands",
         "n8n",
-        "ms-agent",
         "maestro",
+        "ms-agent",
         "langgraph",
         "vercel-ai-sdk",
         "claude-sdk",
@@ -213,11 +213,11 @@
     "maestro": {
       "name": "Maestro",
       "score": {
-        "value": 83,
+        "value": 85,
         "source": "https://github.com/RunMaestro/Maestro/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
-        "exact": 82.5,
+        "exact": 85.0,
         "rubric": {
           "orchestration": {
             "points": 25.0,
@@ -250,30 +250,30 @@
             "max": 6
           },
           "maturity": {
-            "points": 7.5,
+            "points": 10.0,
             "weight": 15,
-            "raw": 3,
+            "raw": 4,
             "max": 6,
-            "evidence": "v0.17.3 stable 2026-07-04 (latest; v0.18.4-RC prerelease, same date); pre-1.0; 4 stable releases in trailing 90 days (v0.17.0 2026-06-15, v0.17.1 2026-06-20, v0.17.2 2026-06-27, v0.17.3 2026-07-04)",
+            "evidence": "v0.17.5 stable 2026-09-25 (latest); pre-1.0, and the README still lists Copilot-CLI as beta; 3 stable releases in the trailing 90-day window 2026-07-04 to 2026-10-02 (v0.17.3 2026-07-04, v0.17.4 2026-09-21, v0.17.5 2026-09-25). The window turned over completely since the 2026-09-02 check: v0.17.0/0.17.1/0.17.2 have all aged out.",
             "criteria": {
               "ga-status": {
                 "score": 1,
                 "source": "https://github.com/RunMaestro/Maestro/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
-                "score": 1,
-                "source": "https://github.com/RunMaestro/Maestro/releases",
-                "checked": "2026-09-02",
+                "score": 2,
+                "source": "https://github.com/RunMaestro/Maestro/releases/tag/v0.17.5",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 1,
                 "source": "https://github.com/RunMaestro/Maestro/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -489,11 +489,11 @@
     "langgraph": {
       "name": "LangGraph",
       "score": {
-        "value": 81,
+        "value": 79,
         "source": "https://github.com/langchain-ai/langgraph/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
-        "exact": 81.25,
+        "exact": 78.75,
         "rubric": {
           "orchestration": {
             "points": 18.75,
@@ -526,30 +526,30 @@
             "max": 6
           },
           "maturity": {
-            "points": 15.0,
+            "points": 12.5,
             "weight": 15,
-            "raw": 6,
+            "raw": 5,
             "max": 6,
-            "evidence": "1.2.11 2026-08-11; major >= 1; 7 stable releases in trailing 90 days (1.2.5 2026-06-12, 1.2.6 2026-06-18, 1.2.7 2026-06-30, 1.2.8 2026-07-06, 1.2.9 2026-07-10, 1.2.10 2026-07-28, 1.2.11 2026-08-11)",
+            "evidence": "1.2.12 2026-09-21 (latest stable); major >= 1; 5 stable releases in the trailing 90-day window 2026-07-04 to 2026-10-02 (1.2.8 2026-07-06, 1.2.9 2026-07-10, 1.2.10 2026-07-28, 1.2.11 2026-08-11, 1.2.12 2026-09-21), down from 7 because 1.2.5/1.2.6/1.2.7 aged out of the window and only one release landed to replace them. Counts the langgraph core package only, excluding langgraph-cli, langgraph-sdk and langgraph-checkpoint* tags, which is the methodology the 2026-09-02 evidence string already used.",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/langchain-ai/langgraph/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/langchain-ai/langgraph/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
-                "score": 2,
+                "score": 1,
                 "source": "https://github.com/langchain-ai/langgraph/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -767,7 +767,7 @@
       "score": {
         "value": 87,
         "source": "https://github.com/google/adk-python/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 87.0833,
         "rubric": {
@@ -806,26 +806,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "v2.8.0 2026-08-26 (latest v2.x), v1.39.1 2026-08-27 (v1.x maintenance line); major >= 1, v2.0.0 GA 2026-05-19; 10 stable releases in trailing 90 days",
+            "evidence": "v2.11.0 2026-10-02 (latest stable, published the day of the check), v1.39.1 2026-08-27 (latest v1.x maintenance tag); major >= 1, v2.0.0 GA 2026-05-19; 14 stable v2.x releases in the trailing 90-day window 2026-07-04 to 2026-10-02 (v2.4.0 07-07, v2.5.0 07-16, v2.6.0 07-30, v2.6.1 07-31, v2.6.2 08-04, v2.6.3 08-07, v2.7.0 08-13, v2.7.1 08-17, v2.8.0 08-26, v2.9.0 09-10, v2.9.1 09-15, v2.9.2 09-18, v2.10.0 09-25, v2.11.0 10-02), none marked pre-release",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/google/adk-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/google/adk-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/google/adk-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1043,7 +1043,7 @@
       "score": {
         "value": 87,
         "source": "https://github.com/strands-agents/harness-sdk/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 87.0833,
         "rubric": {
@@ -1082,26 +1082,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "python/v1.54.0 2026-08-27, typescript/v1.16.0 2026-08-31; major >= 1; at least 16 stable releases in trailing 90 days (python/, typescript/ and mcp/ tag lines combined, enumerated back to 2026-07-24 — the >= 6 threshold was already cleared, so earlier tags in the window were not enumerated individually). Repo renamed strands-agents/sdk-python -> strands-agents/harness-sdk; tag history is continuous across the rename.",
+            "evidence": "python/v1.57.2 2026-10-01 (latest stable), typescript/v1.19.0 2026-09-22; major >= 1; at least 30 stable releases enumerated in the trailing 90-day window 2026-07-04 to 2026-10-02 across the python/, typescript/ and mcp/ tag lines, plus three new v0.1.x lines (harness-cli/, harness-python/, harness-typescript/) first tagged 2026-09-21. The >= 6 threshold was cleared well before the start of the window, so earlier tags were not enumerated individually. Repo renamed strands-agents/sdk-python -> strands-agents/harness-sdk; tag history is continuous across the rename and the old URL still redirects.",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/strands-agents/harness-sdk/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/strands-agents/harness-sdk/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/strands-agents/harness-sdk/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1319,7 +1319,7 @@
       "score": {
         "value": 73,
         "source": "https://docs.databricks.com/aws/en/release-notes/product/",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 73.3333,
         "rubric": {
@@ -1358,26 +1358,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "GA platform, but core Agent Bricks surfaces carry Beta/Public Preview labels in dated vendor docs (multi-agent supervisor, updated 2026-08-03: \"Beta\"; custom LLM, updated 2026-07-28: \"This feature is in Beta\"; managed MCP, updated 2026-08-17: \"Public Preview\") — GA with beta components. Dated platform release-note entries run through 2026-09-01, far more than 6 in the trailing 90 days.",
+            "evidence": "GA platform, still with beta components, so ga-status holds at 1 — but for different components than last round. The multi-agent supervisor page (updated 2026-09-11) has dropped its page-level Beta label; only its \"Manage supervisor agents using the Databricks SDK\" section is still marked \"This feature is in Beta\". Custom LLM (updated 2026-09-15) is still \"This feature is in Beta\" and its heading now reads \"(legacy)\". Managed MCP (updated 2026-09-21) is still \"Public Preview\". The Agent Bricks overview (updated 2026-09-30) additionally marks Agent Bricks CLI and Agent Services as Beta. Dated platform release-note entries run through 2026-09-30, with 24 distinct entries in September alone — far more than 6 in the trailing 90 days.",
             "criteria": {
               "ga-status": {
                 "score": 1,
-                "source": "https://docs.databricks.com/aws/en/generative-ai/agent-bricks/multi-agent-supervisor",
-                "checked": "2026-09-02",
+                "source": "https://docs.databricks.com/aws/en/generative-ai/agent-bricks/custom-llm",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
-                "source": "https://docs.databricks.com/aws/en/release-notes/product/2026/august",
-                "checked": "2026-09-02",
+                "source": "https://docs.databricks.com/aws/en/release-notes/product/2026/september",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
-                "source": "https://docs.databricks.com/aws/en/release-notes/product/2026/august",
-                "checked": "2026-09-02",
+                "source": "https://docs.databricks.com/aws/en/release-notes/product/2026/september",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1609,7 +1609,7 @@
       "score": {
         "value": 76,
         "source": "https://github.com/crewAIInc/crewAI/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 75.625,
         "rubric": {
@@ -1648,26 +1648,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "1.15.18 2026-08-27; major >= 1; 10 stable releases counted from 1.15.9 2026-07-30 through 1.15.18 2026-08-27 (the >= 6 threshold was cleared without enumerating the earlier part of the 2026-06-04 window)",
+            "evidence": "1.15.23 2026-09-28 (latest stable); major >= 1; 22 stable releases fully enumerated in the trailing 90-day window 2026-07-04 to 2026-10-02 (1.15.2 07-08 through 1.15.23 09-28). Five alpha tags in the same period (1.15.2a1/a2, 1.15.3a1/a2, 1.15.7a1) are flagged prerelease and are excluded.",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/crewAIInc/crewAI/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/crewAIInc/crewAI/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/crewAIInc/crewAI/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -1851,17 +1851,17 @@
           },
           {
             "label": {
-              "de": "Cloud Basic",
-              "en": "Cloud Basic"
+              "de": "Basic",
+              "en": "Basic"
             },
             "value": {
-              "de": "€0 (50 Runs)",
-              "en": "€0 (50 Runs)"
+              "de": "Free (50 Workflow-Ausführungen/Mo.)",
+              "en": "Free (50 workflow executions/mo.)"
             },
             "tone": "free",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://www.crewai.com/pricing",
+            "checked": "2026-10-02",
+            "provenance": "sourced"
           },
           {
             "label": {
@@ -1885,7 +1885,7 @@
       "score": {
         "value": 83,
         "source": "https://github.com/microsoft/agent-framework/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 83.3333,
         "rubric": {
@@ -1924,26 +1924,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "dotnet-1.20.0 2026-08-31, python-1.16.0 2026-08-28; major >= 1 and GA in vendor docs for the scored .NET and Python lines (the separate Go SDK is marked public preview); 19 stable releases in trailing 90 days (10 .NET, 9 Python)",
+            "evidence": "dotnet-1.23.0 2026-10-01 (latest stable), python-1.19.0 2026-09-18; major >= 1 and GA in vendor docs for the scored .NET and Python lines (the separate Go SDK is still marked public preview); 20 stable releases in the trailing 90-day window 2026-07-04 to 2026-10-02 (10 .NET, 10 Python). Counts the dotnet- and python- core tag lines only; the in-window python-hosting-a2a-1.0.0a260723 tag is flagged prerelease and python-github-copilot-1.0.0 is a separate sub-package, and neither changes the tier.",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/microsoft/agent-framework/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
-                "source": "https://github.com/microsoft/agent-framework/releases",
-                "checked": "2026-09-02",
+                "source": "https://github.com/microsoft/agent-framework/releases/tag/dotnet-1.23.0",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/microsoft/agent-framework/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -2175,7 +2175,7 @@
       "score": {
         "value": 86,
         "source": "https://github.com/n8n-io/n8n/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 85.8333,
         "rubric": {
@@ -2214,26 +2214,26 @@
             "weight": 15,
             "raw": 6,
             "max": 6,
-            "evidence": "n8n@2.37.7 stable 2026-09-02; major >= 1; stable line released near-daily in trailing 90 days (n8n@2.36.8 and 2.37.4 2026-08-28, 2.36.9 and 2.37.6 2026-08-31, 2.38.1 2026-09-01, 2.38.2 and 2.37.7 2026-09-02)",
+            "evidence": "n8n@2.41.6 stable 2026-10-02 (latest, published the day of the check); major >= 1; stable line still released near-daily across the trailing 90-day window 2026-07-04 to 2026-10-02 — eight stable tags in its final eight days alone (n8n@2.40.7 and 2.41.3 09-25, 2.42.0 09-29, 2.41.4 and 2.42.1 09-30, 2.41.5 and 2.42.2 10-01, 2.41.6 10-02), far past the >= 6 threshold",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/n8n-io/n8n/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
                 "source": "https://github.com/n8n-io/n8n/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/n8n-io/n8n/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -2322,8 +2322,8 @@
             "de": "Sustainable Use License",
             "en": "Sustainable Use License"
           },
-          "source": "https://docs.n8n.io/privacy-and-security/sustainable-use-license",
-          "checked": "2026-08-11",
+          "source": "https://docs.n8n.io/n8n-community-license/",
+          "checked": "2026-10-02",
           "provenance": "sourced"
         },
         "cli-cicd": {
@@ -2479,7 +2479,7 @@
       "score": {
         "value": 76,
         "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 76.4583,
         "rubric": {
@@ -2518,26 +2518,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "v0.2.151 2026-09-01 (Python), v0.3.258 2026-09-01 (TypeScript); pre-1.0; well above 6 stable releases in trailing 90 days (10 Python releases between 2026-08-20 and 2026-09-01 alone; the full 90-day list was not paginated)",
+            "evidence": "v0.2.163 2026-09-30 (Python), v0.3.287 2026-10-01 (TypeScript); both lines still pre-1.0, and no GA or 1.0 language appears in the Agent SDK docs; at least 41 Python and 36 TypeScript stable releases observed inside the trailing 90-day window 2026-07-04 to 2026-10-02 — both are floors, since the tail of the window was not paginated once the >= 6 threshold was clear",
             "criteria": {
               "ga-status": {
                 "score": 1,
                 "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
-                "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-                "checked": "2026-09-02",
+                "source": "https://github.com/anthropics/claude-agent-sdk-typescript/releases",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/anthropics/claude-agent-sdk-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -2769,7 +2769,7 @@
       "score": {
         "value": 66,
         "source": "https://github.com/openai/openai-agents-python/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
         "exact": 65.8333,
         "rubric": {
@@ -2808,26 +2808,26 @@
             "weight": 15,
             "raw": 5,
             "max": 6,
-            "evidence": "v0.22.0 2026-08-19 (still the latest tag on 2026-09-02); pre-1.0; 15 stable releases in trailing 90 days (v0.17.7 through v0.22.0, window 2026-06-04 to 2026-09-02)",
+            "evidence": "v0.23.0 2026-10-02 (latest stable, published the day of the check); pre-1.0, and the vendor docs make no GA or stable declaration; at least 10 stable releases in the trailing 90-day window 2026-07-04 to 2026-10-02 (v0.19.3 08-04, v0.19.4 08-05, v0.20.0 08-11, v0.21.0 08-15, v0.21.1 08-16, v0.22.0 08-19, v0.22.1 09-08, v0.22.2 09-09, v0.22.3 09-17, v0.23.0 10-02) — the >= 6 threshold was cleared without enumerating further back toward 2026-07-04",
             "criteria": {
               "ga-status": {
                 "score": 1,
                 "source": "https://github.com/openai/openai-agents-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
                 "score": 2,
-                "source": "https://github.com/openai/openai-agents-python/releases",
-                "checked": "2026-09-02",
+                "source": "https://github.com/openai/openai-agents-python/releases/tag/v0.23.0",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
                 "score": 2,
                 "source": "https://github.com/openai/openai-agents-python/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -3057,11 +3057,11 @@
     "claude-squad": {
       "name": "Claude Squad",
       "score": {
-        "value": 56,
+        "value": 51,
         "source": "https://github.com/smtg-ai/claude-squad/releases",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "computed-rubric",
-        "exact": 56.4583,
+        "exact": 51.4583,
         "rubric": {
           "orchestration": {
             "points": 15.625,
@@ -3094,30 +3094,30 @@
             "max": 6
           },
           "maturity": {
-            "points": 12.5,
+            "points": 7.5,
             "weight": 15,
-            "raw": 5,
+            "raw": 3,
             "max": 6,
-            "evidence": "v1.0.20 2026-08-20; major >= 1; 2 stable releases in the trailing 90-day window 2026-06-04 to 2026-09-02 (v1.0.19 2026-06-17, v1.0.20 2026-08-20) — v1.0.18 2026-05-23 has fallen out of the window, but 2 is still in the 2-5 band",
+            "evidence": "v1.0.20 2026-08-20 is still the latest stable tag, 43 days old on 2026-10-02, which is the 31-90 day band. Only that one release falls inside the trailing 90-day window 2026-07-04 to 2026-10-02; v1.0.19 2026-06-17 has aged out, so the in-window count drops from 2 to 1. major >= 1, so ga-status is unaffected.",
             "criteria": {
               "ga-status": {
                 "score": 2,
                 "source": "https://github.com/smtg-ai/claude-squad/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "release-recency": {
-                "score": 2,
+                "score": 1,
                 "source": "https://github.com/smtg-ai/claude-squad/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               },
               "sustained-cadence": {
-                "score": 1,
+                "score": 0,
                 "source": "https://github.com/smtg-ai/claude-squad/releases",
-                "checked": "2026-09-02",
+                "checked": "2026-10-02",
                 "provenance": "sourced",
                 "tier": "A"
               }
@@ -3321,7 +3321,7 @@
       "score": {
         "value": null,
         "source": "https://manus.im/updates",
-        "checked": "2026-09-02",
+        "checked": "2026-10-02",
         "provenance": "unrated-no-tier-a-maturity",
         "exact": null,
         "rubric": {
@@ -3360,7 +3360,7 @@
             "weight": 15,
             "raw": null,
             "max": 6,
-            "evidence": "No tier-A source found. Re-checked 2026-09-02: manus.im/changelog and manus.im/help/release-notes still return 404; the help-centre root lists no release-notes or changelog category; manus.im/updates returns 200 but only its navigation shell rendered across three fetch attempts, so it could not be read either way. The only version-numbered material located (manus.im/blog/manus-max-release, manus.im/blog/manus-1.5-release) is vendor blog copy, which is not evidence under ADR-005.",
+            "evidence": "No tier-A source found. Re-checked 2026-10-02, and the gap is now narrower but not closed. New this round: open.manus.im/docs is a genuine versioned API reference — an ADR-005 tier-A category — distinguishing API v2 (current) from v1 (deprecated), and it is not labelled Beta. It carries no calendar dates anywhere: no release date for v2, no deprecation date for v1, no last-updated stamps on any page checked. All three Maturity criteria require dates (<= 30 / 31-90 / > 90 days, and a count of stable releases in a trailing 90-day window), and none can be derived from version labels alone. Still 404: manus.im/changelog, manus.im/release-notes, manus.im/help/release-notes, manus.im/docs/api-reference, open.manus.im/docs/changelog. manus.im/updates returns 200 but holds one undated blog link and no dated entries; manus.im/docs/llms.txt indexes the docs and lists no changelog or version-history page; the help-centre root lists eight categories, none of them release notes. The only version-numbered material remains vendor blog copy, which is not evidence under ADR-005.",
             "criteria": null
           }
         }
@@ -3531,13 +3531,13 @@
               "en": "Free"
             },
             "value": {
-              "de": "Begrenzte Credits",
-              "en": "Limited credits"
+              "de": "300 Credits täglich",
+              "en": "300 credits daily"
             },
             "tone": "free",
-            "source": null,
-            "checked": null,
-            "provenance": "legacy-unsourced"
+            "source": "https://help.manus.im/en/articles/11711111-what-is-the-current-membership-pricing-for-manus",
+            "checked": "2026-10-02",
+            "provenance": "sourced"
           },
           {
             "label": {
