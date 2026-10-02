@@ -1,6 +1,7 @@
 # Evaluation record — Vercel AI SDK (`vercel-ai-sdk`)
 
-Evaluated for addition to the benchmark under the plan in `PLAN.md`
+Evaluated for addition to the benchmark under the plan in
+`docs/plans/2026-10-02-vercel-ai-sdk.md`
 (`feature/vercel-ai-sdk`, Gate 1 approved 2026-10-02).
 
 Evidence tiers used here are the ones published in
