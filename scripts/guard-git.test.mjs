@@ -48,6 +48,27 @@ const BLOCKED = [
   'nohup git push',
   'time git push',
   'stdbuf -o0 git push',
+  // wrappers that take arguments of their own
+  'sudo git push origin main',
+  'sudo -u x git push',
+  'timeout 5 git push origin main',
+  'timeout -s KILL 5 git push',
+  'nice git push',
+  'nice -n 5 git push origin main',
+  'nice -5 git push',
+  'setsid git push',
+  'setsid -f git push origin main',
+  // the hook files, including making them unrunnable
+  'chmod -x .githooks/pre-push',
+  'chmod 000 .git/hooks/pre-push',
+  'chown nobody .githooks/pre-push',
+  // writing the setting into a git config file
+  'echo "[core] hooksPath = /dev/null" >> .git/config',
+  'echo "hooksPath = /dev/null" > ~/.gitconfig',
+  'sed -i s/x/hooksPath/ .git/config',
+  'git -c core.hooksPath=/dev/null push origin hotfix/x',
+  'git -c "core.hooksPath=/dev/null" push origin hotfix/x',
+  'sed -i s/a/b/ .claude/settings.json core.hooksPath',
 ];
 
 const ALLOWED = [
@@ -70,6 +91,16 @@ const ALLOWED = [
   'git log --grep core.hooksPath',
   '(git status)',
   'env git status',
+  // wrappers around something harmless
+  'timeout 5 npm test',
+  'sudo -u x npm run verify',
+  'nice -n 5 node --test scripts/guard-git.test.mjs',
+  // talking about the setting, or touching other files, is not changing it
+  'echo "core.hooksPath" >> notes.md',
+  'git commit -m "set core.hooksPath=.githooks in your clone"',
+  'sed -i s/x/y/ .git/config',
+  'chmod +x scripts/foo.sh',
+  'chown me:me scripts/foo.sh',
 ];
 
 for (const command of BLOCKED) {

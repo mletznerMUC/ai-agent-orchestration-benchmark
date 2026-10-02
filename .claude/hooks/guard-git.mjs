@@ -13,8 +13,21 @@ function block(reason) {
   process.exit(2);
 }
 
-// Leading words that only decorate the command that follows them.
-const WRAPPERS = new Set(['env', 'command', 'nohup', 'time', 'stdbuf']);
+// Leading words that only decorate the command that follows them. Some take
+// arguments of their own (`timeout 5 …`, `nice -n 5 …`, `sudo -u x …`), which
+// have to be dropped too or the wrapped command stays hidden.
+const WRAPPERS = new Map([
+  ['env', { valueFlags: ['-u', '--unset'] }],
+  ['command', {}],
+  ['nohup', {}],
+  ['time', {}],
+  ['stdbuf', { valueFlags: ['-i', '-o', '-e', '--input', '--output', '--error'] }],
+  ['setsid', {}],
+  ['sudo', { valueFlags: ['-u', '--user', '-g', '--group', '-p', '--prompt', '-U', '-C', '-r', '--role', '-t', '--type', '-T'] }],
+  ['timeout', { valueFlags: ['-s', '--signal', '-k', '--kill-after'], duration: true }],
+  ['nice', { valueFlags: ['-n', '--adjustment'] }],
+]);
+const DURATION = /^\d+(\.\d+)?[smhd]?$/;
 
 // Split a compound command into the simple commands it runs. `&&` has to be
 // tried before a lone `&`, which is a separator too (`true & git push`).
@@ -33,14 +46,23 @@ function tokens(segment) {
     .filter((t) => !/^[A-Za-z_][A-Za-z0-9_]*=/.test(t)); // drop env assignments
 }
 
-// `env git push`, `\git push`, `stdbuf -o0 git push` all run git.
+// `env git push`, `\git push`, `stdbuf -o0 git push`, `timeout 5 git push`,
+// `sudo -u x git push`, `nice -n 5 git push` all run git.
 function unwrap(words) {
   let rest = words.slice();
   while (rest.length) {
     rest[0] = rest[0].replace(/^\\/, '');
-    if (!WRAPPERS.has(rest[0].replace(/^.*\//, ''))) break;
+    const spec = WRAPPERS.get(rest[0].replace(/^.*\//, ''));
+    if (!spec) break;
     rest = rest.slice(1);
-    while (rest.length && rest[0].startsWith('-')) rest = rest.slice(1);
+    while (rest.length && rest[0].startsWith('-')) {
+      const flag = rest[0];
+      rest = rest.slice(1);
+      // `-s KILL` eats its value; `-s=KILL` and `-o0` carry it already.
+      if (rest.length && (spec.valueFlags || []).includes(flag)) rest = rest.slice(1);
+    }
+    // `timeout [flags] <duration> <command>`
+    if (spec.duration && rest.length > 1 && DURATION.test(rest[0])) rest = rest.slice(1);
   }
   return rest;
 }
@@ -105,14 +127,36 @@ function checkGit(args) {
   }
 }
 
+const unquote = (t) => t.replace(/^["']|["']$/g, '');
+
+// `.git/config`, `~/.gitconfig`, `.gitconfig`, or any `…/config` inside `.git`.
+function isGitConfigFile(token) {
+  const p = unquote(token);
+  return (
+    /(^|\/)\.gitconfig$/.test(p) ||
+    /(^|\/)\.git\/config$/.test(p) ||
+    /(^|\/)\.git\/.*\/config$/.test(p)
+  );
+}
+
+function redirectTargets(segment) {
+  return [...segment.matchAll(/>>?\s*\|?\s*(["']?[^\s;|&<>]+)/g)].map((m) => m[1]);
+}
+
 function checkSegment(segment) {
   const words = unwrap(tokens(segment));
   if (!words.length) return;
   const cmd = words[0].replace(/^.*\//, '');
 
   if (cmd === 'git') {
-    // `git -c core.hooksPath=… <anything>` sets it for that one command.
-    if (words.some((w) => /^(-c)?core\.hooksPath=/i.test(w))) {
+    // `git -c core.hooksPath=… <anything>` sets it for that one command. Only
+    // as git's own `-c` argument — the same text inside `-m "…"` is a message.
+    const isHooksPathArg = (w, i) => {
+      const t = unquote(w);
+      if (/^-c\s*core\.hooksPath=/i.test(t)) return true;
+      return /^core\.hooksPath=/i.test(t) && unquote(words[i - 1] || '') === '-c';
+    };
+    if (words.some(isHooksPathArg)) {
       block('changing core.hooksPath would disable the push protection.');
     }
     checkGit(gitArgs(words));
@@ -125,14 +169,21 @@ function checkSegment(segment) {
   }
 
   // Outside git, only commands that could actually write the setting — a
-  // mention of it in a commit message, a log grep or an echo is not a change.
-  const writer = /^(sed|perl|awk|tee|python3?|node)$/.test(cmd) || />/.test(segment);
-  if (cmd !== 'git' && writer && /core\.hooksPath/i.test(segment)) {
-    block('changing core.hooksPath would disable the push protection.');
+  // mention of it in a commit message, a log grep or an echo into notes is
+  // not a change. A redirect counts when it lands in a git config file; an
+  // editing command counts when it rewrites one, or spells out the key.
+  if (cmd !== 'git') {
+    const editor = /^(sed|perl|awk|tee|python3?|node)$/.test(cmd);
+    const intoConfig =
+      redirectTargets(segment).some(isGitConfigFile) ||
+      (editor && words.slice(1).some(isGitConfigFile));
+    if ((intoConfig && /hooksPath/i.test(segment)) || (editor && /core\.hooksPath/i.test(segment))) {
+      block('changing core.hooksPath would disable the push protection.');
+    }
   }
 
-  if (/^(rm|mv|cp|ln|truncate|shred|unlink)$/.test(cmd) && /\.git\/hooks|\.githooks/.test(segment)) {
-    block('refusing to delete, move or overwrite the git hooks.');
+  if (/^(rm|mv|cp|ln|truncate|shred|unlink|chmod|chown)$/.test(cmd) && /\.git\/hooks|\.githooks/.test(segment)) {
+    block('refusing to delete, move, overwrite or disarm the git hooks.');
   }
   if (/>\s*["']?\S*(\.git\/hooks|\.githooks)/.test(segment)) {
     block('refusing to overwrite a file under the git hooks directory.');
