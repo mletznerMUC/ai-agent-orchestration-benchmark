@@ -13,7 +13,10 @@ must be sourced and reproducible. When in doubt, understate.
    ADR-001 and ADR-002 for what is and is not checked.
 2. **Methodology consistency.** All tools are scored against the same
    published criteria. Adding a criterion means re-evaluating every
-   tool against it, not just the new one.
+   tool against it, not just the new one. A new scoring interpretation
+   binds every tool, not just the one that provoked it: its ADR states
+   whether the existing tools were re-checked and what moved, or scopes
+   itself to the evaluation at hand.
 3. **Neutrality.** No promotional language for or against any vendor.
    Descriptive, verifiable statements only.
 4. **Simplicity.** Static site, no build-step creep. Prefer plain
@@ -35,6 +38,9 @@ must be sourced and reproducible. When in doubt, understate.
   in the benchmark. Scouted tools become radar candidates only: adding
   one to the benchmark means scoring it against every published
   criterion, which is `/feature` work, not a data refresh.
+- A month's refresh round starts at the first of: the cron slots, or any
+  push to `main`. All go through the same "already ran this month" guard,
+  so only the first can start a paid round (ADR-011, ADR-013).
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases. Enforced mechanically,
   see ADR-014.
@@ -53,6 +59,7 @@ must be sourced and reproducible. When in doubt, understate.
   completing it, before starting the next. If a step is already
   implemented in the codebase, mark it done and move on — never
   re-implement existing work.
+- The implementer commits per step; plans do not prescribe a commit count.
 
 ## Conventions
 - Branches: `feature/<slug>`, `hotfix/<slug>`
@@ -61,6 +68,8 @@ must be sourced and reproducible. When in doubt, understate.
   source in the commit body.
 - Decisions that outlive a PR go to `docs/decisions/` as a short ADR
   (one file per decision, `NNN-title.md`).
+- The changelog carries one card per month. A second change in the same
+  month extends that card, and replaces any bullet it makes untrue.
 
 ## Memory
 Before planning or implementing anything, read `docs/decisions/`.
