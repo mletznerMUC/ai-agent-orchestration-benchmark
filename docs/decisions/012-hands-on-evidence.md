@@ -15,7 +15,13 @@ SDK the scored artefact is the `ai` package only. Provider packages, the AI
 Gateway and the Vercel hosted platform are not scored. *(Decided at Gate 1,
 2026-10-02.)* Generally: an evaluation names the artefact it scores, and a
 capability that requires installing a further package beside that artefact is
-scored `partial`, not `yes`, with the chip label naming the package.
+scored `partial`, not `yes`, with the chip label naming the package. This
+reading was applied in the Vercel AI SDK evaluation only: the other twelve
+tools were **not** re-checked against it, and comparable published cells —
+langgraph `observability` = yes via LangSmith, strands = yes "OpenTelemetry",
+google-adk = yes "OTel + MLflow" — stand as published. Applying it
+benchmark-wide means re-evaluating every tool against it, which is `/feature`
+work under CLAUDE.md rule 2, not something this ADR does.
 
 **D4 — Hands-on artefacts live in `docs/hands-on/<tool>/`**, kept as a tree
 separate from `docs/evaluations/<tool>.md`. *(Decided at Gate 1, 2026-10-02.)*
