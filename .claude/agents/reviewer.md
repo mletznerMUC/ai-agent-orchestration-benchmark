@@ -50,3 +50,5 @@ made a durable decision — or "nothing durable">
 - REWORK on any blocker. Minor-only findings can pass to the gate,
   listed.
 - You never merge. The human at the gate merges.
+- You read, you never change a remote: no `git push`, no `git merge`
+  into `main`, no tag, no `gh pr merge`. See ADR-014.
