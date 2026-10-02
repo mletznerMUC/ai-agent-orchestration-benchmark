@@ -28,6 +28,7 @@ const PRICE_ROWS = Object.values(DATA.tools)
 const TOOL_KEYS = [
   'maestro', 'langgraph', 'google-adk', 'strands', 'databricks', 'crewai',
   'n8n', 'ms-agent', 'claude-sdk', 'claude-squad', 'openai-sdk', 'manus-ai',
+  'vercel-ai-sdk',
 ];
 
 // --- fixtures -------------------------------------------------------------
@@ -142,10 +143,10 @@ test('parseScores throws when a card is missing its score number', () => {
   assert.throws(() => parseScores(broken), /alpha/);
 });
 
-test('parseScores finds all 12 tools in both real files', () => {
+test('parseScores finds all 13 tools in both real files', () => {
   for (const [name, html] of [['de', DE], ['en', EN]]) {
     const scores = parseScores(html);
-    assert.equal(scores.size, 12, `${name}: expected 12 score cards`);
+    assert.equal(scores.size, 13, `${name}: expected 13 score cards`);
     for (const key of TOOL_KEYS) assert.ok(scores.has(key), `${name}: missing tool ${key}`);
   }
 });
@@ -189,13 +190,13 @@ test('parseMatrix throws when a row has no data-feature key', () => {
   assert.throws(() => parseMatrix(broken), /data-feature/);
 });
 
-test('parseMatrix finds 12 tools x 14 features in both real files', () => {
+test('parseMatrix finds 13 tools x 14 features in both real files', () => {
   for (const [name, html] of [['de', DE], ['en', EN]]) {
     const { toolOrder, features, cells } = parseMatrix(html);
-    assert.equal(toolOrder.length, 12, `${name}: expected 12 matrix columns`);
+    assert.equal(toolOrder.length, 13, `${name}: expected 13 matrix columns`);
     assert.equal(features.length, 14, `${name}: expected 14 matrix rows`);
     const total = [...cells.values()].reduce((n, m) => n + m.size, 0);
-    assert.equal(total, 168, `${name}: expected 168 cells`);
+    assert.equal(total, 182, `${name}: expected 182 cells`);
   }
 });
 
@@ -258,14 +259,14 @@ test('parseMeta reads the English stamp', () => {
   assert.equal(parseMeta(html).asOf, 'July 2026');
 });
 
-test('parsePrices finds 12 cards and every price row the data declares', () => {
+test('parsePrices finds 13 cards and every price row the data declares', () => {
   // Without this the assertion below could pass by comparing zero to zero if
   // tools.json ever failed to load — the exact way a fixture stops testing
   // anything while still reporting green.
   assert.ok(PRICE_ROWS > 0, 'derived price-row total is 0 — data/tools.json did not load');
   for (const [name, html] of [['de', DE], ['en', EN]]) {
     const prices = parsePrices(html);
-    assert.equal(prices.size, 12, `${name}: expected 12 price cards`);
+    assert.equal(prices.size, 13, `${name}: expected 13 price cards`);
     const rows = [...prices.values()].reduce((n, p) => n + p.rows.length, 0);
     assert.equal(rows, PRICE_ROWS,
       `${name}: pages publish ${rows} price rows, tools.json declares ${PRICE_ROWS}`);
@@ -420,15 +421,15 @@ test('both real files publish the same six weights in the same order', () => {
   }
 });
 
-test('parseDimensions finds 12 cards x 6 rows in both real files', () => {
+test('parseDimensions finds 13 cards x 6 rows in both real files', () => {
   for (const [name, html] of [['de', DE], ['en', EN]]) {
     const dims = parseDimensions(html);
-    assert.equal(dims.size, 12, `${name}: expected 12 cards with dimension rows`);
+    assert.equal(dims.size, 13, `${name}: expected 13 cards with dimension rows`);
     for (const key of TOOL_KEYS) {
       assert.deepEqual(dims.get(key)?.map((r) => r.key), DIM_ORDER, `${name}/${key}: rows`);
     }
     const total = [...dims.values()].reduce((n, rows) => n + rows.length, 0);
-    assert.equal(total, 72, `${name}: expected 72 dimension rows`);
+    assert.equal(total, 78, `${name}: expected 78 dimension rows`);
   }
 });
 

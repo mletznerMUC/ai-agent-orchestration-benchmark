@@ -275,7 +275,7 @@ test('both files publish the same evidence and the same figures', () => {
 test('the dimension attributes and figures are byte-identical in both files', () => {
   const shape = (html) => [...html.matchAll(/data-dim="[a-z]+" data-max="\d+"( data-raw="\d+")?/g)]
     .map((m) => m[0]);
-  assert.equal(shape(DE).length, 72, 'expected 72 dimension rows in the DE file');
+  assert.equal(shape(DE).length, 78, 'expected 78 dimension rows in the DE file');
   assert.deepEqual(shape(DE), shape(EN));
 
   const evidence = (html) => [...html.matchAll(/<span class="dim-raw">([^<]*)<\/span>/g)].map((m) => m[1]);

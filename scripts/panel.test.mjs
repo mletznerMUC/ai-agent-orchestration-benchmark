@@ -42,12 +42,12 @@ const formula = (src) => sliceBetween(src, '/* wt-formula:begin */', '/* wt-form
 
 test('the score-grid slice holds exactly the published markup it is parsed for', () => {
   const expected = {
-    'score-number': 11,
-    'score-bar-fill': 11,
-    'score-descriptor': 12,
-    '<div class="score-card': 12,
-    '<details class="score-dims">': 12,
-    '<div class="dim': 72,
+    'score-number': 12,
+    'score-bar-fill': 12,
+    'score-descriptor': 13,
+    '<div class="score-card': 13,
+    '<details class="score-dims">': 13,
+    '<div class="dim': 78,
   };
   for (const [name, html] of FILES) {
     const slice = gridSlice(html);
@@ -69,7 +69,7 @@ test('the weighting panel uses none of the reserved class names', () => {
 test('the panel does not bleed into the parsed score cards', () => {
   for (const [name, html] of FILES) {
     const scores = parseScores(html);
-    assert.equal(scores.size, 12, `${name}: expected 12 score cards`);
+    assert.equal(scores.size, 13, `${name}: expected 13 score cards`);
     const unrated = scores.get('manus-ai');
     assert.equal(unrated.score, null, `${name}: manus-ai must stay unrated`);
     assert.equal(unrated.barWidth, null, `${name}: manus-ai must have no bar`);

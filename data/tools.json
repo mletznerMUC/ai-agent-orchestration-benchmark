@@ -2,8 +2,8 @@
   "meta": {
     "edition": "2026",
     "asOf": {
-      "de": "September 2026",
-      "en": "September 2026"
+      "de": "Oktober 2026",
+      "en": "October 2026"
     },
     "features": [
       {
@@ -169,6 +169,7 @@
         "ms-agent",
         "maestro",
         "langgraph",
+        "vercel-ai-sdk",
         "claude-sdk",
         "crewai",
         "databricks",
@@ -188,7 +189,8 @@
         "claude-sdk",
         "claude-squad",
         "openai-sdk",
-        "manus-ai"
+        "manus-ai",
+        "vercel-ai-sdk"
       ],
       "prices": [
         "maestro",
@@ -202,7 +204,8 @@
         "claude-sdk",
         "claude-squad",
         "manus-ai",
-        "openai-sdk"
+        "openai-sdk",
+        "vercel-ai-sdk"
       ]
     }
   },

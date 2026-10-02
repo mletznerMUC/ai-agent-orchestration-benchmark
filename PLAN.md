@@ -254,7 +254,7 @@ Facts established while planning, which the steps rely on:
      vercel-ai-sdk" style messages (the pages have not been edited yet) and
      with no `rubric:` or `sourcing:` failures.
 
-9. [ ] **Add the tool to both served pages with its scope and evidence
+9. [x] **Add the tool to both served pages with its scope and evidence
    disclosure, then reconcile `meta.toolOrder`.** In `index.html` and
    `index.en.html`, mirroring the existing markup exactly and keeping the two
    files identical in content (DE/EN wording only), neutral and descriptive,
@@ -306,7 +306,7 @@ Facts established while planning, which the steps rely on:
      price cards), verified by reading the file — `scripts/verify.mjs` does not
      check `toolOrder`.
 
-10. [ ] **Update the published counts, the changelog entry (incl. the as-of
+10. [x] **Update the published counts, the changelog entry (incl. the as-of
     disclosure) and the as-of stamp.** Hero `stat-num` 12 → 13 in both files.
     Add a changelog entry (`news-date` "Oktober 2026" / "October 2026")
     describing the addition in descriptive, non-promotional language, using the
