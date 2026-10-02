@@ -36,7 +36,8 @@ must be sourced and reproducible. When in doubt, understate.
   one to the benchmark means scoring it against every published
   criterion, which is `/feature` work, not a data refresh.
 - **Nothing merges to `main` without Markus.** Agents never merge,
-  never push to `main`, never tag releases.
+  never push to `main`, never tag releases. Enforced mechanically,
+  see ADR-014.
 - Each phase = one subagent with a clean context. The plan file
   (`PLAN.md`) is the only shared state between phases. The expert
   panel is the one exception: three lens subagents in parallel,
