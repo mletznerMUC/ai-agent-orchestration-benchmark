@@ -1,6 +1,6 @@
 name: refresh-research
 
-# Phase 1 of the refresh line, on a schedule.
+# Phase 1 of the refresh line, on a schedule or a merge to main.
 #
 # Two read-only passes, every round:
 #   1a. one `researcher` subagent per tool in data/tools.json — ALL of
@@ -82,7 +82,7 @@ on:
         type: choice
         options: ['true', 'false']
       backup:
-        description: 'For the automated backup dispatcher only. true applies the same "already ran this month" guard as a scheduled run. Humans leave this false: a deliberate manual re-run must never be blocked.'
+        description: 'Reserved for a future unattended dispatcher; none exists today (the backup is the push to main). true applies the same "already ran this month" guard as a scheduled run. Humans leave this false: a deliberate manual re-run must never be blocked.'
         required: false
         default: 'false'
         type: choice
