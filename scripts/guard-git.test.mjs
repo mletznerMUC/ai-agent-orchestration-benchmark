@@ -33,9 +33,21 @@ const BLOCKED = [
   'git tag v1',
   'git config core.hooksPath /dev/null',
   'git config --unset core.hooksPath',
+  'git config --global --add core.hooksPath /dev/null',
+  'git -c core.hooksPath=/dev/null push origin main',
   'rm .git/hooks/pre-push',
   'mv .githooks/pre-push /tmp/x',
   'echo nope > .githooks/pre-push',
+  // bypass classes: separators and leading wrappers
+  '(git push)',
+  'true & git push',
+  'env git push',
+  'env GIT_DIR=.git git push',
+  'command git push',
+  '\\git push',
+  'nohup git push',
+  'time git push',
+  'stdbuf -o0 git push',
 ];
 
 const ALLOWED = [
@@ -52,6 +64,12 @@ const ALLOWED = [
   'echo "git push is blocked"',
   'echo "enable it with core.hooksPath"',
   'node --test scripts/guard-git.test.mjs',
+  // talking about the setting is not changing it
+  'git commit -m "docs: enable core.hooksPath per clone"',
+  'git config --get core.hooksPath',
+  'git log --grep core.hooksPath',
+  '(git status)',
+  'env git status',
 ];
 
 for (const command of BLOCKED) {
@@ -69,7 +87,17 @@ for (const command of ALLOWED) {
   });
 }
 
-test('ignores input that is not a Bash command payload', () => {
+test('ignores input that is not a Bash command payload, and says so', () => {
   const r = spawnSync(process.execPath, [GUARD], { input: 'not json', encoding: 'utf8' });
   assert.equal(r.status, 0);
+  assert.match(r.stderr, /guard-git: .*allowing without inspection/);
+});
+
+test('fails open visibly when tool_input.command is missing', () => {
+  const r = spawnSync(process.execPath, [GUARD], {
+    input: JSON.stringify({ tool_name: 'Read', tool_input: { file_path: 'x' } }),
+    encoding: 'utf8',
+  });
+  assert.equal(r.status, 0);
+  assert.match(r.stderr, /guard-git: .*allowing without inspection/);
 });
