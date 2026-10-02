@@ -97,6 +97,10 @@ condition.
   Check 1 does not carry it: head branches such as `refresh/2026-10` are
   auto-deleted on merge, so the proposal branch is gone by the time the
   push event fires. The same holds for the merge of the applied pages.
+  That auto-deletion is a GitHub repository setting
+  (`delete_branch_on_merge`), which this amendment assumes is on. If it is
+  off, the proposal branch survives the merge and check 1 finds it — so
+  guard check 1 skips the run too, and the outcome is the same either way.
 - A month's round can now start with the first merge after 00:00 UTC on
   the 1st, which may land before the 06:17 cron slot. The cron then finds
   the guard satisfied and skips. The slots are still the free first line
