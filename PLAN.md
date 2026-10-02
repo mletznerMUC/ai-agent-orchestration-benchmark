@@ -121,7 +121,7 @@ Facts established while planning, which the steps rely on:
      value for every citation in this feature, and carries the D1 scope
      sentence in DE and EN marked as "decided at Gate 1, 2026-10-02".
 
-3. [ ] **Score the 14 matrix criteria from official docs.** One row per
+3. [x] **Score the 14 matrix criteria from official docs.** One row per
    criterion in a table: state (`yes`/`partial`/`no`), the DE and EN chip
    label, source URL, checked date, evidence tier (A/B/C), and one sentence of
    justification. Tiers live here and nowhere else (**D2**). Apply the
