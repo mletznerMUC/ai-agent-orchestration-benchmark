@@ -88,7 +88,9 @@ Facts established while planning, which the steps rely on:
 
 ## Steps
 
-1. [ ] **Category-fit gate (STOP condition).** Check Vercel AI SDK against the
+1. [x] **Category-fit gate (STOP condition).** — PASS on all four bars; the
+   in-category bar clears on the documented `ToolLoopAgent` multi-step tool
+   loop and the documented subagent delegation pattern. Pipeline continues. Check Vercel AI SDK against the
    four scout bars (`.claude/agents/scout.md`): in category / real and usable
    / alive / non-trivial signal, each with a URL actually read. Record the
    verdict and the sources. If the **in-category** bar fails, write that
