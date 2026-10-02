@@ -1,0 +1,14 @@
+#!/bin/sh
+# Versioned guard: nothing reaches main or a tag from a clone of this repo.
+# Enable per clone with: git config core.hooksPath .githooks   (see ADR-014)
+# Markus merges through GitHub PRs; agents never push to main or tag (CLAUDE.md).
+status=0
+while read -r local_ref local_sha remote_ref remote_sha; do
+  case "$remote_ref" in
+    refs/heads/main|refs/heads/master)
+      echo "pre-push: refusing to update $remote_ref — main changes only via a PR merged by Markus." >&2; status=1 ;;
+    refs/tags/*)
+      echo "pre-push: refusing to push tag $remote_ref — releases are tagged by Markus only." >&2; status=1 ;;
+  esac
+done
+exit $status

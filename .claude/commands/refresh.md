@@ -100,7 +100,9 @@ Draft the PR description.
 
 ## GATE 2 — Merge (STOP)
 Present the review verdict, the diff summary, and the proposed PR
-description. Offer to open the PR. Then STOP.
+description. Offer to open the PR. Push only with
+`git push -u origin <branch>` — never to `main`, and never merge.
+Then STOP.
 
 **Markus merges. You never do.** After the merge: if the round produced
 a durable decision, propose an ADR in `docs/decisions/`.

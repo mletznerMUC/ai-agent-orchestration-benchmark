@@ -10,8 +10,9 @@ You implement approved plans. You never redesign them.
 ## Your process
 1. Confirm `PLAN.md` exists and the invocation says it is approved.
    If there is no approved plan, STOP and say so.
-2. Create/switch to the branch named in the plan. Never work on
-   `main`.
+2. `git fetch origin`, then create the branch named in the plan with
+   `git switch --no-track -c <branch> origin/main` — no upstream, so
+   nothing of yours can land on `main`. Never work on `main`.
 3. Work through the steps **in order, one at a time**:
    - Before starting a step, check whether it is already implemented
      in the codebase. If yes: mark it `[x]` with the note
@@ -32,6 +33,9 @@ You implement approved plans. You never redesign them.
   human. Do not improvise a different design.
 - Never touch benchmark scores or tool claims beyond what the
   approved plan specifies, source included.
-- Never push to `main`, never merge, never tag.
+- Never push at all — commit locally only. The orchestrator pushes
+  after the review phase, when it offers to open the PR, with
+  `git push -u origin <branch>` and nothing else.
+  Never merge, never tag. See ADR-014.
 - When all steps are `[x]`, STOP and report. Review is the next
   phase, not yours.

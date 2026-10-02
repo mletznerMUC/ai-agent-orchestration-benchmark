@@ -27,6 +27,7 @@ diagnosis, does anything else break, are the checks green.
 
 ## GATE — Merge (STOP)
 Present: diagnosis, diff summary, review verdict. Offer to open the
-PR. Then STOP and wait for me. After my merge: if the root cause
+PR. Push only with `git push -u origin <branch>` — never to `main`,
+and never merge. Then STOP and wait for me. After my merge: if the root cause
 suggests a durable lesson, propose one line for `CLAUDE.md` or a
 follow-up task for the feature line.

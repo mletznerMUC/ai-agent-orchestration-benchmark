@@ -64,6 +64,8 @@ rounds, then escalate to me).
 Present the review verdict, findings, the proposed PR description,
 and the memory proposal. Offer to open the PR (`gh pr create`) with
 that description. Then STOP.
+Push only with `git push -u origin <branch>` — never to `main`, and
+never merge.
 
 **I merge. You never do.** After I confirm the merge happened: if I
 accepted the memory proposal, apply it to `CLAUDE.md` or
