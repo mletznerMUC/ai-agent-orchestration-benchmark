@@ -216,7 +216,7 @@ Facts established while planning, which the steps rely on:
      sections, states each of D1–D4 and D6 as decided at Gate 1 on 2026-10-02,
      and step 5's log links to it; no other ADR is edited.
 
-7. [ ] **Derive the six rubric dimensions and the arithmetic.** Map the matrix
+7. [x] **Derive the six rubric dimensions and the arithmetic.** Map the matrix
    results onto the ADR-005 dimensions (orchestration 25/max 8, operability
    20/4, integration 15/6, sovereignty 15/4, maturity 15/6, accessibility
    10/6), scoring each criterion 0/1/2. Maturity is **tier A only**, from

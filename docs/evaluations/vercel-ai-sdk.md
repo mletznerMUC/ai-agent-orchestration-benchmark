@@ -163,3 +163,76 @@ artefact carries is the cost of the models the operator points it at, which is
 set by that provider and not by this artefact. AI Gateway pricing and Vercel
 platform pricing are out of scope per D1 and are deliberately not reproduced
 on the price card.
+
+## Rubric
+
+ADR-005 dimensions and weights. Each criterion scores 2 (`yes`), 1 (`partial`)
+or 0 (`no`); dimensions 1–4 and 6 take the matrix cell above as the input
+(ADR-005 rule 2) and are not re-judged here. No criterion in the matrix table
+is still marked `pending hands-on`.
+
+| # | Dimension | Weight | Criteria (score) | raw / max | points = weight·raw/max |
+| --- | --- | --- | --- | --- | --- |
+| 1 | Orchestration capability | 25 | `multi-agent-parallel` 2, `playbooks` 2, `group-chat` 1, `git-worktrees` 0 | 5 / 8 | 25·5/8 = **15.625** |
+| 2 | Operability | 20 | `observability` 1, `hitl` 2 | 3 / 4 | 20·3/4 = **15** |
+| 3 | Integration & interoperability | 15 | `mcp-support` 1, `model-agnostic` 2, `cli-cicd` 2 | 5 / 6 | 15·5/6 = **12.5** |
+| 4 | Deployment sovereignty | 15 | `eu-onprem` 2, `open-source` 2 | 4 / 4 | 15·4/4 = **15** |
+| 5 | Maturity | 15 | `ga-status` 2, `release-recency` 2, `sustained-cadence` 2 | 6 / 6 | 15·6/6 = **15** |
+| 6 | Accessibility | 10 | `learning-curve` 2, `desktop-gui` 1, `mobile-remote` 0 | 3 / 6 | 10·3/6 = **5** |
+
+**Arithmetic, checked by hand.**
+
+```
+15.625 + 15 + 12.5 + 15 + 15 + 5 = 78.125
+25·5/8 = 125/8 = 15.625
+15·5/6 = 75/6  = 12.5
+10·3/6 = 30/6  = 5
+```
+
+- `score.exact` = **78.125**
+- `score.value` = floor(78.125 + 0.5) = floor(78.625) = **78**
+
+The tool is **rated**: every maturity criterion carries a tier-A source, so
+the unrated rule does not apply.
+
+### Maturity (tier A only)
+
+Read from dated, tagged releases of the D1 artefact. Sources, both checked
+2026-10-02:
+
+- https://github.com/vercel/ai/releases — tagged releases, each dated
+- https://registry.npmjs.org/ai — the `time` map, which carries a publication
+  timestamp per published version of the `ai` package
+
+| Criterion | Score | Reading | Tier |
+| --- | --- | --- | --- |
+| `ga-status` | 2 | Latest stable major is `7` — major >= 1. `7.0.0` was published 2026-06-25. | A |
+| `release-recency` | 2 | Latest stable `7.0.127` published 2026-10-01, i.e. 1 day before the evaluation date — inside the <= 30 day band. | A |
+| `sustained-cadence` | 2 | Far more than 6 stable releases in the trailing 90 days. | A |
+
+**The trailing 90-day window** runs 2026-07-04 to 2026-10-02 (the step-2
+evaluation date). Counting only semver-stable versions of the `ai` package —
+no `-canary`, `-beta` or `-alpha` tags:
+
+| Month in window | `7.x` stable | `6.x` stable (maintenance line) |
+| --- | --- | --- |
+| 2026-07 (from the 4th) | 32 | 34 |
+| 2026-08 | 35 | 53 |
+| 2026-09 | 36 | 47 |
+| 2026-10 (to the 2nd) | 1 | 1 |
+| **Total** | **104** | **135** |
+
+The current line alone contributes 104 stable releases, first `7.0.15`
+(2026-07-04T06:10:42Z), last `7.0.127` (2026-10-01T19:20:23Z). The threshold
+for a score of 2 is 6, so the criterion is not close to its boundary and the
+exact count does not have to be litigated. The list is reproducible from the
+registry document: take `time`, keep keys matching `^\d+\.\d+\.\d+$`, keep
+timestamps inside the window.
+
+### Descriptor and ranking
+
+- `descriptor`: "Tool-Loop-SDK · TypeScript" (DE and EN).
+- At 78 the tool sits between `langgraph` (81) and `claude-sdk` (76) in the
+  published order. No existing tool's score, rubric or rank value is changed
+  by this addition; only the positions around it in the published grid shift,
+  because the grid is laid out in rank order.
