@@ -28,13 +28,21 @@ went there. CLAUDE.md's "agents never push to `main`" was prose only;
 nothing enforced it. Markus kept the commits.
 
 ## Consequences
-- Regex guards can be evaded, by an agent or by a shell construct the
-  splitter does not model. Layer 1 is the authority; layers 2 and 3 exist
-  to catch the mistake early and loudly, at the keyboard rather than in the
-  branch history. Known and accepted limits of layer 3, deliberately not
-  chased: `sh -c "…"` and `bash -c "…"`, `eval`, command substitution
-  `$(…)`, `xargs`, and `gh api …` calls that merge. Each hides the real
-  command inside a string the splitter does not open.
+- Layer 3 parses a single shell command heuristically: it splits on the
+  usual separators, drops a short list of wrappers (`env`, `command`,
+  `nohup`, `time`, `stdbuf`, `setsid`, `sudo`, `timeout`, `nice`) and
+  inspects what is left. Anything that keeps the real command out of that
+  view is out of scope and deliberately not chased — among others, a shell
+  in a string (`sh -c`, `bash -c`, `eval`), substitution (`$(…)`,
+  backticks), `xargs`, wrappers beyond the ones named above, a script or
+  npm target that runs git itself, and `gh api …` calls that merge. The
+  list is illustrative, not exhaustive: assume there are more. Layer 1 is
+  the authority; layers 2 and 3 exist to catch the mistake early and
+  loudly, at the keyboard rather than in the branch history.
+- The splitter also reads a heredoc body as if it were code, so a commit
+  message or document that quotes a blocked command can block its own
+  `git commit -F - <<'EOF'`. Workaround: write that content with the Write
+  tool and pass the file path, instead of inlining a heredoc.
 - The guard fails open, visibly, on input it cannot parse — layers 1 and 2
   are what make the rule hold.
 - No workflow pushes to `main`. `apply.yml` checks out the proposal PR's
