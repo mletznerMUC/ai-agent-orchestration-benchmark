@@ -92,10 +92,19 @@ condition.
   merge — more attempts than ADR-011's three, and each one costs a real
   round. A repeatedly failing round should be disabled or fixed, not left
   to retry.
-- A merged refresh proposal PR is itself a push to `main`, and it skips:
-  the round that opened it succeeded and left both `refresh/<month>` and a
-  `refresh full` run behind. The same holds for the merge of the applied
-  pages.
+- A merged refresh proposal PR is itself a push to `main`, and it skips —
+  on check 2, the successful `refresh full` run the round left behind.
+  Check 1 does not carry it: head branches such as `refresh/2026-10` are
+  auto-deleted on merge, so the proposal branch is gone by the time the
+  push event fires. The same holds for the merge of the applied pages.
+  That auto-deletion is a GitHub repository setting
+  (`delete_branch_on_merge`), which this amendment assumes is on. If it is
+  off, the proposal branch survives the merge and check 1 finds it — so
+  guard check 1 skips the run too, and the outcome is the same either way.
+- A month's round can now start with the first merge after 00:00 UTC on
+  the 1st, which may land before the 06:17 cron slot. The cron then finds
+  the guard satisfied and skips. The slots are still the free first line
+  of ADR-011; they are simply no longer guaranteed to be first.
 - The workflow cannot trigger itself. It pushes `refresh/<month>` and opens
   a pull request; it never pushes `main`, and nothing in the refresh or
   apply line merges (ADR-014).

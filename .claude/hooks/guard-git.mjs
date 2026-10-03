@@ -32,10 +32,33 @@ const DURATION = /^\d+(\.\d+)?[smhd]?$/;
 // Split a compound command into the simple commands it runs. `&&` has to be
 // tried before a lone `&`, which is a separator too (`true & git push`).
 function segments(command) {
+  // `&` inside a redirection (`2>&1`, `&>out`) is not a separator. Mask it
+  // first, or `git push … 2>&1 origin main` would split into a lone, legal
+  // looking `git push … 2>` and sneak past.
   return command
+    .replace(/&>/g, '\u0000>')
+    .replace(/>&/g, '>\u0000')
     .split(/\|\||&&|[;\n|&]/)
-    .map((s) => s.replace(/^[\s(){]+/, '').trim())
+    .map((s) => s.replace(/\u0000/g, '&').replace(/^[\s(){]+/, '').trim())
     .filter(Boolean);
+}
+
+// `git push … 2>&1`, `… >/dev/null 2>&1`, `… &>out`: a stdout/stderr
+// redirection to a plain target says nothing about what is being pushed.
+const REDIRECT_WITH_TARGET = /^(\d?>>?|&>>?)\S+$/; // `>/dev/null`, `2>file`
+const REDIRECT_BARE = /^(\d?>>?|&>>?)$/; // `> file`, `2>> file`
+const REDIRECT_FD = /^\d?>&\d+$/; // `2>&1`
+function stripRedirects(args) {
+  const out = [];
+  for (let i = 0; i < args.length; i++) {
+    if (REDIRECT_FD.test(args[i]) || REDIRECT_WITH_TARGET.test(args[i])) continue;
+    if (REDIRECT_BARE.test(args[i])) {
+      i++; // its target is not an argument either
+      continue;
+    }
+    out.push(args[i]);
+  }
+  return out;
 }
 
 function tokens(segment) {
@@ -79,7 +102,8 @@ function gitArgs(words) {
   return rest;
 }
 
-function checkPush(args) {
+function checkPush(rawArgs) {
+  const args = stripRedirects(rawArgs);
   const flags = args.filter((a) => a.startsWith('-'));
   const positional = args.filter((a) => !a.startsWith('-'));
   for (const f of flags) {
