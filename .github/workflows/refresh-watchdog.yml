@@ -124,6 +124,9 @@ jobs:
       # expressions, and never fires. `state` is the only place that shows.
       - name: Check the refresh schedule is enabled
         id: enabled
+        # The checks are independent: one blowing up must not hide the
+        # others. `Report` turns a non-success outcome into a problem.
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -157,6 +160,7 @@ jobs:
       # warn about it.
       - name: Check inactivity
         id: inactivity
+        if: always()
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPO: ${{ github.repository }}
@@ -172,7 +176,9 @@ jobs:
             exit 0
           fi
           DAYS=$(( ( $(date -u +%s) - LAST_TS ) / 86400 ))
-          if [ "$DAYS" -ge 28 ]; then
+          if [ "$DAYS" -ge 60 ]; then
+            echo "problem=The default branch has had no commit for ${DAYS} days, past GitHub's 60-day inactivity line: scheduled workflows in this repository may already have been disabled. Any commit to \`main\` resets the clock." >> "$GITHUB_OUTPUT"
+          elif [ "$DAYS" -ge 28 ]; then
             echo "problem=The default branch has had no commit for ${DAYS} days; GitHub disables scheduled workflows at 60 days of inactivity, i.e. in $((60 - DAYS)) days. Any commit to \`main\` resets the clock." >> "$GITHUB_OUTPUT"
           else
             echo "Latest commit on the default branch is ${DAYS} days old."
@@ -188,17 +194,31 @@ jobs:
           P_ROUND: ${{ steps.round.outputs.problem }}
           P_ENABLED: ${{ steps.enabled.outputs.problem }}
           P_INACTIVITY: ${{ steps.inactivity.outputs.problem }}
+          O_ROUND: ${{ steps.round.outcome }}
+          O_ENABLED: ${{ steps.enabled.outcome }}
+          O_INACTIVITY: ${{ steps.inactivity.outcome }}
         run: |
           set -uo pipefail
           MONTH="$(date -u +%Y-%m)"
 
-          # A check that did not run at all (cancelled, runner failure) has
-          # an empty output and is indistinguishable here from a check that
-          # passed. The run is red either way, which is the signal.
           PROBLEMS=""
-          for P in "$P_ROUND" "$P_ENABLED" "$P_INACTIVITY"; do
-            [ -n "$P" ] && PROBLEMS="${PROBLEMS}- ${P}"$'\n'
-          done
+
+          # Failing closed means the all-clear is only ever reported when
+          # every check actually ran and said so. A step that died, was
+          # skipped or was cancelled leaves an empty `problem` output, which
+          # on its own is indistinguishable from "nothing wrong" — so the
+          # outcome is checked first and a non-success is itself a problem.
+          add_check() { # name, outcome, problem
+            if [ "$2" != "success" ]; then
+              PROBLEMS="${PROBLEMS}- The \"$1\" check did not complete (outcome: ${2:-unknown}), so its result is unknown."$'\n'
+            elif [ -n "$3" ]; then
+              PROBLEMS="${PROBLEMS}- $3"$'\n'
+            fi
+          }
+
+          add_check "this month's round" "$O_ROUND" "$P_ROUND"
+          add_check "refresh schedule is enabled" "$O_ENABLED" "$P_ENABLED"
+          add_check "inactivity" "$O_INACTIVITY" "$P_INACTIVITY"
 
           if [ -z "$PROBLEMS" ]; then
             echo "::notice::Refresh watchdog ${MONTH}: the month's round is accounted for, refresh.yml is active, and the repository is not near the 60-day inactivity line."
@@ -207,14 +227,15 @@ jobs:
           fi
 
           TITLE="Refresh watchdog: ${MONTH} needs attention"
-          BODY="$(printf '%s\n%s\n\n%s\n%s\n%s\n%s\n\n%s\n' \
-            "The refresh watchdog found problems with this month's refresh round (${MONTH}):" \
-            "" \
-            "${PROBLEMS}" \
-            "Remedies:" \
-            "- No round this month: run the \`refresh-research\` workflow via \`workflow_dispatch\` (a plain manual dispatch is unguarded by design, ADR-011)." \
-            "- Workflow disabled: re-enable \`refresh-research\` under Actions." \
-            "- Inactivity: any merge to \`main\` resets GitHub's 60-day clock." )"
+          # PROBLEMS already ends in a newline, so each $'\n' below opens a
+          # blank line: intro, list, remedies list, run link, each its own
+          # markdown block.
+          BODY="The refresh watchdog found problems with this month's refresh round (${MONTH}):"$'\n\n'
+          BODY="${BODY}${PROBLEMS}"$'\n'
+          BODY="${BODY}Remedies:"$'\n\n'
+          BODY="${BODY}- No round this month: run the \`refresh-research\` workflow via \`workflow_dispatch\` (a plain manual dispatch is unguarded by design, ADR-011)."$'\n'
+          BODY="${BODY}- Workflow disabled: re-enable \`refresh-research\` under Actions."$'\n'
+          BODY="${BODY}- Inactivity: any merge to \`main\` resets GitHub's 60-day clock."$'\n'
           BODY="${BODY}"$'\n'"Run: ${RUN_URL}"
 
           {
