@@ -1,0 +1,241 @@
+name: refresh-watchdog
+
+# Does the month's refresh round actually exist? Nothing else asks.
+#
+# Every safeguard in `refresh.yml` — the three cron slots of ADR-011, the
+# push-to-main backup of ADR-013's amendment, the idempotency guard — only
+# runs when a trigger fires. A month in which no trigger fires at all
+# produces no round and no signal: the repository looks exactly like a
+# month that went fine and found nothing. GitHub also disables `schedule`
+# triggers in a public repository after 60 days without repository
+# activity, silently.
+#
+# So this workflow runs later in the same month and applies the guard's own
+# "has this month's round run?" tests from the outside, plus two checks the
+# guard cannot make about itself: that `refresh.yml` is still `active`, and
+# that the repository is not drifting towards the 60-day line.
+#
+# What it NEVER does: start a round. It does not dispatch `refresh.yml`,
+# does not call Anthropic, does not push, does not commit. It reports — red
+# run plus one deduplicated issue — and the remedy is a human running
+# `refresh-research` via workflow_dispatch. That is the same division of
+# labour as the refresh line itself: the automation proposes, a human acts.
+#
+# Unlike the guard, every check here fails CLOSED. The guard runs a round
+# when it cannot tell, because a duplicate attempt is cheaper than a missed
+# month; the watchdog exists to surface uncertainty, so "cannot confirm"
+# is a problem it reports.
+#
+# Secrets: none beyond the automatic GITHUB_TOKEN.
+#
+# See ADR-015, which amends ADR-011 and ADR-013.
+
+on:
+  schedule:
+    # The 5th and the 7th: after all three `refresh.yml` slots (1st, 2nd,
+    # 3rd) have had their chance, with enough of the month left for a
+    # manual dispatch to still deliver the round.
+    #
+    # Two slots for the same reason `refresh.yml` has three — GitHub's
+    # scheduled triggers are best-effort and get dropped — and with the
+    # same caveat: the second slot shares the failure mode of the first,
+    # so this reduces silent misses, it does not eliminate them. Off
+    # minutes, off the top of the hour.
+    - cron: '37 9 5 * *'
+    - cron: '13 10 7 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  # Listing `refresh.yml`'s past runs and reading its enabled/disabled state.
+  actions: read
+  # Opening (or commenting on) the one issue this workflow files.
+  issues: write
+
+concurrency:
+  group: refresh-watchdog
+  cancel-in-progress: false
+
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    steps:
+      # No checkout anywhere in this job: every check reads the remote
+      # through the API or through `git ls-remote` against the public
+      # clone URL. There is no code here to run.
+
+      # The guard's two tests (ADR-011), from the outside:
+      #   1. branch `refresh/<month>` exists on the remote — free, no API;
+      #   2. a `refresh full` run of `refresh.yml` succeeded this month.
+      # Either one means the round happened. A guard-skipped fallback is
+      # also green and also titled `refresh full`, so test 2 counts it —
+      # acceptable, because per ADR-011 such a skip only ever happens
+      # downstream of a real round or a real proposal branch.
+      - name: Check this month's round
+        id: round
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          MONTH="$(date -u +%Y-%m)"
+
+          # --exit-code: 0 = the branch is there, 2 = it is not, anything
+          # else is a transport failure and must not read as "not there".
+          git ls-remote --exit-code --heads "https://github.com/${REPO}" "refresh/${MONTH}" >/dev/null 2>&1
+          LS=$?
+          if [ "$LS" -eq 0 ]; then
+            echo "Branch refresh/${MONTH} exists — this month's round pushed a proposal branch."
+            echo "problem=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if [ "$LS" -ne 2 ]; then
+            echo "problem=Could not reach the remote to look for branch refresh/${MONTH} (git ls-remote exit ${LS}), so this month's round could not be confirmed." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          # Same query as the guard: this UTC month, successful runs only,
+          # --paginate plus `jq -s` because --paginate concatenates one
+          # JSON object per page.
+          ERR_LOG="$(mktemp)"
+          if ! RUNS=$(gh api --paginate \
+                "repos/${REPO}/actions/workflows/refresh.yml/runs?created=%3E%3D${MONTH}-01&status=success&per_page=100" \
+                2>"$ERR_LOG"); then
+            echo "problem=Could not list refresh.yml runs ($(tr '\n' ' ' < "$ERR_LOG" | tr -d '\r')), so this month's round could not be confirmed." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          PREVIOUS=$(printf '%s' "$RUNS" | jq -r -s '
+            first(
+              .[].workflow_runs[]
+              | select((.display_title // "") | startswith("refresh full"))
+              | .html_url
+            ) // ""')
+
+          if [ -n "$PREVIOUS" ]; then
+            echo "A full refresh round succeeded this month (${MONTH}): ${PREVIOUS}"
+            echo "problem=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "problem=No refresh round for ${MONTH}: no branch refresh/${MONTH} on the remote and no successful \`refresh full\` run of refresh.yml this month." >> "$GITHUB_OUTPUT"
+
+      # A workflow GitHub has disabled still exists, still shows its cron
+      # expressions, and never fires. `state` is the only place that shows.
+      - name: Check the refresh schedule is enabled
+        id: enabled
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          ERR_LOG="$(mktemp)"
+          if ! STATE=$(gh api "repos/${REPO}/actions/workflows/refresh.yml" --jq .state 2>"$ERR_LOG"); then
+            echo "problem=Could not read the state of refresh.yml ($(tr '\n' ' ' < "$ERR_LOG" | tr -d '\r')), so it is unknown whether its schedule is still enabled." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          case "$STATE" in
+            active)
+              echo "refresh.yml is active."
+              echo "problem=" >> "$GITHUB_OUTPUT"
+              ;;
+            disabled_inactivity)
+              echo "problem=refresh.yml is \`disabled_inactivity\`: GitHub switched its schedule off after 60 days without repository activity. It will not fire again until it is re-enabled." >> "$GITHUB_OUTPUT"
+              ;;
+            disabled_manually)
+              echo "problem=refresh.yml is \`disabled_manually\`: someone turned it off under Actions. It will not fire again until it is re-enabled." >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "problem=refresh.yml is in state \`${STATE}\`, not \`active\`, so its schedule may not fire." >> "$GITHUB_OUTPUT"
+              ;;
+          esac
+
+      # The 60-day rule is the slow failure: no commits, and every schedule
+      # in the repository — this watchdog included — goes quiet. 28 days is
+      # the threshold because the watchdog only runs monthly, so a repo
+      # already 28 days quiet would be past 60 before the next run could
+      # warn about it.
+      - name: Check inactivity
+        id: inactivity
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          ERR_LOG="$(mktemp)"
+          if ! LAST=$(gh api "repos/${REPO}/commits?per_page=1" --jq '.[0].commit.committer.date' 2>"$ERR_LOG"); then
+            echo "problem=Could not read the latest commit on the default branch ($(tr '\n' ' ' < "$ERR_LOG" | tr -d '\r')), so repository inactivity could not be checked." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          if ! LAST_TS=$(date -u -d "$LAST" +%s 2>/dev/null); then
+            echo "problem=Could not parse the latest commit date (\`${LAST}\`), so repository inactivity could not be checked." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          DAYS=$(( ( $(date -u +%s) - LAST_TS ) / 86400 ))
+          if [ "$DAYS" -ge 28 ]; then
+            echo "problem=The default branch has had no commit for ${DAYS} days; GitHub disables scheduled workflows at 60 days of inactivity, i.e. in $((60 - DAYS)) days. Any commit to \`main\` resets the clock." >> "$GITHUB_OUTPUT"
+          else
+            echo "Latest commit on the default branch is ${DAYS} days old."
+            echo "problem=" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Report
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          RUN_URL: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
+          P_ROUND: ${{ steps.round.outputs.problem }}
+          P_ENABLED: ${{ steps.enabled.outputs.problem }}
+          P_INACTIVITY: ${{ steps.inactivity.outputs.problem }}
+        run: |
+          set -uo pipefail
+          MONTH="$(date -u +%Y-%m)"
+
+          # A check that did not run at all (cancelled, runner failure) has
+          # an empty output and is indistinguishable here from a check that
+          # passed. The run is red either way, which is the signal.
+          PROBLEMS=""
+          for P in "$P_ROUND" "$P_ENABLED" "$P_INACTIVITY"; do
+            [ -n "$P" ] && PROBLEMS="${PROBLEMS}- ${P}"$'\n'
+          done
+
+          if [ -z "$PROBLEMS" ]; then
+            echo "::notice::Refresh watchdog ${MONTH}: the month's round is accounted for, refresh.yml is active, and the repository is not near the 60-day inactivity line."
+            echo "Refresh watchdog ${MONTH}: nothing to report." >> "$GITHUB_STEP_SUMMARY"
+            exit 0
+          fi
+
+          TITLE="Refresh watchdog: ${MONTH} needs attention"
+          BODY="$(printf '%s\n%s\n\n%s\n%s\n%s\n%s\n\n%s\n' \
+            "The refresh watchdog found problems with this month's refresh round (${MONTH}):" \
+            "" \
+            "${PROBLEMS}" \
+            "Remedies:" \
+            "- No round this month: run the \`refresh-research\` workflow via \`workflow_dispatch\` (a plain manual dispatch is unguarded by design, ADR-011)." \
+            "- Workflow disabled: re-enable \`refresh-research\` under Actions." \
+            "- Inactivity: any merge to \`main\` resets GitHub's 60-day clock." )"
+          BODY="${BODY}"$'\n'"Run: ${RUN_URL}"
+
+          {
+            echo "## Refresh watchdog: ${MONTH} needs attention"
+            echo
+            printf '%s\n' "$PROBLEMS"
+          } >> "$GITHUB_STEP_SUMMARY"
+
+          # One issue per month, not one per slot: the 7th finds the 5th's
+          # issue and comments instead. Exact-title match on OPEN issues
+          # only, so a closed month can be reopened by a later failure.
+          EXISTING="$(gh issue list --state open --limit 100 --json number,title \
+            --jq "map(select(.title == \"${TITLE}\")) | .[0].number // empty" 2>/dev/null || echo "")"
+
+          if [ -n "$EXISTING" ]; then
+            gh issue comment "$EXISTING" --body "$BODY" \
+              || echo "::warning::Could not comment on issue #${EXISTING}."
+          else
+            gh issue create --title "$TITLE" --body "$BODY" \
+              || echo "::warning::Could not open an issue; the run summary above is the only record."
+          fi
+
+          echo "::error::Refresh watchdog ${MONTH}: see the run summary and the tracking issue."
+          exit 1
