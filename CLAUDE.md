@@ -41,6 +41,10 @@ must be sourced and reproducible. When in doubt, understate.
 - A month's refresh round starts at the first of: the cron slots, or any
   push to `main`. All go through the same "already ran this month" guard,
   so only the first can start a paid round (ADR-011, ADR-013).
+- A monthly watchdog (`refresh-watchdog.yml`, 5th and 7th) checks that the
+  month's round happened and that the refresh schedule is still enabled. It
+  only reports (red run + one issue per month) and never starts a round; the
+  fix is a human `workflow_dispatch` (ADR-015).
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases. Enforced mechanically,
   see ADR-014.
