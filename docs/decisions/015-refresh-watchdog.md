@@ -43,10 +43,12 @@ check has to come from somewhere other than the thing being checked.
   report its own disabling. It warns while there is still a month of margin
   before GitHub's 60-day line, and any commit to `main` resets the clock.
 - The remedy is always human: a `workflow_dispatch` of `refresh-research`,
-  which ADR-011 leaves deliberately unguarded. The watchdog proposes and
-  never applies, like the research round itself, and for the same practical
-  reason as ADR-013's amendment — nothing here holds a token that could
-  dispatch unattended.
+  which ADR-011 leaves deliberately unguarded. That is a choice, not a
+  limitation — `GITHUB_TOKEN` could be granted `actions: write` and the
+  watchdog could start the round itself. It is not, because a watchdog that
+  fixes things silently is a second unattended spender and removes the only
+  moment a human looks at why the month went wrong. The watchdog proposes
+  and never applies, like the research round it watches.
 - It is read-only plus one issue: `contents: read`, `actions: read`,
   `issues: write`, and no secret but the automatic `GITHUB_TOKEN`.
   `refresh.yml` is unchanged.
