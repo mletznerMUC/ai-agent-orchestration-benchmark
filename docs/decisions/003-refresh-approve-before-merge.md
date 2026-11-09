@@ -36,7 +36,9 @@ the apply has to be redone by hand on a new branch — see PR #21.
 - If a proposal is merged by mistake, main is repaired by re-applying the
   approved `tools.json` to both pages on a fresh branch (matching what
   `apply.yml` would have written), not by reverting the sourced data.
-- Since 2026-10-02 the order is enforced mechanically as well: the ruleset
-  on `main` requires the `verify` check to pass before a PR can be merged,
-  so an unapplied proposal can no longer be merged past its own red gate
-  (see ADR-014).
+- The order was believed to be enforced mechanically from 2026-10-02 by a
+  ruleset on `main` requiring the `verify` check (ADR-014, layer 1). That
+  ruleset never existed — verified 2026-11-09, after PR #74 was merged
+  unapplied — so until Markus completes the Settings checklist in ADR-016,
+  which requires both `verify` and the new `refresh-gate` check, this
+  order holds by discipline, not by mechanism (see ADR-016).
