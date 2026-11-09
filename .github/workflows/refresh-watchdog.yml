@@ -205,11 +205,28 @@ jobs:
             exit 0
           fi
 
-          MISSING=$(printf '%s' "$RULES" | jq -r '
-            if length == 0 then
+          # A 2xx with an unexpected body must not read as "nothing
+          # wrong": the jq program asserts the shape it was written for
+          # and errors otherwise, and jq's exit status is checked. An
+          # unchecked `MISSING=$(… | jq …)` would leave MISSING empty on
+          # any jq error, which is indistinguishable from an all-clear —
+          # the one failure mode this whole check exists to prevent.
+          # An empty body is the one malformed payload jq would NOT error
+          # on: it reads no input, prints nothing and exits 0, which looks
+          # exactly like "no problems found". Caught here instead.
+          if [ -z "$(printf '%s' "$RULES" | tr -d '[:space:]')" ]; then
+            echo "problem=Could not interpret the rules in force on \`main\` (the rules API returned an empty body), so it is unknown whether the ruleset requiring \`verify\` and \`refresh-gate\` still exists." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          JQ_LOG="$(mktemp)"
+          if ! MISSING=$(printf '%s' "$RULES" | jq -r '
+            if type != "array" then error("rules API did not return an array")
+            elif length == 0 then
               "there is no ruleset on `main` at all (the rules API returns an empty list)"
             else
-              [ .[].type ] as $types
+              map(if type != "object" then error("rule is not an object") else . end)
+              | [ .[].type ] as $types
               | [ .[] | select(.type == "required_status_checks")
                   | .parameters.required_status_checks[]?.context ] as $contexts
               | [
@@ -225,7 +242,10 @@ jobs:
                    else "no rule requires status checks to pass" end)
                 ]
               | join("; ")
-            end')
+            end' 2>"$JQ_LOG"); then
+            echo "problem=Could not interpret the rules in force on \`main\` ($(tr '\n' ' ' < "$JQ_LOG" | tr -d '\r')), so it is unknown whether the ruleset requiring \`verify\` and \`refresh-gate\` still exists." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
 
           if [ -z "$MISSING" ]; then
             echo "The ruleset on main requires a pull request, blocks force pushes, and requires both verify and refresh-gate."
@@ -275,7 +295,7 @@ jobs:
           add_check "main ruleset" "$O_RULESET" "$P_RULESET"
 
           if [ -z "$PROBLEMS" ]; then
-            echo "::notice::Refresh watchdog ${MONTH}: the month's round is accounted for, refresh.yml is active, and the repository is not near the 60-day inactivity line."
+            echo "::notice::Refresh watchdog ${MONTH}: the month's round is accounted for, refresh.yml is active, the repository is not near the 60-day inactivity line, and the ruleset on \`main\` is in force."
             echo "Refresh watchdog ${MONTH}: nothing to report." >> "$GITHUB_STEP_SUMMARY"
             exit 0
           fi
