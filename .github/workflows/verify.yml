@@ -10,7 +10,14 @@ name: verify
 # working, not that something is broken.
 
 on:
+  # `labeled`/`unlabeled` are included because `refresh-gate` below reads
+  # the PR's labels: without them a label added after the last push would
+  # never re-evaluate the gate. The cost is that `verify` re-runs on every
+  # label change too — about a minute, no dependencies, free on a public
+  # repo — which is cheaper than excluding it with a job-level `if:` and
+  # publishing a `skipped` check run for a required check name.
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
   push:
     branches: [main]
   workflow_dispatch:
