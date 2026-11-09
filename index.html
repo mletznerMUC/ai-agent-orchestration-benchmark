@@ -1416,6 +1416,20 @@
     </div>
     <p class="score-provenance"><strong>Provenienz:</strong> Die Gesamtbewertung wird aus dem unten veröffentlichten Raster berechnet — sechs gewichtete Dimensionen, jedes Kriterium 0/1/2 gegen eine belegte Quelle. Die ungerundete Summe wird maschinell geprüft. Tools, deren Release-Reife sich nicht aus datierten Primärquellen belegen lässt, werden als <em>nicht bewertet</em> ausgewiesen statt geschätzt.</p>
     <div class="score-grid">
+<div class="score-card" data-tool="maestro">
+        <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
+        <div class="score-number">88</div>
+        <div class="score-bar-track"><div class="score-bar-fill" style="width:88%"></div></div>
+        <div class="score-descriptor">Desktop Orchestrator</div>
+        <details class="score-dims"><summary class="score-dims-sum">Aufschlüsselung der Bewertung</summary>
+<div class="dim" data-dim="orchestration" data-max="8" data-raw="8"><span class="dim-name" title="Orchestrierung">Orchestrierung</span><span class="dim-raw">8/8</span><span class="dim-points">25</span></div>
+<div class="dim" data-dim="operability" data-max="4" data-raw="2"><span class="dim-name" title="Betreibbarkeit">Betreibbarkeit</span><span class="dim-raw">2/4</span><span class="dim-points">10</span></div>
+<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment-Souveränität">Deployment-Souveränität</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
+<div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release-Reife">Release-Reife</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
+<div class="dim" data-dim="accessibility" data-max="6" data-raw="6"><span class="dim-name" title="Zugänglichkeit">Zugänglichkeit</span><span class="dim-raw">6/6</span><span class="dim-points">10</span></div>
+</details>
+      </div>
 <div class="score-card is-adk" data-tool="google-adk">
         <div class="score-tool"><a href="https://adk.dev" target="_blank" rel="noopener">Google ADK</a> <span class="score-badge badge-adk">Best Multi-Cloud</span></div>
         <div class="score-number">87</div>
@@ -1456,20 +1470,6 @@
 <div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment-Souveränität">Deployment-Souveränität</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
 <div class="dim" data-dim="maturity" data-max="6" data-raw="6"><span class="dim-name" title="Release-Reife">Release-Reife</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
 <div class="dim" data-dim="accessibility" data-max="6" data-raw="5"><span class="dim-name" title="Zugänglichkeit">Zugänglichkeit</span><span class="dim-raw">5/6</span><span class="dim-points">8.33</span></div>
-</details>
-      </div>
-<div class="score-card" data-tool="maestro">
-        <div class="score-tool"><a href="https://runmaestro.ai" target="_blank" rel="noopener">Maestro</a></div>
-        <div class="score-number">88</div>
-        <div class="score-bar-track"><div class="score-bar-fill" style="width:88%"></div></div>
-        <div class="score-descriptor">Desktop Orchestrator</div>
-        <details class="score-dims"><summary class="score-dims-sum">Aufschlüsselung der Bewertung</summary>
-<div class="dim" data-dim="orchestration" data-max="8" data-raw="8"><span class="dim-name" title="Orchestrierung">Orchestrierung</span><span class="dim-raw">8/8</span><span class="dim-points">25</span></div>
-<div class="dim" data-dim="operability" data-max="4" data-raw="2"><span class="dim-name" title="Betreibbarkeit">Betreibbarkeit</span><span class="dim-raw">2/4</span><span class="dim-points">10</span></div>
-<div class="dim" data-dim="integration" data-max="6" data-raw="6"><span class="dim-name" title="Integration">Integration</span><span class="dim-raw">6/6</span><span class="dim-points">15</span></div>
-<div class="dim" data-dim="sovereignty" data-max="4" data-raw="4"><span class="dim-name" title="Deployment-Souveränität">Deployment-Souveränität</span><span class="dim-raw">4/4</span><span class="dim-points">15</span></div>
-<div class="dim" data-dim="maturity" data-max="6" data-raw="5"><span class="dim-name" title="Release-Reife">Release-Reife</span><span class="dim-raw">5/6</span><span class="dim-points">12.5</span></div>
-<div class="dim" data-dim="accessibility" data-max="6" data-raw="6"><span class="dim-name" title="Zugänglichkeit">Zugänglichkeit</span><span class="dim-raw">6/6</span><span class="dim-points">10</span></div>
 </details>
       </div>
 <div class="score-card" data-tool="ms-agent">
@@ -2286,7 +2286,7 @@
       <div class="news-body">
         <p class="news-intro">Monatliche Recherche-Runde (2026-11), gepr&uuml;ft am 1. November 2026: alle dreizehn Tools, dazu eine Marktsichtung nach noch nicht aufgenommenen Tools. Die Release-Reife wurde gegen das 90-Tage-Fenster 2026-08-03 bis 2026-11-01 neu hergeleitet. Zwei ver&ouml;ffentlichte Bewertungen haben sich ge&auml;ndert, beide bei der Release-Kadenz und beide, weil Releases erschienen sind &mdash; nicht, weil etwas neu beurteilt wurde.</p>
         <ul class="news-list">
-          <li><strong>Maestro &mdash; Release-Kadenz gestiegen:</strong> Im Fenster liegen acht stabile Releases (v0.17.4 am 21. September, v0.17.5 am 25. September, v0.17.6 und v0.17.7 am 4. Oktober, v0.17.8 am 5. Oktober, v1.0.0 am 9. Oktober, v1.0.1 am 20. Oktober, v1.0.2 am 21. Oktober 2026) statt zuvor drei; Stufe 2 verlangt mindestens sechs. Vier RC-Tags im selben Fenster sind von GitHub als Pre-Release gekennzeichnet und bleiben ungez&auml;hlt, v0.17.3 ist aus dem Fenster gefallen. Kriterium von 1 auf 2, Release-Reife von 4/6 auf 5/6, Score von 85 auf 88. Quelle: <a href="https://github.com/RunMaestro/Maestro/releases" target="_blank" rel="noopener">Release-&Uuml;bersicht</a>.<span class="news-tag-inline">Score +3</span></li>
+          <li><strong>Maestro &mdash; Release-Kadenz gestiegen:</strong> Im Fenster liegen acht stabile Releases (v0.17.4 am 21. September, v0.17.5 am 25. September, v0.17.6 und v0.17.7 am 4. Oktober, v0.17.8 am 5. Oktober, v1.0.0 am 9. Oktober, v1.0.1 am 20. Oktober, v1.0.2 am 21. Oktober 2026) statt zuvor drei; Stufe 2 verlangt mindestens sechs. Vier RC-Tags im selben Fenster sind von GitHub als Pre-Release gekennzeichnet und bleiben ungez&auml;hlt, v0.17.3 ist aus dem Fenster gefallen. Kriterium von 1 auf 2, Release-Reife von 4/6 auf 5/6, Score von 85 auf 88. Maestro f&uuml;hrt die ver&ouml;ffentlichte Rangfolge damit an, vor Google ADK und Strands Agents (je 87). Quelle: <a href="https://github.com/RunMaestro/Maestro/releases" target="_blank" rel="noopener">Release-&Uuml;bersicht</a>.<span class="news-tag-inline">Score +3</span></li>
           <li><strong>Maestro &mdash; GA-Status bleibt bei 1, offene Auslegungsfrage:</strong> v1.0.0 ist am 9. Oktober 2026 erschienen, womit die Teilbedingung &bdquo;vor 1.0&ldquo; der Stufe 1 nicht mehr greift. Die README f&uuml;hrt Copilot-CLI jedoch weiterhin als Beta, womit die zweite Teilbedingung derselben Stufe (&bdquo;GA mit Beta-Komponenten&ldquo;) zutrifft. Welche Klausel Vorrang hat, legt die ver&ouml;ffentlichte Rubrik nicht fest; die Pr&uuml;fung vom 2. Oktober 2026 hat dieselbe Beta-Komponente f&uuml;r Stufe 1 herangezogen, und dieselbe Lesart bindet auch Databricks Agent Bricks. Das Kriterium bleibt deshalb bei 1 &mdash; und untertreibt damit um zwei Punkte &mdash;, bis die Auslegung als Entscheidung festgehalten und auf alle Tools angewendet ist.</li>
           <li><strong>LangGraph &mdash; Release-Kadenz gestiegen:</strong> Im Fenster liegen sieben best&auml;tigte stabile Releases des Kernpakets (1.2.11, 1.2.12, 1.2.15, 1.2.16, 1.2.17, 1.2.18, 1.2.19) statt zuvor f&uuml;nf. 1.2.13 und 1.2.14 wurden gemeldet, haben auf den gepr&uuml;ften Release-Seiten aber keinen eigenen Eintrag und bleiben ungez&auml;hlt; die Stufe wird auch ohne sie erreicht. Kriterium von 1 auf 2, Release-Reife von 5/6 auf 6/6, Score von 79 auf 81. Gez&auml;hlt wird wie bisher ausschlie&szlig;lich die Tag-Linie des Kernpakets <code>langgraph</code>, nicht <code>langgraph-cli</code>, <code>langgraph-sdk</code>, <code>langgraph-prebuilt</code> oder <code>langgraph-checkpoint*</code>. Quelle: <a href="https://github.com/langchain-ai/langgraph/releases" target="_blank" rel="noopener">Releases</a>.<span class="news-tag-inline">Score +2</span></li>
           <li><strong>Vercel AI SDK &mdash; Version in der Preisnotiz nachgezogen:</strong> Die Notiz nennt jetzt <code>ai</code> 7.0.159 statt 7.0.127; diese Version ist am 30. Oktober 2026 erschienen und war am Pr&uuml;ftag als <code>dist-tags.latest</code> der <a href="https://registry.npmjs.org/ai" target="_blank" rel="noopener">npm-Registry</a> ausgewiesen. Apache 2.0, &euro;0 und &bdquo;Modellkosten beim Provider&ldquo; bleiben unver&auml;ndert, der Score bleibt 78.</li>
