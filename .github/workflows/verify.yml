@@ -10,7 +10,14 @@ name: verify
 # working, not that something is broken.
 
 on:
+  # `labeled`/`unlabeled` are included because `refresh-gate` below reads
+  # the PR's labels: without them a label added after the last push would
+  # never re-evaluate the gate. The cost is that `verify` re-runs on every
+  # label change too — about a minute, no dependencies, free on a public
+  # repo — which is cheaper than excluding it with a job-level `if:` and
+  # publishing a `skipped` check run for a required check name.
   pull_request:
+    types: [opened, synchronize, reopened, labeled, unlabeled]
   push:
     branches: [main]
   workflow_dispatch:
@@ -38,3 +45,46 @@ jobs:
 
       - name: Verify site data
         run: npm run verify
+
+  # Polices the ORDER of ADR-003's two gates: approve → apply → verify
+  # green → merge. It fails a pull request that carries `refresh:proposed`
+  # without `refresh:approved`, i.e. a proposal nobody has approved yet,
+  # and therefore one whose data has not been applied to the pages.
+  #
+  # What it deliberately does NOT do: check that data/tools.json and the
+  # HTML pages agree. That is the `verify` job above, and the two are kept
+  # apart on purpose — adding `refresh:approved` turns this job green while
+  # `verify` is still red, and `verify` is then the one that blocks until
+  # `apply.yml` has written the pages. Both are required checks on `main`;
+  # either alone leaves a hole.
+  #
+  # No checkout, no secrets: it reads two booleans off the event payload.
+  # It never skips — on a push or a dispatch there is no pull request, so
+  # it passes and says so in its log (a check run with conclusion `skipped`
+  # is not something this gate should depend on being scored).
+  #
+  # The job id and `name:` are both `refresh-gate` so the check-run name is
+  # deterministically `refresh-gate` — that exact string is what the
+  # ruleset on `main` requires. Do not vary it, and do not add a matrix.
+  #
+  # See ADR-016.
+  refresh-gate:
+    name: refresh-gate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Refuse an unapplied refresh proposal
+        if: >-
+          github.event_name == 'pull_request' &&
+          contains(github.event.pull_request.labels.*.name, 'refresh:proposed') &&
+          !contains(github.event.pull_request.labels.*.name, 'refresh:approved')
+        run: |
+          echo "::error::This pull request carries \`refresh:proposed\` without \`refresh:approved\`. ADR-003's order is approve → apply → verify green → merge: add the \`refresh:approved\` label so apply.yml writes the approved data into both pages, wait for \`verify\` to go green on the PR, and only then merge. A red \`verify\` on a proposal means \"not yet applied\", never \"ready to merge\"."
+          exit 1
+
+      - name: Report which branch of the gate applied
+        if: always()
+        run: |
+          echo "refresh-gate ran. A pull request labelled \`refresh:proposed\` but not"
+          echo "\`refresh:approved\` fails in the step above; anything else — including a"
+          echo "push to main, a workflow_dispatch, and any PR without refresh labels —"
+          echo "passes here. This job does not check data/page agreement (see \`verify\`)."
