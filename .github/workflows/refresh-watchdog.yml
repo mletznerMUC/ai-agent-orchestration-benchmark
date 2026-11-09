@@ -185,6 +185,57 @@ jobs:
             echo "problem=" >> "$GITHUB_OUTPUT"
           fi
 
+      # A manual setting that nothing re-reads is how ADR-014's layer 1
+      # came to be prose: the ruleset on `main` was recorded as configured
+      # and never existed, so two PRs were merged red. The rules endpoint
+      # needs only metadata read on a public repository, which
+      # GITHUB_TOKEN always has — and if that is wrong the call 403s,
+      # which this step reports as a problem rather than an all-clear.
+      - name: Check the main ruleset
+        id: ruleset
+        if: always()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPO: ${{ github.repository }}
+        run: |
+          set -uo pipefail
+          ERR_LOG="$(mktemp)"
+          if ! RULES=$(gh api "repos/${REPO}/rules/branches/main" 2>"$ERR_LOG"); then
+            echo "problem=Could not read the rules in force on \`main\` ($(tr '\n' ' ' < "$ERR_LOG" | tr -d '\r')), so it is unknown whether the ruleset requiring \`verify\` and \`refresh-gate\` still exists." >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          MISSING=$(printf '%s' "$RULES" | jq -r '
+            if length == 0 then
+              "there is no ruleset on `main` at all (the rules API returns an empty list)"
+            else
+              [ .[].type ] as $types
+              | [ .[] | select(.type == "required_status_checks")
+                  | .parameters.required_status_checks[]?.context ] as $contexts
+              | [
+                  (if ($types | index("pull_request")) then empty
+                   else "no rule requires a pull request before merging" end),
+                  (if ($types | index("non_fast_forward")) then empty
+                   else "force pushes are not blocked (no `non_fast_forward` rule)" end),
+                  (if ($types | index("required_status_checks")) then
+                     ( [ "verify", "refresh-gate" ]
+                       | map(select(. as $c | ($contexts | index($c)) | not))
+                       | if length == 0 then empty
+                         else "the required status checks do not include: " + join(", ") end )
+                   else "no rule requires status checks to pass" end)
+                ]
+              | join("; ")
+            end')
+
+          if [ -z "$MISSING" ]; then
+            echo "The ruleset on main requires a pull request, blocks force pushes, and requires both verify and refresh-gate."
+            echo "problem=" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "problem=The ruleset protecting \`main\` is missing or weakened: ${MISSING}. Until it is repaired, ADR-003's approve-before-merge order is prose (see ADR-016)." >> "$GITHUB_OUTPUT"
+          exit 0
+
       - name: Report
         if: always()
         env:
@@ -194,9 +245,11 @@ jobs:
           P_ROUND: ${{ steps.round.outputs.problem }}
           P_ENABLED: ${{ steps.enabled.outputs.problem }}
           P_INACTIVITY: ${{ steps.inactivity.outputs.problem }}
+          P_RULESET: ${{ steps.ruleset.outputs.problem }}
           O_ROUND: ${{ steps.round.outcome }}
           O_ENABLED: ${{ steps.enabled.outcome }}
           O_INACTIVITY: ${{ steps.inactivity.outcome }}
+          O_RULESET: ${{ steps.ruleset.outcome }}
         run: |
           set -uo pipefail
           MONTH="$(date -u +%Y-%m)"
@@ -219,6 +272,7 @@ jobs:
           add_check "this month's round" "$O_ROUND" "$P_ROUND"
           add_check "refresh schedule is enabled" "$O_ENABLED" "$P_ENABLED"
           add_check "inactivity" "$O_INACTIVITY" "$P_INACTIVITY"
+          add_check "main ruleset" "$O_RULESET" "$P_RULESET"
 
           if [ -z "$PROBLEMS" ]; then
             echo "::notice::Refresh watchdog ${MONTH}: the month's round is accounted for, refresh.yml is active, and the repository is not near the 60-day inactivity line."
@@ -236,6 +290,7 @@ jobs:
           BODY="${BODY}- No round this month: run the \`refresh-research\` workflow via \`workflow_dispatch\` (a plain manual dispatch is unguarded by design, ADR-011)."$'\n'
           BODY="${BODY}- Workflow disabled: re-enable \`refresh-research\` under Actions."$'\n'
           BODY="${BODY}- Inactivity: any merge to \`main\` resets GitHub's 60-day clock."$'\n'
+          BODY="${BODY}- Ruleset missing or weakened: create or repair it with the numbered checklist in \`docs/decisions/016-refresh-gate-is-a-required-check.md\`."$'\n'
           BODY="${BODY}"$'\n'"Run: ${RUN_URL}"
 
           {
