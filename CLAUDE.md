@@ -47,7 +47,8 @@ must be sourced and reproducible. When in doubt, understate.
   fix is a human `workflow_dispatch` (ADR-015).
 - **Nothing merges to `main` without Markus.** Agents never merge,
   never push to `main`, never tag releases. Enforced mechanically,
-  see ADR-014.
+  see ADR-014 and ADR-016 (the ruleset itself is a Markus-only setting —
+  until it exists, the gate is prose; ADR-016 has the checklist).
 - Each phase = one subagent with a clean context. The plan file
   (`PLAN.md`) is the only shared state between phases. The expert
   panel is the one exception: three lens subagents in parallel,
