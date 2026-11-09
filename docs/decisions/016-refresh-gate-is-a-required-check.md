@@ -32,7 +32,7 @@ The 2026-10-02 incident (PR #65, merged red) and this one are the same
 incident twice. ADR-014's layers 2 and 3 did not and could not cover
 either: they are **agent-side** guards — a versioned `pre-push` hook and a
 Claude Code tool-call hook — and both merges were made by Markus himself,
-through the GitHub UI, outside any agent session, where neither hook runs.
+outside any agent session, where neither hook runs.
 Layer 1 is the only layer that binds a human, and it was the missing one.
 
 ## Consequences
@@ -53,7 +53,8 @@ Layer 1 is the only layer that binds a human, and it was the missing one.
   `rules/branches/main` and reporting an empty list, a missing
   `pull_request` or `non_fast_forward` rule, or a
   `required_status_checks` rule that does not name both `verify` and
-  `refresh-gate`. An unverified setting is how this ADR came to be needed,
+  `refresh-gate` — or a rules payload it cannot interpret. An unverified
+  setting is how this ADR came to be needed,
   so the setting is now re-read rather than remembered. The watchdog keeps
   its ADR-015 fail-closed contract: an API error is reported as a problem,
   never as an all-clear. Its latency is up to a month — it is a monthly

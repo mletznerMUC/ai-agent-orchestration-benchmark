@@ -77,14 +77,15 @@ what was believed, not what was in force, and is left standing above for
 that reason; this amendment is the correction.
 
 Two pull requests were merged with `verify` red as a result: PR #65 on
-2026-10-02 — the incident that prompted this ADR — and PR #74 on
-2026-11-09, which carried `refresh:proposed` and never `refresh:approved`.
+2026-10-02 — the red merge that prompted layer 1's required check — and
+PR #74 on 2026-11-09, which carried `refresh:proposed` and never
+`refresh:approved`.
 
 Layers 2 and 3 could not have stopped either. Both are **agent-side**
 guards — a versioned `pre-push` hook in the clone, and a Claude Code
 tool-call hook that blocks `git push` to `main` and `gh pr merge` from an
-agent session — and both merges were made by Markus himself, through the
-GitHub UI, outside any agent session, where neither guard is in the path.
+agent session — and both merges were made by Markus himself, outside any
+agent session, where neither guard is in the path.
 Layer 1 is the only layer of the three that binds a human, and it was the
 missing one.
 
