@@ -49,6 +49,9 @@ must be sourced and reproducible. When in doubt, understate.
   never push to `main`, never tag releases. Enforced mechanically,
   see ADR-014 and ADR-016 (the ruleset itself is a Markus-only setting —
   until it exists, the gate is prose; ADR-016 has the checklist).
+- A claim that a repository *setting* is configured is not evidence: an
+  ADR may only assert a setting that something re-reads (a watchdog check
+  or a cited API response), never a remembered one (ADR-016).
 - Each phase = one subagent with a clean context. The plan file
   (`PLAN.md`) is the only shared state between phases. The expert
   panel is the one exception: three lens subagents in parallel,
