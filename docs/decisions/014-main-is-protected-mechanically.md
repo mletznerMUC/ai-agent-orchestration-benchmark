@@ -65,3 +65,33 @@ nothing enforced it. Markus kept the commits.
   `.githooks`. That is a one-line setup per clone, and it is deliberately
   not something an agent sets, since a command that can set it can unset
   it.
+
+## Amendment (2026-11-09): layer 1 was never configured
+
+Layer 1 above describes a ruleset on `main` that did not exist. Verified
+on 2026-11-09: Settings → Rules showed "You haven't created any rulesets",
+`GET /repos/mletznerMUC/ai-agent-orchestration-benchmark/rules/branches/main`
+returned `[]`, and `GET .../branches/main` reported `"protected": false`.
+The sentence "He added the required `verify` check on 2026-10-02" records
+what was believed, not what was in force, and is left standing above for
+that reason; this amendment is the correction.
+
+Two pull requests were merged with `verify` red as a result: PR #65 on
+2026-10-02 — the incident that prompted this ADR — and PR #74 on
+2026-11-09, which carried `refresh:proposed` and never `refresh:approved`.
+
+Layers 2 and 3 could not have stopped either. Both are **agent-side**
+guards — a versioned `pre-push` hook in the clone, and a Claude Code
+tool-call hook that blocks `git push` to `main` and `gh pr merge` from an
+agent session — and both merges were made by Markus himself, through the
+GitHub UI, outside any agent session, where neither guard is in the path.
+Layer 1 is the only layer of the three that binds a human, and it was the
+missing one.
+
+Layer 1 is therefore restated as a procedure rather than a claim: the
+ruleset is specified as a numbered Settings checklist in
+[ADR-016](016-refresh-gate-is-a-required-check.md), it requires two checks
+(`verify` and `refresh-gate`) rather than one, and **it is not in force
+until Markus has completed that checklist**. `refresh-watchdog.yml` now
+re-reads the ruleset monthly, so its absence or weakening produces a red
+run and an issue instead of silence. Layers 2 and 3 are unchanged.
